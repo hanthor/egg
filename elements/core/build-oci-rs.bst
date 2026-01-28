@@ -2,9 +2,9 @@ kind: manual
 
 sources:
 - kind: git_repo
-  url: github:hecknt/build-oci-rs.git
-  track: lockfile-update
-  ref: c2040f956dfd2012a81fd7cec9633ca985e89505
+  url: github:repires/build-oci-rs.git
+  track: main
+  ref: cfa389b65c5dba4fae73f453a9b2bbd160ce67eb
 
 - kind: cargo2
 
@@ -38,6 +38,14 @@ sources:
     version: 3.19.1
     sha: 5dd9dc738b7a8311c7ade152424974d8115f2cdad61e8dab8dac9f2362298510
   - kind: registry
+    name: byteorder
+    version: 1.5.0
+    sha: 1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b
+  - kind: registry
+    name: bytes
+    version: 1.11.0
+    sha: b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3
+  - kind: registry
     name: cc
     version: 1.2.54
     sha: 6354c81bbfd62d9cfa9cb3c773c2b7b2a3a482d569de977fd0e961f6e7c00583
@@ -50,9 +58,17 @@ sources:
     version: 0.4.43
     sha: fac4744fb15ae8337dc853fee7fb3f4e48c0fbaa23d0afe49c447b4fab126118
   - kind: registry
+    name: cmake
+    version: 0.1.57
+    sha: 75443c44cd6b379beb8c5b45d85d0773baf31cce901fe7bb252f4eff3008ef7d
+  - kind: registry
     name: core-foundation-sys
     version: 0.8.7
     sha: 773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b
+  - kind: registry
+    name: core_affinity
+    version: 0.8.3
+    sha: a034b3a7b624016c6e13f5df875747cc25f884156aad2abd12b6c46797971342
   - kind: registry
     name: cpufeatures
     version: 0.2.17
@@ -110,21 +126,45 @@ sources:
     version: 1.1.8
     sha: b375d6465b98090a5f25b1c7703f3859783755aa9a80433b36e0379a3ec2f369
   - kind: registry
+    name: flume
+    version: 0.10.14
+    sha: 1657b4441c3403d9f7b3409e47575237dac27b1b5726df654a6ecbf92f0f7577
+  - kind: registry
+    name: futures-core
+    version: 0.3.31
+    sha: 05f29059c0c2090612e8d742178b0580d2dc940c837851ad723096f87af6663e
+  - kind: registry
+    name: futures-sink
+    version: 0.3.31
+    sha: e575fab7d1e0dcb8d0c7bcf9a63ee213816ab51902e6d244a95819acacf1d4f7
+  - kind: registry
     name: generic-array
     version: 0.14.7
     sha: 85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a
   - kind: registry
     name: getrandom
+    version: 0.2.17
+    sha: ff2abc00be7fca6ebc474524697ae276ad847ad0a6b3faa4bcb027e9a4614ad0
+  - kind: registry
+    name: getrandom
     version: 0.3.4
     sha: 899def5c37c4fd7b2664648c28120ecec138e4d395b459e5ca34f9cce2dd77fd
+  - kind: registry
+    name: gzp
+    version: 0.11.3
+    sha: e7c65d1899521a11810501b50b898464d133e1afc96703cff57726964cfa7baf
   - kind: registry
     name: hashbrown
     version: 0.16.1
     sha: 841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100
   - kind: registry
+    name: hermit-abi
+    version: 0.5.2
+    sha: fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c
+  - kind: registry
     name: iana-time-zone
-    version: 0.1.64
-    sha: 33e57f83510bb73707521ebaffa789ec8caf86f9657cad665b092b581d40e9fb
+    version: 0.1.65
+    sha: e31bc9ad994ba00e440a8aa5c9ef0ec67d5cb5e5cb0cc7f8b744a35b389cc470
   - kind: registry
     name: iana-time-zone-haiku
     version: 0.1.2
@@ -146,13 +186,29 @@ sources:
     version: 0.2.180
     sha: bcc35a38544a891a5f7c865aca548a982ccb3b8650a5b06d0fd33a10283c56fc
   - kind: registry
+    name: libdeflate-sys
+    version: 0.12.0
+    sha: e1f7b0817f85e2ba608892f30fbf4c9d03f3ebf9db0c952d1b7c8f7387b54785
+  - kind: registry
+    name: libdeflater
+    version: 0.12.0
+    sha: 671e63282f642c7bcc7d292b212d5a4739fef02a77fe98429a75d308f96e7931
+  - kind: registry
     name: libredox
     version: 0.1.12
     sha: 3d0b95e02c851351f877147b7deea7b1afb1df71b63aa5f8270716e0c5720616
   - kind: registry
+    name: libz-sys
+    version: 1.1.23
+    sha: 15d118bbf3771060e7311cc7bb0545b01d08a8b4a7de949198dec1fa0ca1c0f7
+  - kind: registry
     name: linux-raw-sys
     version: 0.11.0
     sha: df1d3c3b53da64cf5760482273a98e575c651a67eec7f77df96b5b642de8f039
+  - kind: registry
+    name: lock_api
+    version: 0.4.14
+    sha: 224399e74b87b5f3557511d98dff8b14089b3dadafcab6bb93eab67d3aace965
   - kind: registry
     name: log
     version: 0.4.29
@@ -166,13 +222,33 @@ sources:
     version: 0.8.9
     sha: 1fa76a2c86f704bdb222d66965fb3d63269ce38518b83cb0575fca855ebb6316
   - kind: registry
+    name: nanorand
+    version: 0.7.0
+    sha: 6a51313c5820b0b02bd422f4b44776fbf47961755c74ce64afc73bfad10226c3
+  - kind: registry
     name: num-traits
     version: 0.2.19
     sha: 071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841
   - kind: registry
+    name: num_cpus
+    version: 1.17.0
+    sha: 91df4bbde75afed763b708b7eee1e8e7651e02d97f6d5dd763e89367e957b23b
+  - kind: registry
     name: once_cell
     version: 1.21.3
     sha: 42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d
+  - kind: registry
+    name: pin-project
+    version: 1.1.10
+    sha: 677f1add503faace112b9f1373e43e9e054bfdd22ff1a63c1bc485eaec6a6a8a
+  - kind: registry
+    name: pin-project-internal
+    version: 1.1.10
+    sha: 6e918e4ff8c4549eb882f14b3a4bc8c8bc93de829416eacf579f1207a8fbf861
+  - kind: registry
+    name: pkg-config
+    version: 0.3.32
+    sha: 7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c
   - kind: registry
     name: proc-macro2
     version: 1.0.106
@@ -210,6 +286,10 @@ sources:
     version: 1.0.22
     sha: a50f4cf475b65d88e057964e0e9bb1f0aa9bbb2036dc65c64596b42932536984
   - kind: registry
+    name: scopeguard
+    version: 1.2.0
+    sha: 94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49
+  - kind: registry
     name: serde
     version: 1.0.228
     sha: 9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e
@@ -242,6 +322,10 @@ sources:
     version: 0.3.8
     sha: e320a6c5ad31d271ad523dcf3ad13e2767ad8b1cb8f047f75a8aeaf8da139da2
   - kind: registry
+    name: spin
+    version: 0.9.8
+    sha: 6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67
+  - kind: registry
     name: syn
     version: 2.0.114
     sha: d4d107df263a3013ef9b1879b0df87d706ff80f65a86ea879bd9c31f9b307c2a
@@ -253,6 +337,14 @@ sources:
     name: tempfile
     version: 3.24.0
     sha: 655da9c7eb6305c55742045d5a8d2037996d61d8de95806335c7c86ce0f82e9c
+  - kind: registry
+    name: thiserror
+    version: 1.0.69
+    sha: b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52
+  - kind: registry
+    name: thiserror-impl
+    version: 1.0.69
+    sha: 4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1
   - kind: registry
     name: typenum
     version: 1.19.0
@@ -266,9 +358,17 @@ sources:
     version: 0.2.11
     sha: 673aac59facbab8a9007c7f6108d11f63b603f7cabff99fabf650fea5c32b861
   - kind: registry
+    name: vcpkg
+    version: 0.2.15
+    sha: accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426
+  - kind: registry
     name: version_check
     version: 0.9.5
     sha: 0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a
+  - kind: registry
+    name: wasi
+    version: 0.11.1+wasi-snapshot-preview1
+    sha: ccf3ec651a847eb01de73ccad15eb7d99f80485de043efb2f370cd654f4ea44b
   - kind: registry
     name: wasip2
     version: 1.0.2+wasi-0.2.9
@@ -289,6 +389,18 @@ sources:
     name: wasm-bindgen-shared
     version: 0.2.108
     sha: 1f01b580c9ac74c8d8f0c0e4afb04eeef2acf145458e52c03845ee9cd23e3d12
+  - kind: registry
+    name: winapi
+    version: 0.3.9
+    sha: 5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419
+  - kind: registry
+    name: winapi-i686-pc-windows-gnu
+    version: 0.4.0
+    sha: ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6
+  - kind: registry
+    name: winapi-x86_64-pc-windows-gnu
+    version: 0.4.0
+    sha: 712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f
   - kind: registry
     name: windows-core
     version: 0.62.2
@@ -332,6 +444,7 @@ sources:
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
 - freedesktop-sdk.bst:components/gcc.bst
+- freedesktop-sdk.bst:components/cmake.bst
 - freedesktop-sdk.bst:components/rust.bst
 
 config:
