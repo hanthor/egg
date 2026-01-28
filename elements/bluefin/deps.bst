@@ -6,6 +6,7 @@ depends:
   - bluefin/gnome-shell-extensions.bst
 
   - bluefin/brew.bst
+  - bluefin/brew-tarball.bst
 
   - bluefin/common.bst
   - bluefin/wallpapers.bst

@@ -1,12 +1,22 @@
-kind: import
+kind: manual
+
+build-depends:
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+
+runtime-depends:
+- bluefin/brew.bst
 
 sources:
 - kind: remote
-  url: https://github.com/ublue-os/packages/releases/download/homebrew-2025-11-11-01-29-58/homebrew-x86_64.tar.zst
-  ref: 0ccb314083b4b7933fa9c8633c454bca465205797e1261cdf60d665e5e8f516b
-
-runtime-depends:
-  - bluefin/brew.bst
+  url: github_files:ublue-os/packages/releases/download/homebrew-2026-01-27-01-30-36/homebrew-x86_64.tar.zst
+  ref: e644c70109eae00a01d2a6b09dc08ba5697e88cddb63fee035d6b127187b88ef
+variables:
+  strip-binaries: ''
 
 config:
-  target: /usr/share/homebrew.tar.zst
+  install-commands:
+  - |
+    mkdir -p "%{install-root}%{datadir}"
+    mv homebrew-x86_64.tar.zst "%{install-root}%{datadir}/homebrew.tar.zst"
+  - |
+    %{install-extra}
