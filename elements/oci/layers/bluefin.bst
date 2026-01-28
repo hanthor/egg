@@ -1,12 +1,11 @@
 kind: compose
 
 build-depends:
-- oci/layers/bluefin-stack.bst
+- oci/layers/bluefin-runtime.bst
+- freedesktop-sdk.bst:components/gcc.bst
 
 config:
   exclude:
   - debug
-  - devel
-  - doc
   - extra
   - static-blocklist
