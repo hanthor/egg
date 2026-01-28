@@ -4,7 +4,7 @@ sources:
 - kind: git_repo
   url: github:repires/build-oci-rs.git
   track: main
-  ref: cfa389b65c5dba4fae73f453a9b2bbd160ce67eb
+  ref: f338a43d60c2d54e372478eaa1e52aea8ca1693a
 
 - kind: cargo2
 
@@ -77,6 +77,10 @@ sources:
     name: crc32fast
     version: 1.5.0
     sha: 9481c1c90cbf2ac953f07c8d4a58aa3945c425b7185c9154d67a65e4230da511
+  - kind: registry
+    name: crossbeam-channel
+    version: 0.5.15
+    sha: 82b8f8f868b36967f9606790d1903570de9ceaf870a7bf9fbbd3016d636a2cb2
   - kind: registry
     name: crossbeam-deque
     version: 0.8.6
@@ -217,6 +221,10 @@ sources:
     name: memchr
     version: 2.7.6
     sha: f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273
+  - kind: registry
+    name: memmap2
+    version: 0.9.9
+    sha: 744133e4a0e0a658e1374cf3bf8e415c4052a15a111acd372764c55b4177d490
   - kind: registry
     name: miniz_oxide
     version: 0.8.9
