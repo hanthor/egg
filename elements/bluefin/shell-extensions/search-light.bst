@@ -8,10 +8,11 @@ sources:
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-make.bst
+- freedesktop-sdk.bst:components/jq.bst
 
 depends:
 - freedesktop-sdk.bst:components/gettext.bst
-- freedesktop-sdk.bst:components/jq.bst
+- gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:core/gnome-shell.bst
 
 variables:

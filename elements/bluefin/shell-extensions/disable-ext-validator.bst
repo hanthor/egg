@@ -1,6 +1,7 @@
 kind: manual
 
 depends:
+- gnome-build-meta.bst:sdk/glib.bst
 - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
 
 variables:

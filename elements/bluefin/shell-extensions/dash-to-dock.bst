@@ -11,6 +11,7 @@ build-depends:
 
 depends:
 - freedesktop-sdk.bst:components/gettext.bst
+- gnome-build-meta.bst:sdk/glib.bst
 - gnome-build-meta.bst:sdk-deps/sassc.bst
 - gnome-build-meta.bst:core/gnome-shell.bst
 
