@@ -12,6 +12,7 @@ depends:
   - bluefin/wallpapers.bst
 
   - bluefin/jetbrains-mono.bst
+  - bluefin/jetbrains-mono-nerd-font.bst
 
   # Include things missing from the gnomeos base image
   - freedesktop-sdk.bst:components/git-lfs.bst
