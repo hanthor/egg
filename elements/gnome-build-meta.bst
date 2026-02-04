@@ -1,12 +1,12 @@
 kind: junction
 
 sources:
-  - kind: git_repo
-    url: gnome:/gnome-build-meta.git
-    track: master
-    ref: 49-branchpoint-438-g35cf3d4a75b3628b1c7b81f91a7dd6661659052b
-  - kind: patch_queue
-    path: patches/gnome-build-meta
+- kind: git_repo
+  url: gnome:/gnome-build-meta.git
+  track: master
+  ref: 49-branchpoint-441-g22e8911351734806aa262ef36b9b41518306d4e9
+- kind: patch_queue
+  path: patches/gnome-build-meta
 
 config:
   overrides:
