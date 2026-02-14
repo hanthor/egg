@@ -9,12 +9,14 @@ All AI-assisted development uses the [superpowers](https://github.com/jchook/sup
 | What | Where |
 |---|---|
 | Build target | `oci/bluefin.bst` |
+| End-to-end local test | `just show-me-the-future` |
 | Local build | `just build` |
 | CI workflow | `.github/workflows/build-egg.yml` |
 | Published image | `ghcr.io/projectbluefin/egg:latest` |
 | Upstream repo | `github.com/projectbluefin/egg` |
 | Implementation plans | `docs/plans/` |
 | BuildStream project config | `project.conf` |
+| Local testing skill | `.opencode/skills/local-e2e-testing/` |
 
 ## What This Project Is
 
@@ -66,10 +68,16 @@ Containerfile            Minimal validation container (FROM egg:latest + lint)
 ### Building Locally
 
 ```bash
-just build    # Runs bst build + exports OCI image via podman load
+just show-me-the-future    # Full end-to-end: build + bootable disk + QEMU VM
+just build                 # Build OCI image only (uses bst2 container via podman)
+just bst show oci/bluefin.bst  # Run any bst command inside the bst2 container
 ```
 
-Requires BuildStream 2.5+ installed locally. The Justfile handles `bst build oci/bluefin.bst` followed by `bst artifact checkout --tar - | podman load`.
+All BuildStream commands run inside the official bst2 container image (same one CI uses), invoked automatically via podman. No native BuildStream installation needed. Requires: podman, ~50 GB free disk. For VM boot: QEMU + OVMF.
+
+**Skill:** Load `local-e2e-testing` for full prerequisites, troubleshooting, and environment variable reference.
+
+Requires BuildStream 2.5+ (provided by the bst2 container). The Justfile handles `bst build oci/bluefin.bst` followed by `bst artifact checkout --tar - | podman load`.
 
 ### project.conf
 
@@ -176,7 +184,7 @@ The `gnome-build-meta.bst` and `freedesktop-sdk.bst` junction elements pin speci
 - **Plans**: `docs/plans/YYYY-MM-DD-<feature-name>.md`
 - **YAML indentation**: 2 spaces
 - **Shell in workflows**: `${VAR}` notation, double-quote all expansions, single-quoted `bash -c` with `-e` env passthrough for podman
-- **Agent state**: `.opencode/` is gitignored -- never commit it
+- **Agent state**: `.opencode/` is gitignored -- never commit it (except `.opencode/skills/` which is tracked)
 
 ## Superpowers Skill System
 
@@ -208,3 +216,35 @@ All non-trivial work follows:
 5. **Finish** -- PR or merge via the finishing skill
 
 Plans are the source of truth for what was decided and why. They include corrections discovered during implementation. Always read existing plans in `docs/plans/` before starting related work.
+
+### Subagent Workflow
+
+When executing a multi-task implementation plan in the current session, use the `subagent-driven-development` skill. This applies whenever a plan has two or more independent tasks.
+
+**Dispatch pattern:**
+
+| Rule | Why |
+|---|---|
+| One fresh subagent per task | Isolation prevents cross-contamination of context |
+| Include full task text in the dispatch | Subagents must not read plan files -- they lack conversation context |
+| Provide surrounding context | Tell the subagent where the task fits in the plan and what other tasks exist |
+| Subagents ask questions if unclear | Better to block than to guess wrong |
+
+**Parallelism:**
+
+- Independent tasks (different files, no shared state) -- dispatch in parallel
+- Tasks that modify the same files -- dispatch sequentially, never in parallel
+- When in doubt, run sequentially
+
+**Two-stage review after each task:**
+
+1. **Spec compliance** -- Does the output match the plan's requirements exactly?
+2. **Code quality** -- Is the implementation clean, correct, and consistent with the codebase?
+
+Both stages must pass before the task is marked complete. If a reviewer finds issues, the implementer fixes them and the reviewer re-reviews. This loop repeats until both stages pass.
+
+**Completion:**
+
+- Load `verification-before-completion` before claiming any task or the overall plan is done
+- Run builds or checks as specified in the plan -- evidence before assertions
+- Mark todos complete only after verification passes

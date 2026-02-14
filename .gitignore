@@ -8,6 +8,9 @@
 *.img
 *.raw
 *.tar
+.ovmf-vars.fd
 
 # Local AI agent state (opencode sessions, drafts)
-.opencode/
+# Skills are committed; everything else is ignored
+.opencode/*
+!.opencode/skills/
