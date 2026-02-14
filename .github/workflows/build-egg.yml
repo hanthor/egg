@@ -11,6 +11,8 @@ env:
   IMAGE_NAME: egg
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+  CACHE_GRPC_PORT: 9092
+  CACHE_HTTP_PORT: 8080
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -50,6 +52,48 @@ jobs:
 
       - name: Prepare BuildStream cache directory
         run: mkdir -p "$HOME/.cache/buildstream/sources"
+
+      # ── Remote cache sidecar ──────────────────────────────────────────
+      # bazel-remote speaks CAS gRPC (compatible with BuildStream) and
+      # proxies to Cloudflare R2 via S3.  Only enabled on main pushes.
+
+      - name: Start bazel-remote cache proxy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: |
+          curl -fsSL -o /tmp/bazel-remote \
+            "https://github.com/buchgr/bazel-remote/releases/download/v2.6.1/bazel-remote-2.6.1-linux-amd64"
+          echo "025d53aeb03a7fdd4a0e76262a5ae9eeee9f64d53ca510deff1c84cf3f276784  /tmp/bazel-remote" | sha256sum -c -
+          chmod +x /tmp/bazel-remote
+
+          /tmp/bazel-remote \
+            --s3.endpoint="${R2_ENDPOINT}" \
+            --s3.bucket="bst-cache" \
+            --s3.prefix="cas" \
+            --s3.auth_method=access_key \
+            --s3.access_key_id="${R2_ACCESS_KEY}" \
+            --s3.secret_access_key="${R2_SECRET_KEY}" \
+            --dir=/tmp/bazel-remote-cache \
+            --max_size=5 \
+            --http_address="0.0.0.0:${CACHE_HTTP_PORT}" \
+            --grpc_address="0.0.0.0:${CACHE_GRPC_PORT}" \
+            > /tmp/bazel-remote.log 2>&1 &
+          echo $! > /tmp/bazel-remote.pid
+
+          # Health check: wait up to 30 seconds for the HTTP endpoint
+          for i in $(seq 1 30); do
+            if curl -sf "http://localhost:${CACHE_HTTP_PORT}/status" > /dev/null 2>&1; then
+              echo "bazel-remote is healthy (attempt ${i})"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::bazel-remote failed to start within 30 seconds"
+          cat /tmp/bazel-remote.log
+          exit 1
 
       # ── Generate CI-specific BuildStream config ───────────────────────
       # Tuned per gnome-build-meta CI patterns:
@@ -91,9 +135,18 @@ jobs:
 
       - name: Build OCI image with BuildStream
         run: |
+          NETWORK_FLAG=""
+          REMOTE_FLAG=""
+          if [ -f /tmp/bazel-remote.pid ]; then
+            NETWORK_FLAG="--network=host"
+            REMOTE_FLAG="--artifact-remote=grpc://localhost:${CACHE_GRPC_PORT}"
+          fi
+
           podman run --rm \
             --privileged \
             --device /dev/fuse \
+            ${NETWORK_FLAG} \
+            -e REMOTE_FLAG="${REMOTE_FLAG}" \
             -v "${{ github.workspace }}:/src:rw" \
             -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
@@ -104,9 +157,42 @@ jobs:
                   --colors \
                   --config /src/buildstream-ci.conf \
                   --log-file /src/logs/build.log \
+                  ${REMOTE_FLAG} \
                   build oci/bluefin.bst
             '
         timeout-minutes: 120
+
+      # ── Push artifacts to remote cache ─────────────────────────────────
+      # Pushes all built artifacts (including transitive deps) so future
+      # builds can pull them.  Non-fatal: push failure must not fail the build.
+
+      - name: Push artifacts to remote cache
+        if: success()
+        continue-on-error: true
+        run: |
+          if [ ! -f /tmp/bazel-remote.pid ]; then
+            echo "Cache proxy not running, skipping push"
+            exit 0
+          fi
+
+          podman run --rm \
+            --privileged \
+            --device /dev/fuse \
+            --network=host \
+            -e CACHE_GRPC_PORT="${CACHE_GRPC_PORT}" \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            bash -c '
+              ulimit -n 1048576
+              bst --no-interactive \
+                  --config /src/buildstream-ci.conf \
+                  --artifact-remote=grpc://localhost:${CACHE_GRPC_PORT} \
+                  artifact push \
+                  --deps all \
+                  oci/bluefin.bst
+            '
 
       - name: Disk space after build
         if: always()
@@ -162,6 +248,30 @@ jobs:
           path: logs/
           retention-days: 7
           if-no-files-found: ignore
+
+      # ── Cache proxy cleanup ────────────────────────────────────────────
+
+      - name: Upload cache proxy logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-logs
+          path: /tmp/bazel-remote.log
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Stop cache proxy
+        if: always()
+        run: |
+          if [ -f /tmp/bazel-remote.pid ]; then
+            PID=$(cat /tmp/bazel-remote.pid)
+            if kill -0 "${PID}" 2>/dev/null; then
+              echo "Stopping bazel-remote (PID ${PID})"
+              kill "${PID}" || true
+              wait "${PID}" 2>/dev/null || true
+            fi
+            rm -f /tmp/bazel-remote.pid
+          fi
 
       # ── Publish to GHCR (main branch only) ───────────────────────────
 
