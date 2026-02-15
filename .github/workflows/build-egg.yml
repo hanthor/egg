@@ -126,15 +126,22 @@ jobs:
             cache-buildtrees: never
           BSTCONF
 
-          # If cache proxy is running, configure push-during-build
+          # If cache proxy is running, configure push-during-build.
+          # type: storage is critical -- bazel-remote only implements the CAS
+          # (storage) gRPC API, not the Remote Asset (index) API.  Without this,
+          # BuildStream tries the Remote Asset FetchBlob RPC first, gets
+          # UNIMPLEMENTED, and silently disables the entire remote (both index
+          # AND storage) due to a shared try/except in RemotePair.__init__.
           if [ -f /tmp/bazel-remote.pid ]; then
             cat >> buildstream-ci.conf <<BSTPUSH
           artifacts:
             servers:
               - url: "grpc://localhost:${CACHE_GRPC_PORT}"
+                type: storage
                 push: true
           BSTPUSH
             echo "Configured incremental artifact push to localhost:${CACHE_GRPC_PORT}"
+            cat buildstream-ci.conf
           fi
 
       # ── BuildStream build ─────────────────────────────────────────────
@@ -150,7 +157,7 @@ jobs:
           REMOTE_FLAG=""
           if [ -f /tmp/bazel-remote.pid ]; then
             NETWORK_FLAG="--network=host"
-            REMOTE_FLAG="--artifact-remote=grpc://localhost:${CACHE_GRPC_PORT}"
+            REMOTE_FLAG="--artifact-remote=url=grpc://localhost:${CACHE_GRPC_PORT},type=storage"
           fi
 
           podman run --rm \
@@ -201,10 +208,23 @@ jobs:
               bst --no-interactive \
                   --config /src/buildstream-ci.conf \
                   artifact push \
-                  --artifact-remote=grpc://localhost:${CACHE_GRPC_PORT} \
+                  --artifact-remote=url=grpc://localhost:${CACHE_GRPC_PORT},type=storage \
                   --deps all \
                   oci/bluefin.bst
             '
+
+      - name: Check cache proxy stats
+        if: always()
+        run: |
+          if [ -f /tmp/bazel-remote.pid ]; then
+            echo "=== bazel-remote status ==="
+            curl -sf "http://localhost:${CACHE_HTTP_PORT}/status" || echo "status endpoint unreachable"
+            echo ""
+            echo "=== last 50 lines of bazel-remote log ==="
+            tail -50 /tmp/bazel-remote.log 2>/dev/null || echo "no log file"
+          else
+            echo "Cache proxy was not running"
+          fi
 
       - name: Disk space after build
         if: always()
