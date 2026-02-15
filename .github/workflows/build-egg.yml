@@ -66,6 +66,8 @@ jobs:
   # patched (kernel config, openssh, lvm2) causing full rebuilds.
   warmup-sdk:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -97,6 +99,8 @@ jobs:
   warmup-desktop:
     needs: warmup-sdk
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -128,6 +132,8 @@ jobs:
   warmup-gnomeos:
     needs: warmup-desktop
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -157,6 +163,8 @@ jobs:
   # with all tiers above.
   warmup-ghostty:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
