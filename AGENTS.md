@@ -35,7 +35,7 @@ The build pipeline:
 .github/workflows/       CI/CD pipeline (GitHub Actions)
 docs/plans/              Implementation plans (source of truth for decisions)
 elements/                BuildStream element definitions (.bst files)
-  bluefin/               Bluefin-specific packages (brew, fonts, extensions, etc.)
+  bluefin/               Bluefin-specific packages (brew, fonts, extensions, ghostty, etc.)
   core/                  Core system component overrides (bootc, grub, ptyxis, etc.)
   oci/                   OCI image assembly -- build targets live here
     bluefin.bst          THE primary build target
