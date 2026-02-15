@@ -44,7 +44,7 @@ Quick-reference for authoring `.bst` elements in the bluefin-egg project. Look u
 | Source Kind | Use Case | Examples |
 |-------------|----------|---------|
 | `git_repo` | Most elements | brew, common, jetbrains-mono |
-| `tar` | Release tarballs | tailscale-x86_64, wallpapers |
+| `tar` | Release tarballs. Add `base-dir: ""` if the tarball has no wrapping directory (e.g., fzf ships a bare binary at root). Without it, BuildStream fails with `Could not find base directory matching pattern: *` | tailscale-x86_64, wallpapers, fzf |
 | `remote` | Single file download (not extracted) | brew-tarball. Use `directory:` to place into a subdirectory (critical for Zig offline builds) |
 | `local` | Files from repo's `files/` directory | plymouth-bluefin-theme |
 | `cargo2` | Rust crate vendoring | bootc, just. Generate with `files/scripts/generate_cargo_sources.py` from Cargo.lock |

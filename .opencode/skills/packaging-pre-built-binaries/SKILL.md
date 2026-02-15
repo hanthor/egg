@@ -187,6 +187,7 @@ This is a known gap. When working on pre-built binary elements, always check whe
 | Forget `%{install-extra}` | Breaks extensibility convention | Always end install-commands with it |
 | Wrong `install` argument order | Files installed to wrong location | Use `-t DIR FILE` form for clarity |
 | Forget preset file | Service not enabled on boot | Add `80-<name>.preset` with `enable` |
+| Tarball has no wrapping directory | `Could not find base directory matching pattern: *` | Add `base-dir: ""` to the `tar` source (common with Go single-binary releases like fzf) |
 
 ## Related Skills
 

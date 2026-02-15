@@ -53,7 +53,7 @@ digraph debug {
 
 ### 1. Source Fetch Failures
 
-**Symptoms:** `Failed to fetch`, `Connection refused`, `404 Not Found`, `ref not found`
+**Symptoms:** `Failed to fetch`, `Connection refused`, `404 Not Found`, `ref not found`, `Could not find base directory matching pattern`
 
 | Cause | Fix |
 |---|---|
@@ -62,6 +62,7 @@ digraph debug {
 | Network issue / GNOME CAS down | Retry; check connectivity to `gbm.gnome.org:11003` |
 | Missing source alias | Add alias to `include/aliases.yml` (see `buildstream-element-reference` skill) |
 | Tarball checksum mismatch | Source was updated without updating ref; `bst source track` to get new hash |
+| Tarball has no wrapping directory | Add `base-dir: ""` to the `tar` source. Common with Go binary releases (e.g., fzf ships a bare binary). See `buildstream-element-reference` skill for `base-dir` docs. |
 
 **Debug command:** `just bst source fetch <element>` -- isolates fetch from build.
 
