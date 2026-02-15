@@ -10,7 +10,7 @@ Bluefin's Primal Form -- smol. Local workflows prioritized.
 2. `just show-me-the-future`
 3. VM with Bluefin built on GNOME OS!
 4. WIP: Pushing to a locally run registry for super fast development!
-   - But also means a Dakotaraptor system can build itself. On a fast machine this can take about 2 minutes once the initial caching is complete!  
+   - But also means a Dakotaraptor system can build and host itself. On a fast machine this can take about 2 minutes once the initial caching is complete!  
 
 ## Make It Yours
 
