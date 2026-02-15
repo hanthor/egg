@@ -21,38 +21,51 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# ═══════════════════════════════════════════════════════════════════════
+# Build Pipeline Architecture
+# ═══════════════════════════════════════════════════════════════════════
+#
+# The gnomeos base layer is the heaviest part of the build. Both
+# junctions (freedesktop-sdk, gnome-build-meta) are patched so nothing
+# hits the upstream GNOME CAS cache -- everything is built from source.
+#
+# To avoid overwhelming a single free GitHub runner (6h timeout, ~50GB
+# disk after cleanup), the gnomeos build is split into a sequential
+# chain of jobs. Each job builds one tier of the dependency tree, pushes
+# artifacts to R2, and the next job pulls them as cached:
+#
+#   Tier 1: warmup-sdk      ─── freedesktop-sdk platform + GNOME SDK
+#           │                    (GCC, glibc, mesa, systemd, GTK4,
+#           │                     WebKit, GStreamer, ~hundreds of libs)
+#           ▼
+#   Tier 2: warmup-desktop  ─── GNOME desktop shell
+#           │                    (mutter, gnome-shell, GDM, nautilus,
+#           │                     gnome-control-center, ptyxis, etc.)
+#           ▼
+#   Tier 3: warmup-gnomeos  ─── GNOME OS image assembly
+#           │                    (Linux kernel, initramfs, bootc,
+#           │                     firmware, signed modules, OCI layer)
+#           ▼
+#   Tier 4: build           ─── Final Bluefin OCI image
+#                                (bluefin layer + gnomeos parent)
+#
+#   Independent (parallel with all tiers):
+#           warmup-ghostty  ─── Zig compile + 35 deps
+#
+# Each tier only builds incremental work on top of the previous tier's
+# cached artifacts, so no single runner needs to build the full stack.
+# ═══════════════════════════════════════════════════════════════════════
+
 jobs:
-  # ── JOB 1: WARMUP (Parallel Builds) ───────────────────────────────────
-  # Matrix of runners that each build a heavy independent subtree and push
-  # the resulting artifacts to R2. This distributes the work across
-  # multiple runners so no single runner hits the 6-hour timeout or fills
-  # its disk.
+  # ── TIER 1: SDK Platform ──────────────────────────────────────────────
+  # Build the entire freedesktop-sdk platform + GNOME SDK libraries.
+  # This is the foundation everything else depends on. Contains GCC,
+  # glibc, mesa, systemd, GTK4, WebKit, GStreamer, librsvg, mozjs, etc.
   #
-  # Split points are the heaviest elements that are independent of each
-  # other in the dependency graph:
-  #
-  #   - gnomeos   (full GNOME OS base layer -- builds the entire
-  #                freedesktop-sdk and gnome-build-meta from source
-  #                because both junctions are patched, so nothing
-  #                hits the upstream GNOME CAS cache. Includes the
-  #                Linux kernel, systemd, mutter, gnome-shell, bootc,
-  #                and hundreds of libraries.)
-  #   - ghostty   (Zig compile + 35 deps -- heaviest Bluefin-specific
-  #                element, independent of the gnomeos subtree)
-  #
-  # Note: core/bootc.bst is overridden into gnomeos via the
-  # gnome-build-meta junction (gnomeos-deps/bootc.bst: core/bootc.bst)
-  # so it is already built as part of the gnomeos target.
-  warmup:
+  # This is typically the heaviest single tier since freedesktop-sdk is
+  # patched (kernel config, openssh, lvm2) causing full rebuilds.
+  warmup-sdk:
     runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: oci/gnomeos.bst
-            name: gnomeos
-          - target: bluefin/ghostty.bst
-            name: ghostty
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -66,11 +79,7 @@ jobs:
           r2-endpoint: ${{ secrets.R2_ENDPOINT }}
           r2-bucket: ${{ env.R2_BUCKET }}
 
-      # ── BuildStream build (warmup target) ───────────────────────────
-      # Each matrix runner builds one heavy subtree. Artifacts are
-      # pushed to R2 afterwards so the assembly job can pull them.
-
-      - name: Build ${{ matrix.target }}
+      - name: Build SDK platform
         run: |
           podman run --rm \
             --privileged \
@@ -87,14 +96,9 @@ jobs:
                   --config /src/buildstream-ci.conf \
                   --log-file /src/logs/build.log \
                   build \
-                  ${{ matrix.target }}
+                  gnome-build-meta.bst:sdk-platform.bst
             '
         timeout-minutes: 300
-
-      # ── Sync artifacts to R2 ────────────────────────────────────────
-      # Push artifacts built by this warmup runner to R2 so the assembly
-      # job can pull them as cached. Always runs so partial progress is
-      # saved even on build failure.
 
       - name: Sync artifacts to R2
         if: always()
@@ -151,17 +155,318 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: buildstream-logs-warmup-${{ matrix.name }}
+          name: buildstream-logs-warmup-sdk
           path: logs/
           retention-days: 7
           if-no-files-found: ignore
 
-  # ── JOB 2: ASSEMBLY (Final Build) ─────────────────────────────────────
-  # Once the warmup runners have built and pushed the heavy dependencies,
-  # this job starts fresh, pulls all artifacts from R2 (fast -- just
-  # downloading, not building), and finishes the OCI image assembly.
+  # ── TIER 2: GNOME Desktop Shell ───────────────────────────────────────
+  # Build the GNOME desktop components: mutter, gnome-shell, GDM,
+  # gnome-control-center, nautilus, ptyxis, and all core OS services.
+  # Pulls SDK platform artifacts from R2 (built by tier 1).
+  warmup-desktop:
+    needs: warmup-sdk
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup BuildStream CI environment
+        uses: ./.github/actions/setup-bst
+        with:
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+
+      - name: Build GNOME desktop shell
+        run: |
+          podman run --rm \
+            --privileged \
+            --device /dev/fuse \
+            --network=host \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            bash -c '
+              ulimit -n 1048576 || true
+              bst --no-interactive \
+                  --colors \
+                  --config /src/buildstream-ci.conf \
+                  --log-file /src/logs/build.log \
+                  build \
+                  gnome-build-meta.bst:gnomeos-deps/deps.bst
+            '
+        timeout-minutes: 300
+
+      - name: Sync artifacts to R2
+        if: always()
+        continue-on-error: true
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: |
+          if [ -z "${R2_ACCESS_KEY}" ]; then
+            echo "R2 secrets not configured, skipping sync"
+            exit 0
+          fi
+
+          BST_CACHE="$HOME/.cache/buildstream"
+
+          echo "=== Local cache sizes ==="
+          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+
+          echo "=== CAS sync to R2 ==="
+          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+            --transfers=32 \
+            --checkers=64 \
+            --s3-upload-concurrency=4 \
+            --s3-chunk-size=16M \
+            --ignore-existing \
+            --fast-list \
+            --stats=10s \
+            --stats-one-line \
+            -v || echo "::warning::CAS sync to R2 failed"
+
+          echo "=== Artifact refs sync to R2 ==="
+          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Artifact refs sync to R2 failed"
+
+          echo "=== Source protos sync to R2 ==="
+          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Source protos sync to R2 failed"
+
+          echo "=== R2 sync complete ==="
+
+      - name: Disk space after build
+        if: always()
+        run: df -h /
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: buildstream-logs-warmup-desktop
+          path: logs/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ── TIER 3: GNOME OS Image ───────────────────────────────────────────
+  # Build the full GNOME OS OCI parent image: Linux kernel, initramfs,
+  # bootc, firmware, signed modules, and OCI layer assembly.
+  # Pulls desktop artifacts from R2 (built by tiers 1+2).
+  warmup-gnomeos:
+    needs: warmup-desktop
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup BuildStream CI environment
+        uses: ./.github/actions/setup-bst
+        with:
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+
+      - name: Build GNOME OS image
+        run: |
+          podman run --rm \
+            --privileged \
+            --device /dev/fuse \
+            --network=host \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            bash -c '
+              ulimit -n 1048576 || true
+              bst --no-interactive \
+                  --colors \
+                  --config /src/buildstream-ci.conf \
+                  --log-file /src/logs/build.log \
+                  build \
+                  oci/gnomeos.bst
+            '
+        timeout-minutes: 300
+
+      - name: Sync artifacts to R2
+        if: always()
+        continue-on-error: true
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: |
+          if [ -z "${R2_ACCESS_KEY}" ]; then
+            echo "R2 secrets not configured, skipping sync"
+            exit 0
+          fi
+
+          BST_CACHE="$HOME/.cache/buildstream"
+
+          echo "=== Local cache sizes ==="
+          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+
+          echo "=== CAS sync to R2 ==="
+          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+            --transfers=32 \
+            --checkers=64 \
+            --s3-upload-concurrency=4 \
+            --s3-chunk-size=16M \
+            --ignore-existing \
+            --fast-list \
+            --stats=10s \
+            --stats-one-line \
+            -v || echo "::warning::CAS sync to R2 failed"
+
+          echo "=== Artifact refs sync to R2 ==="
+          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Artifact refs sync to R2 failed"
+
+          echo "=== Source protos sync to R2 ==="
+          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Source protos sync to R2 failed"
+
+          echo "=== R2 sync complete ==="
+
+      - name: Disk space after build
+        if: always()
+        run: df -h /
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: buildstream-logs-warmup-gnomeos
+          path: logs/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ── INDEPENDENT: Ghostty ──────────────────────────────────────────────
+  # Zig compile + 35 deps. Independent of gnomeos -- runs in parallel
+  # with all tiers above.
+  warmup-ghostty:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup BuildStream CI environment
+        uses: ./.github/actions/setup-bst
+        with:
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+
+      - name: Build Ghostty
+        run: |
+          podman run --rm \
+            --privileged \
+            --device /dev/fuse \
+            --network=host \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            bash -c '
+              ulimit -n 1048576 || true
+              bst --no-interactive \
+                  --colors \
+                  --config /src/buildstream-ci.conf \
+                  --log-file /src/logs/build.log \
+                  build \
+                  bluefin/ghostty.bst
+            '
+        timeout-minutes: 300
+
+      - name: Sync artifacts to R2
+        if: always()
+        continue-on-error: true
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: |
+          if [ -z "${R2_ACCESS_KEY}" ]; then
+            echo "R2 secrets not configured, skipping sync"
+            exit 0
+          fi
+
+          BST_CACHE="$HOME/.cache/buildstream"
+
+          echo "=== Local cache sizes ==="
+          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+
+          echo "=== CAS sync to R2 ==="
+          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+            --transfers=32 \
+            --checkers=64 \
+            --s3-upload-concurrency=4 \
+            --s3-chunk-size=16M \
+            --ignore-existing \
+            --fast-list \
+            --stats=10s \
+            --stats-one-line \
+            -v || echo "::warning::CAS sync to R2 failed"
+
+          echo "=== Artifact refs sync to R2 ==="
+          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Artifact refs sync to R2 failed"
+
+          echo "=== Source protos sync to R2 ==="
+          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Source protos sync to R2 failed"
+
+          echo "=== R2 sync complete ==="
+
+      - name: Disk space after build
+        if: always()
+        run: df -h /
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: buildstream-logs-warmup-ghostty
+          path: logs/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ── TIER 4: FINAL ASSEMBLY ───────────────────────────────────────────
+  # Once all warmup tiers have built and pushed their artifacts, this job
+  # starts fresh, pulls everything from R2 (fast download, not rebuild),
+  # and finishes the Bluefin OCI image assembly.
   build:
-    needs: warmup
+    needs: [warmup-gnomeos, warmup-ghostty]
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -246,10 +551,14 @@ jobs:
           echo "Background R2 sync started (PID $(cat /tmp/r2-sync-loop.pid))"
 
       # ── BuildStream build ─────────────────────────────────────────────
-      # This build will be FAST because the heavy deps (gnomeos base
-      # layer with kernel/systemd/GNOME, and ghostty) were already built
-      # by the warmup matrix and their artifacts are in the R2 cache.
-      # BuildStream resolves them as cached and skips rebuilding.
+      # This build will be FAST because all heavy deps were already built
+      # by the warmup chain:
+      #   Tier 1: SDK platform (freedesktop-sdk + GNOME SDK)
+      #   Tier 2: GNOME desktop (mutter, gnome-shell, deps)
+      #   Tier 3: GNOME OS image (kernel, initramfs, bootc)
+      #   Independent: Ghostty (Zig compile)
+      # Their artifacts are in the R2 cache. BuildStream resolves them
+      # as cached and skips rebuilding.
       # Runs inside the bst2 container with:
       # - --privileged: required for bubblewrap sandboxing
       # - --device /dev/fuse: required for buildbox-fuse (ext4 lacks reflinks)
