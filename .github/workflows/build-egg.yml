@@ -48,9 +48,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target:
-          - oci/gnomeos.bst
-          - bluefin/ghostty.bst
+        include:
+          - target: oci/gnomeos.bst
+            name: gnomeos
+          - target: bluefin/ghostty.bst
+            name: ghostty
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -87,7 +89,7 @@ jobs:
                   build \
                   ${{ matrix.target }}
             '
-        timeout-minutes: 120
+        timeout-minutes: 300
 
       # ── Sync artifacts to R2 ────────────────────────────────────────
       # Push artifacts built by this warmup runner to R2 so the assembly
@@ -149,7 +151,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: buildstream-logs-warmup-${{ strategy.job-index }}
+          name: buildstream-logs-warmup-${{ matrix.name }}
           path: logs/
           retention-days: 7
           if-no-files-found: ignore
