@@ -26,7 +26,7 @@ Three mechanisms keep upstream sources current. Every skill that touches a depen
 | **Renovate** | GH Actions, bst2 image, bazel-remote, PyPI plugins, Nerd Fonts | `.github/renovate.json5` |
 | **`bst source track` workflow** | git-sourced elements (auto-merge group + manual-merge group) | `.github/workflows/track-bst-sources.yml` |
 | **`track-tarballs` job** | brew-tarball, wallpapers (bash/sed/gh-api) | same workflow, `track-tarballs` job |
-| **Nothing (gap)** | Tailscale, Ghostty, Zig, ghostty-gobject | needs future Renovate expansion |
+| **Nothing (gap)** | Tailscale, Zig | needs future Renovate expansion |
 
 ---
 
@@ -63,7 +63,7 @@ git commit -m "fix: add track-bst-sources.yml to Renovate bst2 image manager"
 - Create: `.opencode/skills/packaging-zig-projects/SKILL.md`
 
 **What this skill covers:**
-The Zig offline build pattern used by Ghostty -- the most complex element in the repo (293 lines). Agents packaging any Zig project need to understand:
+The Zig offline build pattern. Agents packaging any Zig project need to understand:
 - Using a pre-built Zig SDK as `build-depends` (reference `bluefin/zig.bst`)
 - Zig dependency caching: HTTP deps → `zig-deps/` directory, git deps → `place_git_dep()` shell function
 - The `zig fetch --global-cache-dir` + `zig build --system` offline build pattern
@@ -72,7 +72,7 @@ The Zig offline build pattern used by Ghostty -- the most complex element in the
 - GTK/Wayland/X11 integration flags
 - `strip-binaries: ""` is NOT needed (Zig produces ELF binaries)
 
-**Source material:** Read `elements/bluefin/ghostty.bst` (293 lines) and `elements/bluefin/zig.bst` (35 lines) as primary references.
+**Source material:** Read `elements/bluefin/zig.bst` (35 lines) and Zig build system documentation as primary references.
 
 **TDD steps:**
 
@@ -92,7 +92,7 @@ Write `SKILL.md` addressing the specific failures from baseline. Include:
 - The `place_git_dep()` function with explanation
 - The `zig fetch` + `zig build --system` command sequence
 - Common build flags table
-- Dependency tracking note: Ghostty + Zig are NOT tracked by any automation (manual updates only)
+- Dependency tracking note: Zig projects are NOT tracked by any automation (manual updates only)
 - Cross-reference to `packaging-pre-built-binaries` for the Zig SDK element
 - Common mistakes table
 
@@ -423,7 +423,7 @@ Key concepts:
 1. Add `collect_initial_scripts` to Element Kinds table
 2. Add Zig build pattern to Element Kinds (or add note pointing to `packaging-zig-projects`)
 3. Expand Go Packaging Approaches section with cross-reference to `packaging-go-projects`
-4. Add `remote` source with `directory:` option to Source Kinds (used by Ghostty zig deps)
+4. Add `remote` source with `directory:` option to Source Kinds (used by Zig deps)
 5. Add note about `generate_cargo_sources.py` helper in cargo2 section
 6. Add `overlap-whitelist` to Variables table
 7. Ensure the Rust/cargo pattern is represented (kind: `make` with `cargo2`, not `cargo`)
@@ -509,5 +509,5 @@ One commit per task. Convention: `feat: add <skill-name> skill` for new skills, 
 
 ## Future Work (Out of Scope)
 
-- **Renovate expansion**: Add custom managers for Tailscale, Ghostty, Zig, ghostty-gobject. Tracked as a separate plan.
+- **Renovate expansion**: Add custom managers for Tailscale, Zig. Tracked as a separate plan.
 - **Automated testing harness for skills**: Currently manual subagent testing. Could be automated.

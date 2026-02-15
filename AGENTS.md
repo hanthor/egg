@@ -35,7 +35,7 @@ The build pipeline:
 .github/workflows/       CI/CD pipeline (GitHub Actions)
 docs/plans/              Implementation plans (source of truth for decisions)
 elements/                BuildStream element definitions (.bst files)
-  bluefin/               Bluefin-specific packages (brew, fonts, extensions, ghostty, etc.)
+  bluefin/               Bluefin-specific packages (brew, fonts, extensions, etc.)
   core/                  Core system component overrides (bootc, grub, ptyxis, etc.)
   oci/                   OCI image assembly -- build targets live here
     bluefin.bst          THE primary build target
@@ -78,6 +78,20 @@ All BuildStream commands run inside the official bst2 container image (same one 
 **Skill:** Load `local-e2e-testing` for full prerequisites, troubleshooting, and environment variable reference.
 
 Requires BuildStream 2.5+ (provided by the bst2 container). The Justfile handles `bst build oci/bluefin.bst` followed by `bst artifact checkout --tar - | podman load`.
+
+### Local-First Development Policy
+
+**Local development is the default.** All build verification MUST happen locally before pushing to the remote. CI is a safety net, not the primary build environment.
+
+**Hard gate:** No code may be committed to `main` or pushed for PR without a local build log showing the affected elements build successfully. This means:
+
+1. **Before committing element changes:** Run `just bst build <element>` for the changed element(s)
+2. **Before pushing image-affecting changes:** Run `just build` (full OCI image build)
+3. **Build log evidence is required:** The `verification-before-completion` skill enforces this -- agents must show build command output before claiming success
+
+The rationale: CI runs take 30-60 minutes and consume shared resources. Local builds with a warm cache take minutes. Catching failures locally is faster, cheaper, and more respectful of the shared CI infrastructure.
+
+**Skill:** Load `local-e2e-testing` for the complete local development workflow -- it is the default workflow for all build work, not just "testing."
 
 ### project.conf
 

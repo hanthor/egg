@@ -1,6 +1,6 @@
 ---
 name: updating-upstream-refs
-description: Use when updating a package version, bumping upstream refs, wondering how dependency tracking works, or asking how to update Tailscale/Ghostty/Zig/junction refs in the Bluefin image
+description: Use when updating a package version, bumping upstream refs, wondering how dependency tracking works, or asking how to update Tailscale/Zig/junction refs in the Bluefin image
 ---
 
 # Updating Upstream Refs
@@ -96,7 +96,7 @@ For packages with `tar` or `remote` sources that aren't covered by Renovate or t
 
 ## Manual Version Bump Workflow
 
-**When:** Updating Tailscale, Ghostty, Zig, or any `tar`/`remote` source not in the other two mechanisms.
+**When:** Updating Tailscale, Zig, or any `tar`/`remote` source not in the other two mechanisms.
 
 ### Simple case (single tar source, e.g., Tailscale)
 
@@ -122,17 +122,6 @@ For packages with `tar` or `remote` sources that aren't covered by Renovate or t
    just build
    ```
 7. Commit: `chore(deps): update tailscale to v2.0.0`
-
-### Complex case (many sources, e.g., Ghostty)
-
-Ghostty has 1 `tar` source + ~34 `remote` Zig dependency sources. Updating requires:
-
-1. Update the primary source tarball URL and SHA256
-2. Update **every** Zig dependency URL and SHA256 to match the new version's `build.zig.zon`
-3. Update the `place_git_dep` hashes in the build commands if git-based Zig deps changed
-4. Update the `-Dversion-string=` flag in install-commands
-
-For Ghostty specifically, parse `build.zig.zon` from the new release to get all dependency URLs and hashes.
 
 ## Adding New Packages to Tracking
 
@@ -169,7 +158,6 @@ url:\s*github_files:(?<depName>ryanoasis/nerd-fonts)/releases/download/v(?<curre
 | Package | Source kind | Why not automated |
 |---|---|---|
 | Tailscale (x86_64 + aarch64) | `tar` | No `track:` field; not in Renovate |
-| Ghostty + ~34 Zig deps | `tar` + `remote` | Too many sources for simple regex; Zig hash complexity |
 | Zig compiler | `tar` | Pre-built binary; not in Renovate |
 
 These require manual version bumps following the workflow above.

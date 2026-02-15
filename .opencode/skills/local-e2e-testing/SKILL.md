@@ -7,7 +7,11 @@ description: Use when building the egg OCI image locally, testing changes end-to
 
 ## Overview
 
+**This is the default development workflow.** All build verification happens locally before pushing to the remote. CI is a safety net, not the primary build environment.
+
 Build Bluefin from source and boot it in a VM using three composable `just` recipes. All BuildStream commands run inside the bst2 container via podman -- no native BuildStream installation required.
+
+**Hard gate:** No code may be committed or pushed without a local build log showing affected elements build successfully. See `verification-before-completion` skill for the full gate function.
 
 ## Prerequisites
 
