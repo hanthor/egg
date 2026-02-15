@@ -90,6 +90,7 @@ generate-bootable-image $base_dir=base_dir $filesystem=filesystem:
         --via-loopback /data/bootable.raw \
         --filesystem "${filesystem}" \
         --wipe \
+        --composefs-backend \
         --bootloader systemd \
         --karg systemd.firstboot=no \
         --karg splash \
