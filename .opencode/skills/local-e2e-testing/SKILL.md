@@ -47,7 +47,12 @@ just bst show oci/bluefin.bst          # Show element details
 just bst build bluefin/brew.bst        # Build a single element
 just bst shell bluefin/brew.bst        # Interactive shell in build sandbox
 just bst artifact log oci/bluefin.bst  # View build logs
+just bst artifact delete <element.bst> # Delete cached artifact to reclaim disk
 ```
+
+## Cache Behavior
+
+BuildStream uses a local Content Addressable Storage (CAS) cache. The first build downloads and builds ~2000 elements (~1-2 hours depending on network). Once cached, only changed elements rebuild — subsequent builds with a warm cache typically take minutes. The cache lives in `~/.cache/buildstream/` (inside the bst2 container, mapped to the host). If disk runs low, use `just bst artifact delete <element>` to selectively reclaim space or remove the entire cache directory.
 
 ## Environment Variables
 
@@ -82,3 +87,8 @@ just bst artifact log oci/bluefin.bst  # View build logs
 ## Serial Debug Shell
 
 The disk image includes `systemd.debug_shell=ttyS1` as a kernel argument. In the QEMU console (stdio), you get access to this debug shell for troubleshooting boot issues without needing a graphical login.
+
+## Related Skills
+
+- **`debugging-bst-build-failures`** — When a build fails during local testing, use this skill for systematic diagnosis of BuildStream element failures
+- **`ci-pipeline-operations`** — Understanding how the full CI pipeline works, including remote artifact caching and image publishing to GHCR
