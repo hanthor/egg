@@ -26,7 +26,7 @@ Bluefin Egg is the "primal form" of [Project Bluefin](https://projectbluefin.io/
 
 The build pipeline:
 1. BuildStream resolves the dependency graph rooted at `oci/bluefin.bst`
-2. It pulls cached artifacts from GNOME's upstream CAS and our R2 cache
+2. It pulls cached artifacts from GNOME's upstream CAS and the local sticky disk cache
 3. Elements not in any cache are built from source inside bubblewrap sandboxes
 4. The final output is an OCI image containing a bootable Linux filesystem
 5. CI validates with `bootc container lint` and pushes to GHCR
@@ -120,59 +120,57 @@ The project configuration defines:
 - **Architecture options**: x86_64, aarch64, riscv64
 - **Source ref format**: `git-describe`
 
-**Important**: `project.conf` is shared between local dev and CI. CI-specific settings (like the R2 cache remote) are passed via CLI flags, NOT added to project.conf.
+**Important**: `project.conf` is shared between local dev and CI. CI-specific settings are passed via CLI flags, NOT added to project.conf.
 
 ## CI/CD Pipeline
 
 ### Workflow: `.github/workflows/build-egg.yml`
 
-Runs on `ubuntu-24.04`. Triggers on push to main, PRs against main, and manual dispatch.
+Runs on `blacksmith-8vcpu-ubuntu-2404`. Triggers on push to main, PRs against main, and manual dispatch.
 
-**Architecture**: BuildStream runs inside GNOME's official `bst2` Docker image via podman. This container needs `--privileged` and `--device /dev/fuse` for bubblewrap sandboxing. The container is NOT the GitHub Actions `container:` directive -- it's invoked via `podman run` because the disk-space-reclamation action needs host filesystem access.
+**Architecture**: BuildStream runs inside GNOME's official `bst2` Docker image via podman. This container needs `--privileged` and `--device /dev/fuse` for bubblewrap sandboxing. The container is NOT the GitHub Actions `container:` directive -- it's invoked via `podman run` because sticky disk mounts must happen on the host before being bind-mounted into the container.
 
 **Steps** (in order):
-1. Free disk space (removes pre-installed SDKs -- essential, builds need >50 GB)
-2. Checkout repository
-3. Pull bst2 container image
-4. Restore BuildStream source cache (`actions/cache`)
-5. Start bazel-remote cache proxy (main branch only)
-6. Generate CI-specific BuildStream config (`buildstream-ci.conf`)
-7. Build `oci/bluefin.bst` inside bst2 container
-8. Push artifacts to R2 cache (main branch only, non-fatal)
-9. Export OCI image (`bst artifact checkout --tar - | podman load`)
-10. Validate with `bootc container lint`
-11. Upload build logs and cache proxy logs
-12. Stop cache proxy
-13. Tag and push to GHCR (main branch only)
+1. Checkout repository
+2. Pull bst2 container image
+3. Mount BuildStream cache (sticky disk)
+4. Mount BuildStream sources (sticky disk)
+5. Prepare BuildStream cache layout (mkdir subdirs, symlink sources)
+6. Preseed CAS from R2 (cold cache only -- runs only when sticky disk is empty)
+7. Install just
+8. Generate CI-specific BuildStream config (`buildstream-ci.conf`)
+9. Build `oci/bluefin.bst` inside bst2 container
+10. Cache and disk status
+11. Export OCI image (`bst artifact checkout --tar - | podman load`)
+12. Verify image loaded
+13. Validate with `bootc container lint`
+14. Upload build logs
+15. Login to GHCR (main only)
+16. Tag image for GHCR (main only)
+17. Push to GHCR (main only)
 
 ### Artifact Caching
 
-Two layers of artifact caching:
+Two layers of artifact caching, backed by Blacksmith sticky disks:
 
-1. **GNOME upstream** (`gbm.gnome.org:11003`): Read-only. Configured in `project.conf`. Contains artifacts for freedesktop-sdk and gnome-build-meta elements. Available to all builds.
+1. **Sticky disk cache** (NVMe-backed Ceph): Two persistent disks that survive across CI runs (~3s mount time, auto-commit on job end, 7-day eviction). `bst-cache` holds `~/.cache/buildstream` (CAS + artifacts + source_protos). `bst-sources` holds `~/.cache/buildstream-sources` (source tarballs, symlinked into buildstream/sources/).
 
-2. **Project R2 cache** (Cloudflare R2 via `bazel-remote`): Read-write. Only active on main-branch pushes. Stores artifacts for Bluefin-specific elements that aren't in GNOME's cache.
+2. **GNOME upstream** (`gbm.gnome.org:11003`): Read-only. Configured in `project.conf`. Contains artifacts for freedesktop-sdk and gnome-build-meta elements. Available to all builds.
 
-The R2 cache uses `bazel-remote` v2.6.1 as a CAS-to-S3 bridge:
-- Runs on the GitHub Actions host (not inside the bst2 container)
-- Exposes gRPC CAS on port 9092, HTTP status on port 8080
-- The bst2 container reaches it via `--network=host`
-- BuildStream pulls from it during build via `--artifact-remote=grpc://localhost:9092`
-- A separate `bst artifact push` step uploads after a successful build
-- Binary integrity verified via SHA256 checksum
+3. **R2 cold preseed** (Cloudflare R2, read-only): Used only when the sticky disk is empty (first run or after 7-day eviction). Installs rclone on-demand, downloads CAS archive and metadata refs, then never touches R2 again until the next cold start.
 
-**Secrets** (configured on projectbluefin/egg):
+**Secrets** (configured on projectbluefin/egg, used only for R2 preseed):
 - `R2_ACCESS_KEY`: Cloudflare R2 access key ID
 - `R2_SECRET_KEY`: Cloudflare R2 secret access key
 - `R2_ENDPOINT`: R2 S3-compatible endpoint (`https://<ACCOUNT_ID>.r2.cloudflarestorage.com`)
-- R2 bucket name: `bst-cache` (hardcoded in workflow)
+- R2 bucket name: `bst-cache` (hardcoded in workflow env block)
 
 ### CI Config Rationale
 
 The `buildstream-ci.conf` generated during CI uses these settings:
 - `on-error: continue` -- Find ALL build failures, don't stop at first
 - `fetchers: 12` -- Parallel downloads from artifact caches
-- `builders: 1` -- GHA runners have 4 vCPUs; conservative to avoid OOM
+- `builders: 1` -- Conservative to avoid OOM on complex elements
 - `retry-failed: True` -- Auto-retry flaky builds
 - `error-lines: 80` -- Generous error context in logs
 - `cache-buildtrees: never` -- Save disk; only final artifacts matter
@@ -184,14 +182,11 @@ Read `docs/plans/` for full context and rationale. Summary:
 | Decision | Why |
 |---|---|
 | bst2 container via podman (not pip/Homebrew) | Consistent with GNOME upstream CI; avoids dependency conflicts |
-| CLI flags for CI cache config (not project.conf) | Avoids affecting local dev builds |
 | `on-error: continue` in CI | Find all failures in one run, not just the first |
-| R2 cache push only on main | PRs don't write to shared cache; avoids exposing secrets to fork PRs |
-| `bazel-remote` as CAS bridge | BuildStream needs gRPC CAS; R2 speaks S3; bazel-remote bridges them |
-| `--network=host` for bst2 container | Simplest way for container to reach host's cache proxy |
-| Separate `bst artifact push` step | BuildStream has no `--artifact-push` flag on `bst build`; push is a separate command |
-| Non-fatal cache push (`continue-on-error`) | Cache failures must not block image builds |
-| Disk space reclamation still needed | R2 cache reduces rebuild time but BuildStream's local CAS still needs >50 GB |
+| Blacksmith sticky disks for CI cache | NVMe-backed persistent storage; ~3s mount; no sync overhead; auto-commit on job end |
+| R2 as cold preseed only | Sticky disks are primary; R2 bootstraps empty disks after 7-day eviction |
+| No `actions/cache` for sources | Sticky disk replaces it; no 10 GB size limit, no upload/download step |
+| Non-fatal R2 preseed (`continue-on-error`) | Preseed failures must not block builds; sticky disk may already be warm |
 
 ## Working with Elements
 
