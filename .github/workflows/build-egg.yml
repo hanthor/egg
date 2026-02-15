@@ -58,21 +58,20 @@ jobs:
           mkdir -p "$HOME/.cache/buildstream/source_protos"
 
       # ── Restore cache from R2 ─────────────────────────────────────────
-      # CAS objects (the bulk of the cache, ~20GB+) are stored as a single
-      # zstd-compressed tar archive in R2. This is orders of magnitude
-      # faster than downloading 20,000+ individual files:
-      #   - 1 GET request instead of ~20,000 GETs + 256 LISTs + 20,000 HEADs
-      #   - Pure streaming I/O (rclone cat | zstd -d | tar x)
-      #   - zstd decompression at ~1.5 GB/s is faster than network delivery
-      #   - ~21GB compresses to ~7-10GB with zstd -9, cutting transfer time significantly
-      #
-      # Artifact refs and source protos are small metadata dirs (~12MB)
-      # kept as individual files for incremental sync.
+      # Self-hosted runner: the local cache persists between runs, so we
+      # only need R2 as a cold-start fallback (e.g. after runner reprovisioning).
+      # CAS objects are stored as a single zstd-compressed tar in R2.
+      # Artifact refs and source protos are small metadata dirs (~12MB).
 
       - name: Install rclone
         run: |
-          curl -fsSL https://rclone.org/install.sh | sudo bash
-          rclone version
+          if command -v rclone &>/dev/null; then
+            echo "rclone already installed"
+            rclone version
+          else
+            curl -fsSL https://rclone.org/install.sh | sudo bash
+            rclone version
+          fi
 
       - name: Restore BuildStream cache from R2
         env:
@@ -101,49 +100,63 @@ jobs:
 
           BST_CACHE="$HOME/.cache/buildstream"
 
-          echo "=== Restoring CAS objects from R2 (tar+zstd stream) ==="
-          # Single GET request for the entire CAS instead of ~20,000 individual GETs.
-          # Stream: R2 -> rclone cat -> zstd decompress -> tar extract
-          # Falls back gracefully on first run when cas.tar.zst doesn't exist yet.
-          RESTORE_START=$SECONDS
-          if rclone lsf "r2:${R2_BUCKET}/cas.tar.zst" >/dev/null 2>&1; then
-            if rclone cat "r2:${R2_BUCKET}/cas.tar.zst" \
-              --s3-no-head-object \
-              | zstd -d \
-              | tar xf - -C "${BST_CACHE}/"; then
-              echo "CAS restore completed in $(( SECONDS - RESTORE_START ))s"
-            else
-              echo "::warning::CAS tar+zstd restore failed (non-fatal, will build from scratch)"
-            fi
+          # Check if we already have a warm local cache (self-hosted runner persistence)
+          LOCAL_CAS_FILES=$(find "${BST_CACHE}/cas" -type f 2>/dev/null | head -100 | wc -l)
+          LOCAL_CAS_SIZE=$(du -sb "${BST_CACHE}/cas" 2>/dev/null | cut -f1 || echo 0)
+          echo "Local CAS: ${LOCAL_CAS_FILES}+ files, $(( LOCAL_CAS_SIZE / 1048576 )) MB"
+
+          if [ "$LOCAL_CAS_FILES" -ge 100 ]; then
+            echo "=== Local cache is warm (self-hosted runner persistence), skipping R2 restore ==="
+            echo "This saves ~2-5 minutes of downloading and extracting the tar archive."
           else
-            echo "No cas.tar.zst found in R2 (first run?), skipping CAS restore"
+            echo "=== Local cache is cold, restoring from R2 ==="
+            RESTORE_START=$SECONDS
+
+            echo "--- Checking for cas.tar.zst in R2 ---"
+            if rclone lsf "r2:${R2_BUCKET}/cas.tar.zst" -v 2>&1; then
+              echo "--- Found cas.tar.zst, downloading and extracting ---"
+              if rclone cat "r2:${R2_BUCKET}/cas.tar.zst" \
+                --s3-no-head-object \
+                -v \
+                | zstd -d \
+                | tar xf - -C "${BST_CACHE}/"; then
+                echo "CAS restore completed in $(( SECONDS - RESTORE_START ))s"
+                echo "Files restored: $(find "${BST_CACHE}/cas" -type f | head -100 | wc -l)+"
+              else
+                echo "::warning::CAS tar+zstd restore failed (exit code $?, non-fatal)"
+              fi
+            else
+              echo "No cas.tar.zst found in R2 (first run?), skipping CAS restore"
+            fi
+
+            echo "--- Restoring artifact refs from R2 ---"
+            rclone copy "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
+              --size-only \
+              --transfers=16 \
+              --checkers=8 \
+              --fast-list \
+              --s3-no-head-object \
+              --s3-no-system-metadata \
+              --no-update-modtime \
+              -v || echo "::warning::Artifact refs restore from R2 failed (non-fatal)"
+
+            echo "--- Restoring source protos from R2 ---"
+            rclone copy "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
+              --size-only \
+              --transfers=16 \
+              --checkers=8 \
+              --fast-list \
+              --s3-no-head-object \
+              --s3-no-system-metadata \
+              --no-update-modtime \
+              -v || echo "::warning::Source protos restore from R2 failed (non-fatal)"
           fi
-
-          echo "=== Restoring artifact refs from R2 ==="
-          rclone copy "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
-            --size-only \
-            --transfers=16 \
-            --checkers=8 \
-            --fast-list \
-            --s3-no-head-object \
-            --s3-no-system-metadata \
-            --no-update-modtime \
-            -v || echo "::warning::Artifact refs restore from R2 failed (non-fatal)"
-
-          echo "=== Restoring source protos from R2 ==="
-          rclone copy "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
-            --size-only \
-            --transfers=16 \
-            --checkers=8 \
-            --fast-list \
-            --s3-no-head-object \
-            --s3-no-system-metadata \
-            --no-update-modtime \
-            -v || echo "::warning::Source protos restore from R2 failed (non-fatal)"
 
           echo "=== Cache restore summary ==="
           du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
                  "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+          echo "=== CAS subdirectory breakdown ==="
+          du -sh "${BST_CACHE}/cas"/*/ 2>/dev/null || true
           df -h /
 
       # ── Generate CI-specific BuildStream config ───────────────────────
@@ -186,13 +199,12 @@ jobs:
           cat buildstream-ci.conf
 
       # ── Background R2 sync ──────────────────────────────────────────
-      # Incrementally push new CAS blobs to R2 every 2 minutes while the
-      # build runs, using per-file rclone copy. This ensures partial
-      # progress is saved even if the build times out or is cancelled.
-      # The final sync step creates the definitive tar+zstd archive;
-      # these per-file uploads serve as a safety net only.
-      # The loop runs on the host (not in the container) and has direct
-      # access to ~/.cache/buildstream/ via the bind mount.
+      # On a self-hosted runner the local cache persists, so continuous
+      # R2 uploads are less critical. We run a single mid-build tar+zstd
+      # snapshot to R2 as a safety net (in case the runner is lost), then
+      # the final sync step creates the definitive archive.
+      # No more per-file uploads — they bloated the bucket to 37GB with
+      # loose CAS objects that were never used for restore.
 
       - name: Start background R2 sync
         env:
@@ -211,51 +223,30 @@ jobs:
           set -euo pipefail
           BST_CACHE="$1"
           R2_BUCKET="$2"
-          INTERVAL=120  # seconds between sync cycles
+          INTERVAL=600  # every 10 minutes
 
-          echo "[r2-sync] Background sync started (every ${INTERVAL}s)"
+          echo "[r2-sync] Background tar+zstd sync started (every ${INTERVAL}s)"
           while true; do
             sleep "$INTERVAL"
-            echo "[r2-sync] $(date -Iseconds) Starting sync cycle..."
 
-            # CAS: copy only (never delete), skip existing (immutable blobs)
-            # --no-traverse: don't list R2, just check each local file individually
-            # --size-only: filename=SHA256 hash, size match = correct
-            rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-              --no-traverse \
-              --size-only \
-              --transfers=16 \
-              --checkers=4 \
-              --s3-no-head \
-              --s3-upload-concurrency=4 \
-              --s3-chunk-size=16M \
-              --s3-no-system-metadata \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] CAS sync warning (non-fatal)"
+            CAS_SIZE=$(du -sb "${BST_CACHE}/cas" 2>/dev/null | cut -f1 || echo 0)
+            echo "[r2-sync] $(date -Iseconds) CAS size: $(( CAS_SIZE / 1048576 )) MB, uploading tar+zstd snapshot..."
 
-            # Artifact refs: copy new/updated refs
+            tar cf - -C "${BST_CACHE}/" cas/ \
+              | zstd -T0 -3 \
+              | rclone rcat \
+                  --streaming-upload-cutoff 0 \
+                  --s3-chunk-size=64M \
+                  --s3-upload-concurrency=4 \
+                  "r2:${R2_BUCKET}/cas.tar.zst" \
+              && echo "[r2-sync] $(date -Iseconds) Snapshot uploaded" \
+              || echo "[r2-sync] $(date -Iseconds) Snapshot upload failed (non-fatal)"
+
+            # Also sync metadata (small, fast)
             rclone copy "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-              --no-traverse \
-              --size-only \
-              --transfers=8 \
-              --checkers=4 \
-              --s3-no-head \
-              --s3-no-system-metadata \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Artifacts sync warning (non-fatal)"
-
-            # Source protos: copy new/updated protos
+              --no-traverse --size-only --transfers=8 --s3-no-head -q 2>&1 || true
             rclone copy "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-              --no-traverse \
-              --size-only \
-              --transfers=8 \
-              --checkers=4 \
-              --s3-no-head \
-              --s3-no-system-metadata \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Source protos sync warning (non-fatal)"
-
-            echo "[r2-sync] $(date -Iseconds) Sync cycle complete"
+              --no-traverse --size-only --transfers=8 --s3-no-head -q 2>&1 || true
           done
           SYNCSCRIPT
           chmod +x /tmp/r2-sync-loop.sh
