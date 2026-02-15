@@ -54,8 +54,22 @@ jobs:
       # Artifact refs and source protos are small metadata dirs (~12MB).
 
       - name: Install rclone
+        env:
+          RCLONE_VERSION: "1.73.0"
+          # SHA256 of rclone-v1.73.0-linux-amd64.zip from GitHub releases
+          RCLONE_SHA256: "2a69bf23b6e937b03f4b6f71e97154543d81610b2e5d209e9a2b96b1f9c2d803"
         run: |
-          curl -fsSL https://rclone.org/install.sh | sudo bash
+          RCLONE_URL="https://github.com/rclone/rclone/releases/download/v${RCLONE_VERSION}/rclone-v${RCLONE_VERSION}-linux-amd64.zip"
+          echo "Downloading rclone v${RCLONE_VERSION}..."
+          curl -fsSL "$RCLONE_URL" -o /tmp/rclone.zip
+
+          echo "Verifying checksum..."
+          echo "${RCLONE_SHA256}  /tmp/rclone.zip" | sha256sum -c -
+
+          unzip -j /tmp/rclone.zip "rclone-v${RCLONE_VERSION}-linux-amd64/rclone" -d /tmp/
+          sudo install -m 755 /tmp/rclone /usr/local/bin/rclone
+          rm -f /tmp/rclone.zip /tmp/rclone
+
           rclone version
 
       - name: Install just
@@ -283,12 +297,21 @@ jobs:
           while true; do
             sleep "$INTERVAL"
 
+            # Check lock — final sync may have started
+            LOCK_FILE="/tmp/r2-sync.lock"
+            if [ -f "$LOCK_FILE" ]; then
+              echo "[r2-sync] Lock held by final sync, skipping this cycle"
+              continue
+            fi
+            touch "${LOCK_FILE}.bg"
+
             CAS_SIZE=$(du -sb "${BST_CACHE}/cas" 2>/dev/null | cut -f1 || echo 0)
             CAS_MB=$(( CAS_SIZE / 1048576 ))
             echo "[r2-sync] $(date -Iseconds) CAS size: ${CAS_MB} MB"
 
             if [ "$CAS_MB" -lt 100 ]; then
               echo "[r2-sync] CAS too small (${CAS_MB} MB), skipping upload"
+              rm -f "${LOCK_FILE}.bg"
               continue
             fi
 
@@ -317,10 +340,11 @@ jobs:
 
             # Sync metadata (small, fast)
             rclone copy "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-              --no-traverse --size-only --transfers=8 --s3-no-head -q 2>&1 || true
+              --no-traverse --size-only --transfers=8 -q 2>&1 || true
             rclone copy "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-              --no-traverse --size-only --transfers=8 --s3-no-head -q 2>&1 || true
+              --no-traverse --size-only --transfers=8 -q 2>&1 || true
 
+            rm -f "${LOCK_FILE}.bg"
             echo "[r2-sync] $(date -Iseconds) Sync cycle complete"
           done
           SYNCSCRIPT

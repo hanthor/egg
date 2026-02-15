@@ -67,6 +67,21 @@
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+
+    // ── rclone binary download in CI workflow ──
+    // Matches the version and SHA256 as env vars in the Install rclone step
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/\\.github/workflows/build-egg\\.yml$/"
+      ],
+      "matchStrings": [
+        "RCLONE_VERSION:\\s*\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\"\\n\\s+.*RCLONE_SHA256:\\s*\"(?<currentDigest>[a-f0-9]{64})\""
+      ],
+      "depNameTemplate": "rclone/rclone",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ],
 
@@ -83,6 +98,7 @@
       "matchUpdateTypes": ["patch"],
       "matchDepNames": [
         "buchgr/bazel-remote",
+        "rclone/rclone",
         "actions/checkout",
         "actions/cache",
         "actions/upload-artifact",
