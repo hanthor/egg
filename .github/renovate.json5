@@ -8,13 +8,14 @@
   "rebaseWhen": "never",
 
   "customManagers": [
-    // ── bst2 container image in CI workflow and Justfile ──
-    // Matches: BST2_IMAGE: registry.../bst2:<sha>
-    // Matches: bst2_image := env("BST2_IMAGE", "registry.../bst2:<sha>")
+    // ── bst2 container image in CI workflows and Justfile ──
+    // Matches: BST2_IMAGE: registry.../bst2:<sha>  (YAML env in workflows)
+    // Matches: bst2_image := env("BST2_IMAGE", "registry.../bst2:<sha>")  (Justfile)
     {
       "customType": "regex",
       "managerFilePatterns": [
         "/\\.github/workflows/build-egg\\.yml$/",
+        "/\\.github/workflows/track-bst-sources\\.yml$/",
         "/^Justfile$/"
       ],
       "matchStrings": [
