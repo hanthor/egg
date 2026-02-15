@@ -2,8 +2,7 @@ kind: script
 
 build-depends:
   - gnome-build-meta.bst:freedesktop-sdk.bst:components/fakecap.bst
-  # - gnome-build-meta.bst:freedesktop-sdk.bst:components/oci-builder.bst
-  - core/build-oci-rs.bst
+  - gnome-build-meta.bst:freedesktop-sdk.bst:components/oci-builder.bst
   - freedesktop-sdk.bst:components/glib.bst
   - gnome-build-meta.bst:freedesktop-sdk.bst:vm/prepare-image.bst
   - oci/layers/bluefin-init-scripts.bst
@@ -37,9 +36,19 @@ config:
     - |
       glib-compile-schemas /layer/usr/share/glib-2.0/schemas
 
+    # bootc images must not have both /etc and /usr/etc.
+    # /usr/etc is an ostree implementation detail generated client-side;
+    # the image should only ship /etc.
+    - |
+      if [ -d /layer/usr/etc ]; then
+        mkdir -p /layer/etc
+        cp -a /layer/usr/etc/. /layer/etc/
+        rm -rf /layer/usr/etc
+      fi
+
     - |
       cd "%{install-root}"
-      build-oci -j %{max-jobs} <<EOF
+      build-oci <<EOF
       mode: oci
       gzip: disabled
       images:
