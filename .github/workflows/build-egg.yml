@@ -66,6 +66,7 @@ jobs:
   # patched (kernel config, openssh, lvm2) causing full rebuilds.
   warmup-sdk:
     runs-on: ubuntu-24.04
+    timeout-minutes: 300
     permissions:
       contents: read
     steps:
@@ -99,6 +100,7 @@ jobs:
   warmup-desktop:
     needs: warmup-sdk
     runs-on: ubuntu-24.04
+    timeout-minutes: 300
     permissions:
       contents: read
     steps:
@@ -132,6 +134,7 @@ jobs:
   warmup-gnomeos:
     needs: warmup-desktop
     runs-on: ubuntu-24.04
+    timeout-minutes: 300
     permissions:
       contents: read
     steps:
@@ -163,6 +166,7 @@ jobs:
   # with all tiers above.
   warmup-ghostty:
     runs-on: ubuntu-24.04
+    timeout-minutes: 300
     permissions:
       contents: read
     steps:

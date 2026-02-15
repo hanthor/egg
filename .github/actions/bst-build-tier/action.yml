@@ -26,10 +26,6 @@ inputs:
     description: R2 bucket name for BuildStream cache
     required: false
     default: bst-cache
-  timeout-minutes:
-    description: Timeout for the build step in minutes
-    required: false
-    default: '300'
   artifact-name:
     description: Name for the uploaded build log artifact
     required: true
@@ -57,7 +53,6 @@ runs:
                 build \
                 ${{ inputs.target }}
           '
-      timeout-minutes: ${{ fromJSON(inputs.timeout-minutes) }}
 
     - name: Sync artifacts to R2
       if: always()
