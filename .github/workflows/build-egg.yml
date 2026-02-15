@@ -79,86 +79,16 @@ jobs:
           r2-endpoint: ${{ secrets.R2_ENDPOINT }}
           r2-bucket: ${{ env.R2_BUCKET }}
 
-      - name: Build SDK platform
-        run: |
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --colors \
-                  --config /src/buildstream-ci.conf \
-                  --log-file /src/logs/build.log \
-                  build \
-                  gnome-build-meta.bst:sdk-platform.bst
-            '
-        timeout-minutes: 300
-
-      - name: Sync artifacts to R2
-        if: always()
-        continue-on-error: true
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Local cache sizes ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-
-          echo "=== CAS sync to R2 ==="
-          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
-            --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS sync to R2 failed"
-
-          echo "=== Artifact refs sync to R2 ==="
-          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs sync to R2 failed"
-
-          echo "=== Source protos sync to R2 ==="
-          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos sync to R2 failed"
-
-          echo "=== R2 sync complete ==="
-
-      - name: Disk space after build
-        if: always()
-        run: df -h /
-
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Build and sync SDK platform
+        uses: ./.github/actions/bst-build-tier
         with:
-          name: buildstream-logs-warmup-sdk
-          path: logs/
-          retention-days: 7
-          if-no-files-found: ignore
+          target: gnome-build-meta.bst:sdk-platform.bst
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+          artifact-name: buildstream-logs-warmup-sdk
 
   # ── TIER 2: GNOME Desktop Shell ───────────────────────────────────────
   # Build the GNOME desktop components: mutter, gnome-shell, GDM,
@@ -180,86 +110,16 @@ jobs:
           r2-endpoint: ${{ secrets.R2_ENDPOINT }}
           r2-bucket: ${{ env.R2_BUCKET }}
 
-      - name: Build GNOME desktop shell
-        run: |
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --colors \
-                  --config /src/buildstream-ci.conf \
-                  --log-file /src/logs/build.log \
-                  build \
-                  gnome-build-meta.bst:gnomeos-deps/deps.bst
-            '
-        timeout-minutes: 300
-
-      - name: Sync artifacts to R2
-        if: always()
-        continue-on-error: true
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Local cache sizes ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-
-          echo "=== CAS sync to R2 ==="
-          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
-            --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS sync to R2 failed"
-
-          echo "=== Artifact refs sync to R2 ==="
-          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs sync to R2 failed"
-
-          echo "=== Source protos sync to R2 ==="
-          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos sync to R2 failed"
-
-          echo "=== R2 sync complete ==="
-
-      - name: Disk space after build
-        if: always()
-        run: df -h /
-
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Build and sync GNOME desktop
+        uses: ./.github/actions/bst-build-tier
         with:
-          name: buildstream-logs-warmup-desktop
-          path: logs/
-          retention-days: 7
-          if-no-files-found: ignore
+          target: gnome-build-meta.bst:gnomeos-deps/deps.bst
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+          artifact-name: buildstream-logs-warmup-desktop
 
   # ── TIER 3: GNOME OS Image ───────────────────────────────────────────
   # Build the full GNOME OS OCI parent image: Linux kernel, initramfs,
@@ -281,86 +141,16 @@ jobs:
           r2-endpoint: ${{ secrets.R2_ENDPOINT }}
           r2-bucket: ${{ env.R2_BUCKET }}
 
-      - name: Build GNOME OS image
-        run: |
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --colors \
-                  --config /src/buildstream-ci.conf \
-                  --log-file /src/logs/build.log \
-                  build \
-                  oci/gnomeos.bst
-            '
-        timeout-minutes: 300
-
-      - name: Sync artifacts to R2
-        if: always()
-        continue-on-error: true
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Local cache sizes ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-
-          echo "=== CAS sync to R2 ==="
-          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
-            --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS sync to R2 failed"
-
-          echo "=== Artifact refs sync to R2 ==="
-          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs sync to R2 failed"
-
-          echo "=== Source protos sync to R2 ==="
-          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos sync to R2 failed"
-
-          echo "=== R2 sync complete ==="
-
-      - name: Disk space after build
-        if: always()
-        run: df -h /
-
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Build and sync GNOME OS image
+        uses: ./.github/actions/bst-build-tier
         with:
-          name: buildstream-logs-warmup-gnomeos
-          path: logs/
-          retention-days: 7
-          if-no-files-found: ignore
+          target: oci/gnomeos.bst
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+          artifact-name: buildstream-logs-warmup-gnomeos
 
   # ── INDEPENDENT: Ghostty ──────────────────────────────────────────────
   # Zig compile + 35 deps. Independent of gnomeos -- runs in parallel
@@ -380,86 +170,16 @@ jobs:
           r2-endpoint: ${{ secrets.R2_ENDPOINT }}
           r2-bucket: ${{ env.R2_BUCKET }}
 
-      - name: Build Ghostty
-        run: |
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --colors \
-                  --config /src/buildstream-ci.conf \
-                  --log-file /src/logs/build.log \
-                  build \
-                  bluefin/ghostty.bst
-            '
-        timeout-minutes: 300
-
-      - name: Sync artifacts to R2
-        if: always()
-        continue-on-error: true
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Local cache sizes ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-
-          echo "=== CAS sync to R2 ==="
-          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
-            --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS sync to R2 failed"
-
-          echo "=== Artifact refs sync to R2 ==="
-          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs sync to R2 failed"
-
-          echo "=== Source protos sync to R2 ==="
-          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos sync to R2 failed"
-
-          echo "=== R2 sync complete ==="
-
-      - name: Disk space after build
-        if: always()
-        run: df -h /
-
-      - name: Upload build logs
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Build and sync Ghostty
+        uses: ./.github/actions/bst-build-tier
         with:
-          name: buildstream-logs-warmup-ghostty
-          path: logs/
-          retention-days: 7
-          if-no-files-found: ignore
+          target: bluefin/ghostty.bst
+          bst2-image: ${{ env.BST2_IMAGE }}
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          r2-bucket: ${{ env.R2_BUCKET }}
+          artifact-name: buildstream-logs-warmup-ghostty
 
   # ── TIER 4: FINAL ASSEMBLY ───────────────────────────────────────────
   # Once all warmup tiers have built and pushed their artifacts, this job

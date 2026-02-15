@@ -1,0 +1,123 @@
+name: BuildStream Build Tier
+description: |
+  Build a single BuildStream target and sync artifacts to R2.
+  Used by warmup jobs to avoid duplicating the build+sync pattern.
+
+inputs:
+  target:
+    description: BuildStream element to build (e.g. oci/gnomeos.bst)
+    required: true
+  bst2-image:
+    description: BuildStream 2 container image reference
+    required: true
+  r2-access-key:
+    description: Cloudflare R2 access key ID
+    required: false
+    default: ''
+  r2-secret-key:
+    description: Cloudflare R2 secret access key
+    required: false
+    default: ''
+  r2-endpoint:
+    description: Cloudflare R2 S3-compatible endpoint
+    required: false
+    default: ''
+  r2-bucket:
+    description: R2 bucket name for BuildStream cache
+    required: false
+    default: bst-cache
+  timeout-minutes:
+    description: Timeout for the build step in minutes
+    required: false
+    default: '300'
+  artifact-name:
+    description: Name for the uploaded build log artifact
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build ${{ inputs.target }}
+      shell: bash
+      run: |
+        podman run --rm \
+          --privileged \
+          --device /dev/fuse \
+          --network=host \
+          -v "$GITHUB_WORKSPACE:/src:rw" \
+          -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+          -w /src \
+          "${{ inputs.bst2-image }}" \
+          bash -c '
+            ulimit -n 1048576 || true
+            bst --no-interactive \
+                --colors \
+                --config /src/buildstream-ci.conf \
+                --log-file /src/logs/build.log \
+                build \
+                ${{ inputs.target }}
+          '
+      timeout-minutes: ${{ fromJSON(inputs.timeout-minutes) }}
+
+    - name: Sync artifacts to R2
+      if: always()
+      continue-on-error: true
+      shell: bash
+      env:
+        R2_ACCESS_KEY: ${{ inputs.r2-access-key }}
+        R2_SECRET_KEY: ${{ inputs.r2-secret-key }}
+        R2_ENDPOINT: ${{ inputs.r2-endpoint }}
+        R2_BUCKET: ${{ inputs.r2-bucket }}
+      run: |
+        if [ -z "${R2_ACCESS_KEY}" ]; then
+          echo "R2 secrets not configured, skipping sync"
+          exit 0
+        fi
+
+        BST_CACHE="$HOME/.cache/buildstream"
+
+        echo "=== Local cache sizes ==="
+        du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+               "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+
+        echo "=== CAS sync to R2 ==="
+        rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+          --transfers=32 \
+          --checkers=64 \
+          --s3-upload-concurrency=4 \
+          --s3-chunk-size=16M \
+          --ignore-existing \
+          --fast-list \
+          --stats=10s \
+          --stats-one-line \
+          -v || echo "::warning::CAS sync to R2 failed"
+
+        echo "=== Artifact refs sync to R2 ==="
+        rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+          --transfers=16 \
+          --checkers=32 \
+          --fast-list \
+          -v || echo "::warning::Artifact refs sync to R2 failed"
+
+        echo "=== Source protos sync to R2 ==="
+        rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+          --transfers=16 \
+          --checkers=32 \
+          --fast-list \
+          -v || echo "::warning::Source protos sync to R2 failed"
+
+        echo "=== R2 sync complete ==="
+
+    - name: Disk space after build
+      if: always()
+      shell: bash
+      run: df -h /
+
+    - name: Upload build logs
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: logs/
+        retention-days: 7
+        if-no-files-found: ignore
