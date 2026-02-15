@@ -68,10 +68,10 @@ sources:
     ref: a05fd01e04cf11ab781e28387c621d2e420f1e6044c8e27a25e603ea99ef7860
     directory: zig-deps
 
-  - kind: remote
-    url: github_files:mbadolato/iTerm2-Color-Schemes/releases/download/release-20251002-142451-4a5043e/ghostty-themes.tgz
-    ref: 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
-    directory: zig-deps
+  # NOTE: iTerm2-Color-Schemes ghostty-themes.tgz removed — the upstream
+  # GitHub release was deleted (404). This is safe because Ghostty's
+  # emit_themes defaults to false; themes are a lazy dependency only
+  # fetched when -Demit-themes=true is passed to zig build.
 
   - kind: remote
     url: ghostty_deps:JetBrainsMono-2.304.tar.gz
