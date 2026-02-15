@@ -8,8 +8,6 @@ depends:
   - bluefin/brew.bst
   - bluefin/brew-tarball.bst
 
-  - bluefin/ghostty.bst
-
   - bluefin/tailscale.bst
 
   - bluefin/common.bst
