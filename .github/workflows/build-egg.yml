@@ -14,8 +14,12 @@ env:
   CACHE_GRPC_PORT: 9092
   CACHE_HTTP_PORT: 8080
 
+# On PRs: group by branch so new pushes cancel stale runs.
+# On main: group by SHA so every push gets its own non-cancellable run.
+# (GitHub cancels even pending/queued runs in the same group regardless of
+#  cancel-in-progress when a newer run arrives, so main needs unique groups.)
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -55,10 +59,10 @@ jobs:
 
       # ── Remote cache sidecar ──────────────────────────────────────────
       # bazel-remote speaks CAS gRPC (compatible with BuildStream) and
-      # proxies to Cloudflare R2 via S3.  Only enabled on main pushes.
+      # proxies to Cloudflare R2 via S3.
 
       - name: Start bazel-remote cache proxy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: ${{ secrets.R2_ACCESS_KEY != '' }}
         env:
           R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
           R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
@@ -126,12 +130,10 @@ jobs:
             cache-buildtrees: never
           BSTCONF
 
-          # If cache proxy is running, configure push-during-build.
-          # type: storage is critical -- bazel-remote only implements the CAS
-          # (storage) gRPC API, not the Remote Asset (index) API.  Without this,
-          # BuildStream tries the Remote Asset FetchBlob RPC first, gets
-          # UNIMPLEMENTED, and silently disables the entire remote (both index
-          # AND storage) due to a shared try/except in RemotePair.__init__.
+          # If cache proxy is running, add it as an artifact remote.
+          # type: storage is critical -- bazel-remote only implements CAS,
+          # not Remote Asset API. Without this BuildStream silently disables
+          # the remote entirely.
           if [ -f /tmp/bazel-remote.pid ]; then
             cat >> buildstream-ci.conf <<BSTPUSH
           artifacts:
@@ -140,7 +142,6 @@ jobs:
                 type: storage
                 push: true
           BSTPUSH
-            echo "Configured incremental artifact push to localhost:${CACHE_GRPC_PORT}"
             cat buildstream-ci.conf
           fi
 
