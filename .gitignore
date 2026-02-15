@@ -15,3 +15,6 @@
 # Skills are committed; everything else is ignored
 .opencode/*
 !.opencode/skills/
+
+# Git worktrees
+.worktrees/
