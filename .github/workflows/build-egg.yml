@@ -11,8 +11,7 @@ env:
   IMAGE_NAME: egg
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
-  CACHE_GRPC_PORT: 9092
-  CACHE_HTTP_PORT: 8080
+  R2_BUCKET: bst-cache
 
 # On PRs: group by branch so new pushes cancel stale runs.
 # On main: group by SHA so every push gets its own non-cancellable run.
@@ -57,66 +56,95 @@ jobs:
           restore-keys: |
             bst-sources-
 
-      - name: Disk space before build
-        run: df -h /
-
       - name: Prepare BuildStream cache directory
-        run: mkdir -p "$HOME/.cache/buildstream/sources"
+        run: |
+          mkdir -p "$HOME/.cache/buildstream/sources"
+          mkdir -p "$HOME/.cache/buildstream/cas"
+          mkdir -p "$HOME/.cache/buildstream/artifacts"
+          mkdir -p "$HOME/.cache/buildstream/source_protos"
 
-      # ── Remote cache sidecar ──────────────────────────────────────────
-      # bazel-remote speaks CAS gRPC (compatible with BuildStream) and
-      # proxies to Cloudflare R2 via S3.
+      # ── Restore cache from R2 ─────────────────────────────────────────
+      # Use rclone to sync BuildStream's CAS and artifact metadata from
+      # Cloudflare R2. rclone only transfers files that differ (by size
+      # and checksum), making this incremental. The CAS is content-
+      # addressed so files never change — only new blobs are downloaded.
 
-      - name: Start bazel-remote cache proxy
+      - name: Install rclone
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+          rclone version
+
+      - name: Restore BuildStream cache from R2
         env:
           R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
           R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
           R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
         run: |
           if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping cache proxy"
+            echo "R2 secrets not configured, skipping cache restore"
             exit 0
           fi
 
-          curl -fsSL -o /tmp/bazel-remote \
-            "https://github.com/buchgr/bazel-remote/releases/download/v2.6.1/bazel-remote-2.6.1-linux-amd64"
-          echo "025d53aeb03a7fdd4a0e76262a5ae9eeee9f64d53ca510deff1c84cf3f276784  /tmp/bazel-remote" | sha256sum -c -
-          chmod +x /tmp/bazel-remote
+          # Configure rclone for Cloudflare R2 (S3-compatible)
+          mkdir -p ~/.config/rclone
+          cat > ~/.config/rclone/rclone.conf <<EOF
+          [r2]
+          type = s3
+          provider = Cloudflare
+          access_key_id = $R2_ACCESS_KEY
+          secret_access_key = $R2_SECRET_KEY
+          endpoint = $R2_ENDPOINT
+          no_check_bucket = true
+          EOF
+          # Strip leading whitespace from config (heredoc is indented in YAML)
+          sed -i 's/^[[:space:]]*//' ~/.config/rclone/rclone.conf
 
-          /tmp/bazel-remote \
-            --s3.endpoint="${R2_ENDPOINT}" \
-            --s3.bucket="bst-cache" \
-            --s3.prefix="cas" \
-            --s3.auth_method=access_key \
-            --s3.access_key_id="${R2_ACCESS_KEY}" \
-            --s3.secret_access_key="${R2_SECRET_KEY}" \
-            --dir=/tmp/bazel-remote-cache \
-            --max_size=5 \
-            --http_address="0.0.0.0:${CACHE_HTTP_PORT}" \
-            --grpc_address="0.0.0.0:${CACHE_GRPC_PORT}" \
-            > /tmp/bazel-remote.log 2>&1 &
-          echo $! > /tmp/bazel-remote.pid
+          BST_CACHE="$HOME/.cache/buildstream"
 
-          # Health check: wait up to 30 seconds for the HTTP endpoint
-          for i in $(seq 1 30); do
-            if curl -sf "http://localhost:${CACHE_HTTP_PORT}/status" > /dev/null 2>&1; then
-              echo "bazel-remote is healthy (attempt ${i})"
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "::error::bazel-remote failed to start within 30 seconds"
-          cat /tmp/bazel-remote.log
-          exit 1
+          echo "=== Restoring CAS objects from R2 ==="
+          rclone sync "r2:${R2_BUCKET}/cas/" "${BST_CACHE}/cas/" \
+            --transfers=32 \
+            --checkers=64 \
+            --fast-list \
+            --stats=10s \
+            --stats-one-line \
+            -v || echo "::warning::CAS restore from R2 failed (non-fatal)"
+
+          echo "=== Restoring artifact refs from R2 ==="
+          rclone sync "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Artifact refs restore from R2 failed (non-fatal)"
+
+          echo "=== Restoring source protos from R2 ==="
+          rclone sync "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Source protos restore from R2 failed (non-fatal)"
+
+          echo "=== Cache restore summary ==="
+          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+          df -h /
+
+      - name: Disk space before build
+        run: df -h /
 
       # ── Generate CI-specific BuildStream config ───────────────────────
       # Tuned per gnome-build-meta CI patterns:
       # - on-error: continue  -> find ALL failures, don't stop at first
-      # - fetchers: 32        -> aggressive parallel downloads from cache
-      # - builders: 1         -> GHA has 4 vCPUs; nproc/4 = 1
+      # - fetchers: 12        -> parallel downloads from upstream caches
+      # - builders: 1         -> GHA has 4 vCPUs; single builder avoids OOM
       # - retry-failed: True  -> auto-retry flaky builds
       # - error-lines: 80     -> generous error context in logs
       # - cache-buildtrees: never -> save disk (we only need final artifacts)
+      #
+      # No remote artifact server is configured. BuildStream uses only:
+      # 1. Local disk cache (restored from R2 above)
+      # 2. Upstream GNOME caches defined in project.conf (read-only)
+      # After the build, rclone syncs everything back to R2.
 
       - name: Generate BuildStream CI config
         run: |
@@ -140,62 +168,74 @@ jobs:
             cache-buildtrees: never
           BSTCONF
 
-          # If cache proxy is running, add it as an artifact remote.
-          # type: storage is critical -- bazel-remote only implements CAS,
-          # not Remote Asset API. Without this BuildStream silently disables
-          # the remote entirely.
-          if [ -f /tmp/bazel-remote.pid ]; then
-            cat >> buildstream-ci.conf <<BSTPUSH
-          artifacts:
-            servers:
-              - url: "grpc://localhost:${CACHE_GRPC_PORT}"
-                type: storage
-                push: true
-          BSTPUSH
-            cat buildstream-ci.conf
-          fi
+          echo "=== BuildStream CI config ==="
+          cat buildstream-ci.conf
 
-      # ── Seed R2 cache with upstream artifacts ────────────────────────
-      # Pull all available artifacts from GNOME upstream into the local
-      # CAS, then push them to R2 via the cache proxy. This ensures R2
-      # accumulates upstream artifacts over time so future builds can
-      # pull entirely from R2 instead of depending on GNOME's server.
-      # Non-fatal: this is an optimization, not a build requirement.
+      # ── Background R2 sync ──────────────────────────────────────────
+      # Start a background loop that pushes new CAS blobs to R2 every
+      # 2 minutes while the build runs. This ensures the R2 cache is
+      # filled incrementally even if the build times out or is cancelled.
+      # The loop runs on the host (not in the container) and has direct
+      # access to ~/.cache/buildstream/ via the bind mount.
 
-      - name: Seed R2 cache with upstream artifacts
-        if: always()
-        continue-on-error: true
+      - name: Start background R2 sync
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
         run: |
-          if [ ! -f /tmp/bazel-remote.pid ]; then
-            echo "Cache proxy not running, skipping seed"
+          if [ -z "${R2_ACCESS_KEY}" ]; then
+            echo "R2 secrets not configured, skipping background sync"
             exit 0
           fi
 
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              echo "=== Pulling artifacts from GNOME upstream ==="
-              bst --no-interactive \
-                  --config /src/buildstream-ci.conf \
-                  artifact pull \
-                  --deps all \
-                  oci/bluefin.bst || true
+          BST_CACHE="$HOME/.cache/buildstream"
 
-              echo "=== Pushing fetched artifacts to R2 cache ==="
-              bst --no-interactive \
-                  --config /src/buildstream-ci.conf \
-                  artifact push \
-                  --deps all \
-                  --ignore-project-artifact-remotes \
-                  oci/bluefin.bst || true
-            '
+          cat > /tmp/r2-sync-loop.sh <<'SYNCSCRIPT'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          BST_CACHE="$1"
+          R2_BUCKET="$2"
+          INTERVAL=120  # seconds between sync cycles
+
+          echo "[r2-sync] Background sync started (every ${INTERVAL}s)"
+          while true; do
+            sleep "$INTERVAL"
+            echo "[r2-sync] $(date -Iseconds) Starting sync cycle..."
+
+            # CAS: copy only (never delete), skip existing (immutable blobs)
+            rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+              --ignore-existing \
+              --transfers=16 \
+              --checkers=32 \
+              --fast-list \
+              --stats=0 \
+              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] CAS sync warning (non-fatal)"
+
+            # Artifact refs: sync (metadata can change)
+            rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+              --transfers=8 \
+              --checkers=16 \
+              --fast-list \
+              --stats=0 \
+              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Artifacts sync warning (non-fatal)"
+
+            # Source protos: sync (metadata can change)
+            rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+              --transfers=8 \
+              --checkers=16 \
+              --fast-list \
+              --stats=0 \
+              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Source protos sync warning (non-fatal)"
+
+            echo "[r2-sync] $(date -Iseconds) Sync cycle complete"
+          done
+          SYNCSCRIPT
+          chmod +x /tmp/r2-sync-loop.sh
+
+          nohup /tmp/r2-sync-loop.sh "$BST_CACHE" "$R2_BUCKET" \
+            > /tmp/r2-sync-loop.log 2>&1 &
+          echo $! > /tmp/r2-sync-loop.pid
+          echo "Background R2 sync started (PID $(cat /tmp/r2-sync-loop.pid))"
 
       # ── BuildStream build ─────────────────────────────────────────────
       # Runs inside the bst2 container with:
@@ -206,15 +246,10 @@ jobs:
 
       - name: Build OCI image with BuildStream
         run: |
-          NETWORK_FLAG=""
-          if [ -f /tmp/bazel-remote.pid ]; then
-            NETWORK_FLAG="--network=host"
-          fi
-
           podman run --rm \
             --privileged \
             --device /dev/fuse \
-            ${NETWORK_FLAG} \
+            --network=host \
             -v "${{ github.workspace }}:/src:rw" \
             -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
@@ -230,48 +265,71 @@ jobs:
             '
         timeout-minutes: 120
 
-      # ── Push artifacts to remote cache ─────────────────────────────────
-      # Safety net: ensures all artifacts are pushed even if incremental
-      # push-during-build missed some.  Non-fatal.
+      # ── Final R2 sync ───────────────────────────────────────────────
+      # Stop the background sync loop, then do one final thorough sync
+      # to catch any blobs created since the last background cycle.
+      # Always runs (even on build failure) so partial progress is saved.
 
-      - name: Push artifacts to remote cache
+      - name: Final sync to R2
         if: always()
         continue-on-error: true
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
         run: |
-          if [ ! -f /tmp/bazel-remote.pid ]; then
-            echo "Cache proxy not running, skipping push"
+          # Stop background sync loop
+          if [ -f /tmp/r2-sync-loop.pid ]; then
+            PID=$(cat /tmp/r2-sync-loop.pid)
+            if kill -0 "$PID" 2>/dev/null; then
+              echo "Stopping background R2 sync (PID $PID)"
+              kill "$PID" || true
+              wait "$PID" 2>/dev/null || true
+            fi
+            rm -f /tmp/r2-sync-loop.pid
+          fi
+
+          echo "=== Background sync log (last 30 lines) ==="
+          tail -30 /tmp/r2-sync-loop.log 2>/dev/null || echo "(no log)"
+
+          if [ -z "${R2_ACCESS_KEY}" ]; then
+            echo "R2 secrets not configured, skipping final sync"
             exit 0
           fi
 
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --config /src/buildstream-ci.conf \
-                  artifact push \
-                  --deps all \
-                  oci/bluefin.bst
-            '
+          BST_CACHE="$HOME/.cache/buildstream"
 
-      - name: Check cache proxy stats
-        if: always()
-        run: |
-          if [ -f /tmp/bazel-remote.pid ]; then
-            echo "=== bazel-remote status ==="
-            curl -sf "http://localhost:${CACHE_HTTP_PORT}/status" || echo "status endpoint unreachable"
-            echo ""
-            echo "=== last 50 lines of bazel-remote log ==="
-            tail -50 /tmp/bazel-remote.log 2>/dev/null || echo "no log file"
-          else
-            echo "Cache proxy was not running"
-          fi
+          echo "=== Local cache sizes ==="
+          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
+                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
+
+          echo "=== Final CAS sync to R2 ==="
+          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+            --transfers=32 \
+            --checkers=64 \
+            --s3-upload-concurrency=4 \
+            --s3-chunk-size=16M \
+            --ignore-existing \
+            --fast-list \
+            --stats=10s \
+            --stats-one-line \
+            -v || echo "::warning::CAS sync to R2 failed"
+
+          echo "=== Final artifact refs sync to R2 ==="
+          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Artifact refs sync to R2 failed"
+
+          echo "=== Final source protos sync to R2 ==="
+          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            --transfers=16 \
+            --checkers=32 \
+            --fast-list \
+            -v || echo "::warning::Source protos sync to R2 failed"
+
+          echo "=== R2 final sync complete ==="
 
       - name: Disk space after build
         if: always()
@@ -350,30 +408,6 @@ jobs:
           path: logs/
           retention-days: 7
           if-no-files-found: ignore
-
-      # ── Cache proxy cleanup ────────────────────────────────────────────
-
-      - name: Upload cache proxy logs
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: bazel-remote-logs
-          path: /tmp/bazel-remote.log
-          retention-days: 7
-          if-no-files-found: ignore
-
-      - name: Stop cache proxy
-        if: always()
-        run: |
-          if [ -f /tmp/bazel-remote.pid ]; then
-            PID=$(cat /tmp/bazel-remote.pid)
-            if kill -0 "${PID}" 2>/dev/null; then
-              echo "Stopping bazel-remote (PID ${PID})"
-              kill "${PID}" || true
-              wait "${PID}" 2>/dev/null || true
-            fi
-            rm -f /tmp/bazel-remote.pid
-          fi
 
       # ── Publish to GHCR (main branch only) ───────────────────────────
 
