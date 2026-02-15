@@ -2,10 +2,11 @@ kind: manual
 
 build-depends:
   - freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+  - freedesktop-sdk.bst:components/sed.bst
 
 sources:
   - kind: tar
-    url: github_files:tailscale/tailscale/releases/download/v1.94.2/tailscale_1.94.2_amd64.tgz
+    url: tailscale_pkgs:tailscale_1.94.2_amd64.tgz
     ref: c6f99a5d774c7783b56902188d69e9756fc3dddfb08ac6be4cb2585f3fecdc32
 
 variables:
