@@ -58,10 +58,15 @@ jobs:
           mkdir -p "$HOME/.cache/buildstream/source_protos"
 
       # ── Restore cache from R2 ─────────────────────────────────────────
-      # Use rclone to sync BuildStream's CAS and artifact metadata from
-      # Cloudflare R2. rclone only transfers files that differ (by size
-      # and checksum), making this incremental. The CAS is content-
-      # addressed so files never change — only new blobs are downloaded.
+      # Use rclone to copy BuildStream's CAS and artifact metadata from
+      # Cloudflare R2. Key optimizations:
+      # - --size-only: CAS filenames ARE SHA256 hashes, so if a file
+      #   exists with the right size it is correct. Avoids expensive
+      #   per-object HEAD requests for modtime comparison.
+      # - --s3-no-head-object: skip HEAD before GET (saves 1 API call/file)
+      # - --no-update-modtime: don't set local modtime after download
+      # - --buffer-size 0: stream directly to disk, don't buffer in RAM
+      # - rclone copy (not sync): never delete local files
 
       - name: Install rclone
         run: |
@@ -96,26 +101,39 @@ jobs:
           BST_CACHE="$HOME/.cache/buildstream"
 
           echo "=== Restoring CAS objects from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/cas/" "${BST_CACHE}/cas/" \
+          rclone copy "r2:${R2_BUCKET}/cas/" "${BST_CACHE}/cas/" \
+            --size-only \
             --transfers=32 \
-            --checkers=64 \
+            --checkers=16 \
             --fast-list \
+            --s3-no-head-object \
+            --s3-no-system-metadata \
+            --no-update-modtime \
+            --buffer-size=0 \
             --stats=10s \
             --stats-one-line \
             -v || echo "::warning::CAS restore from R2 failed (non-fatal)"
 
           echo "=== Restoring artifact refs from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
+          rclone copy "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
+            --size-only \
             --transfers=16 \
-            --checkers=32 \
+            --checkers=8 \
             --fast-list \
+            --s3-no-head-object \
+            --s3-no-system-metadata \
+            --no-update-modtime \
             -v || echo "::warning::Artifact refs restore from R2 failed (non-fatal)"
 
           echo "=== Restoring source protos from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
+          rclone copy "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
+            --size-only \
             --transfers=16 \
-            --checkers=32 \
+            --checkers=8 \
             --fast-list \
+            --s3-no-head-object \
+            --s3-no-system-metadata \
+            --no-update-modtime \
             -v || echo "::warning::Source protos restore from R2 failed (non-fatal)"
 
           echo "=== Cache restore summary ==="
@@ -197,27 +215,39 @@ jobs:
             echo "[r2-sync] $(date -Iseconds) Starting sync cycle..."
 
             # CAS: copy only (never delete), skip existing (immutable blobs)
+            # --no-traverse: don't list R2, just check each local file individually
+            # --size-only: filename=SHA256 hash, size match = correct
             rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-              --ignore-existing \
+              --no-traverse \
+              --size-only \
               --transfers=16 \
-              --checkers=32 \
-              --fast-list \
+              --checkers=4 \
+              --s3-no-head \
+              --s3-upload-concurrency=4 \
+              --s3-chunk-size=16M \
+              --s3-no-system-metadata \
               --stats=0 \
               -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] CAS sync warning (non-fatal)"
 
-            # Artifact refs: sync (metadata can change)
-            rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            # Artifact refs: copy new/updated refs
+            rclone copy "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+              --no-traverse \
+              --size-only \
               --transfers=8 \
-              --checkers=16 \
-              --fast-list \
+              --checkers=4 \
+              --s3-no-head \
+              --s3-no-system-metadata \
               --stats=0 \
               -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Artifacts sync warning (non-fatal)"
 
-            # Source protos: sync (metadata can change)
-            rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            # Source protos: copy new/updated protos
+            rclone copy "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+              --no-traverse \
+              --size-only \
               --transfers=8 \
-              --checkers=16 \
-              --fast-list \
+              --checkers=4 \
+              --s3-no-head \
+              --s3-no-system-metadata \
               --stats=0 \
               -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Source protos sync warning (non-fatal)"
 
@@ -298,29 +328,40 @@ jobs:
                  "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
 
           echo "=== Final CAS sync to R2 ==="
+          # --no-traverse: don't list all of R2, check each local file individually
+          # --size-only: filename=hash, size match = correct, skip modtime HEAD
+          # --s3-no-head: skip HEAD after PUT (trust the upload succeeded)
           rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
+            --no-traverse \
+            --size-only \
             --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
+            --checkers=8 \
+            --s3-no-head \
+            --s3-upload-concurrency=8 \
             --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
+            --s3-no-system-metadata \
             --stats=10s \
             --stats-one-line \
             -v || echo "::warning::CAS sync to R2 failed"
 
           echo "=== Final artifact refs sync to R2 ==="
           rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
+            --size-only \
             --transfers=16 \
-            --checkers=32 \
+            --checkers=8 \
             --fast-list \
+            --s3-no-head \
+            --s3-no-system-metadata \
             -v || echo "::warning::Artifact refs sync to R2 failed"
 
           echo "=== Final source protos sync to R2 ==="
           rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
+            --size-only \
             --transfers=16 \
-            --checkers=32 \
+            --checkers=8 \
             --fast-list \
+            --s3-no-head \
+            --s3-no-system-metadata \
             -v || echo "::warning::Source protos sync to R2 failed"
 
           echo "=== R2 final sync complete ==="
