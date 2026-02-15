@@ -406,6 +406,21 @@ jobs:
           echo "=== Background sync log (last 30 lines) ==="
           tail -30 /tmp/r2-sync-loop.log 2>/dev/null || echo "(no log)"
 
+          # Acquire sync lock (prevent background sync from starting new uploads)
+          LOCK_FILE="/tmp/r2-sync.lock"
+          touch "$LOCK_FILE"
+
+          # Wait for any in-progress background upload to finish (max 60s)
+          echo "Waiting for background sync to release..."
+          for i in $(seq 1 60); do
+            [ ! -f "${LOCK_FILE}.bg" ] && break
+            sleep 1
+          done
+          if [ -f "${LOCK_FILE}.bg" ]; then
+            echo "::warning::Background sync did not release lock after 60s, proceeding anyway"
+            rm -f "${LOCK_FILE}.bg"
+          fi
+
           if [ -z "${R2_ACCESS_KEY}" ]; then
             echo "R2 secrets not configured, skipping final sync"
             exit 0
@@ -468,8 +483,6 @@ jobs:
             --transfers=16 \
             --checkers=8 \
             --fast-list \
-            --s3-no-head \
-            --s3-no-system-metadata \
             -v; then
             ARTIFACTS_UPLOADED=true
             echo "✓ Artifact refs synced in $(( SECONDS - ARTIFACTS_UPLOAD_START ))s"
@@ -486,8 +499,6 @@ jobs:
             --transfers=16 \
             --checkers=8 \
             --fast-list \
-            --s3-no-head \
-            --s3-no-system-metadata \
             -v; then
             PROTOS_UPLOADED=true
             echo "✓ Source protos synced in $(( SECONDS - PROTOS_UPLOAD_START ))s"
