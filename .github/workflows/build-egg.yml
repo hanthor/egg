@@ -338,15 +338,17 @@ jobs:
       # Uses the Justfile's `export` recipe: checks out the OCI image
       # layout from BuildStream, loads it into podman via skopeo, and
       # applies the /usr/etc bootc fixup. Same logic as local builds.
+      # Creates image with local name (egg:latest) to avoid registry
+      # lookups during validation.
 
       - name: Export OCI image from BuildStream
         id: export
         env:
           BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
-          BUILD_IMAGE_NAME: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}
+          BUILD_IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
           just export
-          echo "image_ref=${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
+          echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
       - name: Verify image loaded
         run: podman images
@@ -355,11 +357,9 @@ jobs:
 
       - name: Validate with bootc container lint
         run: |
-          # Use containers-storage: prefix to ensure we use the local image
-          # and don't try to pull from the registry
           podman run --rm --privileged \
             -v /var/lib/containers:/var/lib/containers \
-            "containers-storage:${{ steps.export.outputs.image_ref }}" \
+            "${{ steps.export.outputs.image_ref }}" \
             bootc container lint
 
       # ── Upload build logs ─────────────────────────────────────────────
@@ -385,6 +385,8 @@ jobs:
       - name: Tag image for GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
+          podman tag "${{ steps.export.outputs.image_ref }}" \
+            "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           podman tag "${{ steps.export.outputs.image_ref }}" \
             "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
