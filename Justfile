@@ -10,8 +10,8 @@ filesystem := env("BUILD_FILESYSTEM", "btrfs")
 bst2_image := env("BST2_IMAGE", "registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1")
 
 # VM settings
-vm_ram := env("VM_RAM", "4096")
-vm_cpus := env("VM_CPUS", "2")
+vm_ram := env("VM_RAM", "8192")
+vm_cpus := env("VM_CPUS", "4")
 
 # ── BuildStream wrapper ──────────────────────────────────────────────
 # Runs any bst command inside the bst2 container via podman.
@@ -85,6 +85,12 @@ export:
     echo "==> Export complete. Image loaded as {{image_name}}:{{image_tag}}"
     $SUDO_CMD podman images | grep -E "{{image_name}}|REPOSITORY" || true
 
+# ── Clean ─────────────────────────────────────────────────────────────
+# Remove generated artifacts (disk image, OVMF vars, build output).
+clean:
+    rm -f bootable.raw .ovmf-vars.fd
+    rm -rf .build-out
+
 # ── Containerfile build (alternative) ────────────────────────────────
 build-containerfile $image_name=image_name:
     sudo podman build --security-opt label=type:unconfined_t --squash-all -t "${image_name}:latest" .
@@ -104,6 +110,12 @@ bootc *ARGS:
 generate-bootable-image $base_dir=base_dir $filesystem=filesystem:
     #!/usr/bin/env bash
     set -euo pipefail
+
+    if ! sudo podman image exists "{{image_name}}:{{image_tag}}"; then
+        echo "ERROR: Image '{{image_name}}:{{image_tag}}' not found in podman." >&2
+        echo "Run 'just build' first to build and export the OCI image." >&2
+        exit 1
+    fi
 
     if [ ! -e "${base_dir}/bootable.raw" ] ; then
         echo "==> Creating 30G sparse disk image..."
