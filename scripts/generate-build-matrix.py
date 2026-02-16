@@ -71,7 +71,7 @@ def main():
     
     # Output JSON for GHA
     # We produce a map where keys are 'chunk1', 'chunk2', etc.
-    output = {}
+    matrix_map = {}
     for i, chunk in enumerate(chunks):
         if not chunk:
             continue
@@ -92,10 +92,15 @@ def main():
         key = f"chunk{i+1}-{safe_name}"
         
         # Join with space for passing to bst build
-        output[key] = " ".join(chunk)
+        matrix_map[key] = " ".join(chunk)
         print(f"{key}: {len(chunk)} elements (ends with {representative})", file=sys.stderr)
 
-    print(json.dumps(output))
+    # Structure: { "matrix": { "chunk1": "...", ... }, "final": "target" }
+    final_output = {
+        "matrix": matrix_map,
+        "final": target
+    }
+    print(json.dumps(final_output))
 
 if __name__ == "__main__":
     main()

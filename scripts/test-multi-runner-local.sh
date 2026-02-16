@@ -37,7 +37,18 @@ import os
 with open('matrix.json') as f:
     data = json.load(f)
 
-for chunk_name, elements in data.items():
+# Handle new format {\"matrix\": ..., \"final\": ...} or old flat format
+if \"matrix\" in data:
+    matrix_data = data[\"matrix\"]
+    final_target = data[\"final\"]
+else:
+    matrix_data = data
+    final_target = \"oci/bluefin.bst\"
+
+with open('final_target.txt', 'w') as f:
+    f.write(final_target)
+
+for chunk_name, elements in matrix_data.items():
     if not elements.strip():
         print(f'Skipping empty {chunk_name}')
         continue
@@ -65,7 +76,7 @@ for chunk_name, elements in data.items():
     # Simulate artifact upload (creating tarball)
     print(f'Archiving CAS for {chunk_name}...')
     # We tar the contents of .cache/buildstream from the host perspective
-    subprocess.run(['tar', '-cf', f'cas-{chunk_name}.tar', '-C', cache_dir, 'cas', 'artifacts', 'source_protos'], check=True)
+    subprocess.run(['tar', '-cf', f'cas-{chunk_name}.tar', '-C', cache_dir, '--exclude', 'cas/staging', '--exclude', 'cas/tmp', 'cas', 'artifacts', 'source_protos'], check=True)
 
 "
 
@@ -85,13 +96,27 @@ for tar in cas-*.tar; do
     fi
 done
 
-echo "=== Exporting Final Image ==="
+FINAL_TARGET=$(cat final_target.txt)
+echo "=== Building Final Target: $FINAL_TARGET ==="
 podman run --rm --privileged --device /dev/fuse \
     -v "${WORK_DIR}:/src:rw" \
     -v "${MERGE_CACHE}:/root/.cache/buildstream:rw" \
     -w /src \
     "$BST2_IMAGE" \
-    bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar - oci/bluefin.bst' | podman load
+    bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-final.log build $FINAL_TARGET"
+
+echo "=== Exporting Final Image ==="
+# Checkout to file
+podman run --rm --privileged --device /dev/fuse \
+    -v "${WORK_DIR}:/src:rw" \
+    -v "${MERGE_CACHE}:/root/.cache/buildstream:rw" \
+    -w /src \
+    "$BST2_IMAGE" \
+    bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar image.tar $FINAL_TARGET"
+
+# Load
+podman load -i image.tar
+rm -f image.tar
 
 echo "=== Build Complete ==="
 # Cleanup

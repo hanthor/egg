@@ -24,6 +24,7 @@ jobs:
     outputs:
       matrix_keys: ${{ steps.matrix.outputs.matrix_keys }}
       matrix_data: ${{ steps.matrix.outputs.matrix_data }}
+      final_target: ${{ steps.matrix.outputs.final_target }}
     steps:
       - name: Free disk space
         uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
@@ -69,9 +70,11 @@ jobs:
 
           cat matrix.json
           # Output keys for strategy.matrix (e.g. ["chunk1", "chunk2"])
-          python3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_keys={json.dumps(list(data.keys()))}')" >> "$GITHUB_OUTPUT"
+          python3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_keys={json.dumps(list(data[\"matrix\"].keys()))}')" >> "$GITHUB_OUTPUT"
           # Output full data for looking up targets (e.g. {"chunk1": "target1 target2"})
-          python3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_data={json.dumps(data)}')" >> "$GITHUB_OUTPUT"
+          python3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_data={json.dumps(data[\"matrix\"])}')" >> "$GITHUB_OUTPUT"
+          # Output final target
+          python3 -c "import json; data = json.load(open('matrix.json')); print(f'final_target={data[\"final\"]}')" >> "$GITHUB_OUTPUT"
 
       - name: Upload planning logs
         if: always()
@@ -82,7 +85,7 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
-  build:
+  build_deps:
     needs: planning
     runs-on: ubuntu-24.04
     strategy:
@@ -141,8 +144,8 @@ jobs:
           path: logs/
           retention-days: 7
 
-  export:
-    needs: [planning, build]
+  build_final:
+    needs: [planning, build_deps]
     if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-24.04
     permissions:
@@ -180,6 +183,15 @@ jobs:
           echo "CAS merge complete."
           du -sh ~/.cache/buildstream
 
+      - name: Build Final Target
+        id: build_final
+        run: |
+          podman run --rm --privileged --device /dev/fuse \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src "$BST2_IMAGE" \
+            bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-final.log build ${{ needs.planning.outputs.final_target }}"
+
       # Ensure everything is pulled/built/merged before export
       # The final build should be very fast as everything is in CAS
       - name: Export OCI image from BuildStream
@@ -190,7 +202,7 @@ jobs:
             -v "${{ github.workspace }}:/src:rw" \
             -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src "$BST2_IMAGE" \
-            bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar image.tar oci/bluefin.bst'
+            bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar image.tar ${{ needs.planning.outputs.final_target }}'
           
           # Load the image
           LOADED=$(podman load -i image.tar)
