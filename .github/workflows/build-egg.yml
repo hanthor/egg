@@ -46,7 +46,8 @@ jobs:
           mkdir -p .cache/buildstream
           mkdir -p logs
           # Run the script inside container to ensure python/bst environment matches
-          podman run --rm \
+          podman run --rm --privileged --device /dev/fuse \
+            --security-opt apparmor=unconfined --cap-add SYS_ADMIN \
             -v "${{ github.workspace }}:/src:rw" \
             -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
