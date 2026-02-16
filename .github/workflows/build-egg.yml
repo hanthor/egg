@@ -37,14 +37,14 @@ jobs:
         uses: useblacksmith/stickydisk@v1
         with:
           key: ${{ github.repository }}-bst-cache
-          path: ~/.cache/buildstream
+          path: /home/runner/.cache/buildstream
 
       - name: Prepare BuildStream cache layout
         run: |
-          mkdir -p ~/.cache/buildstream/{cas,artifacts,source_protos,sources}
+          mkdir -p /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources}
           echo "=== Sticky disk status ==="
-          du -sh ~/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
-          df -h ~/.cache/buildstream
+          du -sh /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
+          df -h /home/runner/.cache/buildstream
 
       - name: Install just
         run: |
@@ -107,13 +107,13 @@ jobs:
         if: always()
         run: |
           echo "=== Disk usage ==="
-          df -h ~/.cache/buildstream / 2>/dev/null || df -h /
+          df -h /home/runner/.cache/buildstream / 2>/dev/null || df -h /
           echo ""
           echo "=== BuildStream cache breakdown ==="
-          du -sh ~/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
+          du -sh /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
           echo ""
           echo "=== Total ==="
-          du -sh ~/.cache/buildstream/ 2>/dev/null || true
+          du -sh /home/runner/.cache/buildstream/ 2>/dev/null || true
 
       # ── Export OCI image ──────────────────────────────────────────────
       # Uses the Justfile's `export` recipe: checks out the OCI image
