@@ -37,6 +37,22 @@ jobs:
       - name: Pull BuildStream container image
         run: podman pull "$BST2_IMAGE"
 
+      - name: Cache BuildStream sources
+        uses: actions/cache@v4
+        with:
+          path: .cache/buildstream/sources
+          key: bst-sources-${{ runner.os }}-${{ hashFiles('project.conf', 'elements/**/*.bst') }}
+          restore-keys: |
+            bst-sources-${{ runner.os }}-
+
+      - name: Cache BuildStream sources
+        uses: actions/cache@v4
+        with:
+          path: .cache/buildstream/sources
+          key: bst-sources-${{ runner.os }}-${{ hashFiles('project.conf', 'elements/**/*.bst') }}
+          restore-keys: |
+            bst-sources-${{ runner.os }}-
+
       - name: Generate BuildStream CI config
         run: ./scripts/setup-buildstream.sh
 
