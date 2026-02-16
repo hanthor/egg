@@ -123,7 +123,7 @@ jobs:
           # This is heavyIO but allows moving the state.
           echo "Archiving CAS..."
           du -sh ~/.cache/buildstream
-          tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" cas artifacts source_protos
+          tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" --exclude "cas/staging" --exclude "cas/tmp" cas artifacts source_protos
 
       - name: Upload CAS Artifact
         if: steps.build.outputs.skipped != 'true'
