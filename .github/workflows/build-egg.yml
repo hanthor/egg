@@ -43,6 +43,7 @@ jobs:
       - name: Generate Build Matrix
         id: matrix
         run: |
+          mkdir -p ~/.cache/buildstream
           mkdir -p logs
           # Run the script inside container to ensure python/bst environment matches
           podman run --rm \

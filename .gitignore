@@ -19,3 +19,6 @@
 # Git worktrees
 .worktrees/
 .cache
+buildstream/
+chunkah/
+gnome-build-meta/
