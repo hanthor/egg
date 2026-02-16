@@ -214,9 +214,16 @@ jobs:
           if [ -d "$HOME/.cache/buildstream" ]; then
             ls -F "$HOME/.cache/buildstream"
             du -sh ~/.cache/buildstream
-            # Exclude staging/tmp to keep artifact small
-            # Archive everything in .cache/buildstream to avoid errors with missing dirs (like source_protos)
-            tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" . --exclude "cas/staging" --exclude "cas/tmp"
+            
+            # Use absolute path for output
+            OUTPUT_TAR="${{ github.workspace }}/cas-${{ matrix.chunk }}.tar"
+            
+            # cd into directory to ensure dot (.) works as expected
+            cd "$HOME/.cache/buildstream"
+            tar -cf "$OUTPUT_TAR" . --exclude "cas/staging" --exclude "cas/tmp"
+            
+            # Verify creation
+            ls -lh "$OUTPUT_TAR"
           else
             echo "Cache directory not found!"
             exit 1
