@@ -54,14 +54,14 @@ digraph decide {
 | Group | Elements | PR behavior |
 |---|---|---|
 | **auto-merge** | brew, common, jetbrains-mono, 6 shell extensions, build-oci-rs | Squash-merged automatically |
-| **manual-merge** | gnome-build-meta, freedesktop-sdk, bootc, grub, ptyxis, efibootmgr | PR created, requires human review |
+| **manual-merge** | gnome-build-meta, freedesktop-sdk, grub, ptyxis, efibootmgr | PR created, requires human review |
 | **tarballs** | brew-tarball, wallpapers | Custom bash script checks GitHub Releases API, updates URL + SHA256 |
 
 **Run locally:**
 
 ```bash
 just bst source track elements/bluefin/brew.bst
-just bst source track elements/core/bootc.bst
+just bst source track elements/gnome-build-meta.bst
 ```
 
 **What `track:` values look like:**
@@ -70,7 +70,7 @@ just bst source track elements/core/bootc.bst
 |---|---|---|
 | `main` | Latest commit on main branch | `brew.bst`, `common.bst` |
 | `master` | Latest commit on master branch | `gnome-build-meta.bst` |
-| `v*` | Latest tag matching `v*` glob | `bootc.bst`, `app-indicators.bst` |
+| `v*` | Latest tag matching `v*` glob | `app-indicators.bst` |
 | `freedesktop-sdk-25.08*` | Latest tag matching pattern | `freedesktop-sdk.bst` |
 | `<commit-hash>` | Pinned — tracking is a no-op | (avoid this pattern) |
 

@@ -52,7 +52,6 @@ jobs:
             elements: >-
               elements/gnome-build-meta.bst
               elements/freedesktop-sdk.bst
-              elements/core/bootc.bst
               elements/core/grub.bst
               elements/core/ptyxis.bst
               elements/core/efibootmgr.bst

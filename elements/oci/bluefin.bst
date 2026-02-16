@@ -6,7 +6,7 @@ build-depends:
   - freedesktop-sdk.bst:components/glib.bst
   - gnome-build-meta.bst:freedesktop-sdk.bst:vm/prepare-image.bst
   - oci/layers/bluefin-init-scripts.bst
-  - filename: oci/gnomeos.bst
+  - filename: gnome-build-meta.bst:oci/gnomeos.bst
     config:
       location: /parent
   - filename: oci/layers/bluefin.bst
@@ -61,8 +61,12 @@ config:
         config:
           Labels:
             'com.github.containers.toolbox': 'true'
-            'org.opencontainers.image.source': 'https://github.com/projectbluefin/egg/'
-            'org.opencontainers.image.url': 'https://github.com/projectbluefin/egg/'
+            'org.opencontainers.image.title': 'Bluefin'
+            'org.opencontainers.image.description': 'A custom GNOME-based desktop image'
+            'org.opencontainers.image.vendor': 'Project Bluefin'
+            'org.opencontainers.image.licenses': 'Apache-2.0'
+            'org.opencontainers.image.url': 'https://projectbluefin.io'
+            'org.opencontainers.image.source': 'https://github.com/projectbluefin/egg'
             'containers.bootc': '1'
         index-annotations:
           'org.opencontainers.image.ref.name': 'ghcr.io/projectbluefin/egg:latest'

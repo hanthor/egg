@@ -79,13 +79,13 @@ freedesktop-sdk: oci/platform.bst              (base freedesktop runtime)
 gnome-build-meta: oci/platform.bst             (GNOME platform)
         |
         v
-oci/gnomeos.bst                                (GNOME OS layer -- kind: script)
+gnome-build-meta: oci/gnomeos.bst              (GNOME OS layer -- kind: script, upstream)
         |
         v
 oci/bluefin.bst                                (Bluefin layer -- kind: script)
 ```
 
-Both `oci/gnomeos.bst` and `oci/bluefin.bst` are `kind: script` elements that use the same assembly pattern:
+Both `gnome-build-meta:oci/gnomeos.bst` (upstream) and `oci/bluefin.bst` (local) are `kind: script` elements that use the same assembly pattern:
 - Mount parent image at `/parent` and layer at `/layer`
 - Run `prepare-image.sh` on the layer with `--initscripts` and `--seed`
 - Run `systemd-sysusers --root /layer`
@@ -100,13 +100,11 @@ Several elements in `elements/oci/` are **local overrides** of upstream gnome-bu
 config:
   overrides:
     oci/os-release.bst: oci/os-release.bst      # Bluefin's os-release replaces GNOME's
-    oci/gnomeos.bst: oci/gnomeos.bst            # Local GNOME OS layer assembly
-    gnomeos-deps/bootc.bst: core/bootc.bst      # Custom bootc build
-    gnomeos-deps/plymouth-gnome-theme.bst: bluefin/plymouth-bluefin-theme.bst
-    core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst
+    core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst  # Custom GNOME app selection
+    gnomeos-deps/plymouth-gnome-theme.bst: bluefin/plymouth-bluefin-theme.bst  # Bluefin theme
 ```
 
-This means `oci/gnomeos.bst` and `oci/os-release.bst` are local files that **replace** their upstream counterparts. When you modify these files, you're changing what gnome-build-meta sees when it resolves those element paths.
+This means `oci/os-release.bst` is a local file that **replaces** its upstream counterpart. When you modify this file, you're changing what gnome-build-meta sees when it resolves that element path.
 
 ## OCI Assembly Script (oci/bluefin.bst)
 
@@ -121,7 +119,7 @@ build-depends:
   - freedesktop-sdk.bst:components/glib.bst
   - gnome-build-meta.bst:freedesktop-sdk.bst:vm/prepare-image.bst
   - oci/layers/bluefin-init-scripts.bst
-  - filename: oci/gnomeos.bst        # Parent image mounted at /parent
+  - filename: gnome-build-meta.bst:oci/gnomeos.bst  # Parent image (upstream GNOME OS)
     config:
       location: /parent
   - filename: oci/layers/bluefin.bst  # Layer content mounted at /layer
@@ -203,7 +201,7 @@ Rare cases where you'd touch `elements/oci/`:
 - **Changing OCI labels/annotations**: Edit `oci/bluefin.bst`
 - **Changing os-release metadata**: Edit `oci/os-release.bst` environment variables
 - **Adding a new split domain exclusion**: Edit the `compose` elements' `config.exclude` lists
-- **Changing the parent image**: Edit `oci/bluefin.bst` or `oci/gnomeos.bst` build-depends
+- **Changing the parent image**: Edit `oci/bluefin.bst` build-depends to point to a different upstream or custom parent
 
 ## Common Mistakes
 
@@ -227,5 +225,4 @@ Rare cases where you'd touch `elements/oci/`:
 | `elements/oci/layers/bluefin.bst` | compose | Second filter (excludes extra) |
 | `elements/oci/layers/bluefin-init-scripts.bst` | collect_initial_scripts | First-boot scripts |
 | `elements/oci/bluefin.bst` | script | Final OCI assembly |
-| `elements/oci/gnomeos.bst` | script | Parent GNOME OS image |
 | `elements/oci/os-release.bst` | manual | OS release metadata |

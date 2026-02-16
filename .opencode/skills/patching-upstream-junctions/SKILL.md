@@ -134,10 +134,9 @@ The junction elements also support `config.overrides` which **completely replace
 # In elements/gnome-build-meta.bst:
 config:
   overrides:
-    oci/os-release.bst: oci/os-release.bst        # Local Bluefin os-release
-    oci/gnomeos.bst: oci/gnomeos.bst              # Local GNOME OS assembly
-    gnomeos-deps/bootc.bst: core/bootc.bst        # Custom bootc build
-    gnomeos-deps/plymouth-gnome-theme.bst: bluefin/plymouth-bluefin-theme.bst
+    oci/os-release.bst: oci/os-release.bst              # Local Bluefin os-release
+    core/meta-gnome-core-apps.bst: core/meta-gnome-core-apps.bst  # Custom GNOME app selection
+    gnomeos-deps/plymouth-gnome-theme.bst: bluefin/plymouth-bluefin-theme.bst  # Bluefin theme
 ```
 
 ### Decision Matrix

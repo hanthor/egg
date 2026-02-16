@@ -13,9 +13,15 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
 ## How to Access Skills
 
-**In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
+Skills are located in `.opencode/skills/` in this repository. Despite the directory name, **these are agent-agnostic markdown files** that any AI system can use.
 
-**In other environments:** Check your platform's documentation for how skills are loaded.
+**In OpenCode:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
+
+**In Claude Code / Claude Desktop:** Skills should be auto-discovered from this directory. Use your platform's native skill loading mechanism.
+
+**In other AI agents (Cursor, Windsurf, Aider, etc.):** If your platform doesn't have native skill support, read the markdown files directly using your available tools. Skills are designed to be human-readable and follow a standard format.
+
+**For tool developers:** See `.opencode/skills/README.md` for integration guidance.
 
 # Using Skills
 

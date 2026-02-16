@@ -4,6 +4,8 @@ This repository builds **Bluefin** -- a custom GNOME-based Linux desktop image -
 
 All AI-assisted development is skill-driven. Skills (`.opencode/skills/`) are vendored in-repo and are the primary mechanism for institutional memory. Agents MUST load and follow relevant skills before acting, and MUST create or update skills whenever they discover automatable patterns.
 
+**Note:** Despite the directory name, skills are agent-agnostic markdown files. The `.opencode/` prefix is a convention for open AI tooling, not a tool-specific requirement. Any agent system (Claude Code, Cursor, Windsurf, Aider, custom tools) can read and use these skills. See `.opencode/skills/README.md` for details.
+
 ## Quick Reference
 
 | What | Where |
@@ -101,15 +103,11 @@ Requires BuildStream 2.5+ (provided by the bst2 container). The Justfile handles
 
 **Local development is the default.** All build verification MUST happen locally before pushing to the remote. CI is a safety net, not the primary build environment.
 
-**Hard gate:** No code may be committed to `main` or pushed for PR without a local build log showing the affected elements build successfully. This means:
+**Hard gate:** No code may be committed to `main` or pushed for PR without a local build log showing the affected elements build successfully. The `verification-before-completion` skill enforces this with specific requirements for different change types.
 
-1. **Before committing element changes:** Run `just bst build <element>` for the changed element(s)
-2. **Before pushing image-affecting changes:** Run `just build` (full OCI image build)
-3. **Build log evidence is required:** The `verification-before-completion` skill enforces this -- agents must show build command output before claiming success
+**Rationale:** CI runs take 30-60 minutes and consume shared resources. Local builds with a warm cache take minutes. Catching failures locally is faster, cheaper, and more respectful of the shared CI infrastructure.
 
-The rationale: CI runs take 30-60 minutes and consume shared resources. Local builds with a warm cache take minutes. Catching failures locally is faster, cheaper, and more respectful of the shared CI infrastructure.
-
-**Skill:** Load `local-e2e-testing` for the complete local development workflow -- it is the default workflow for all build work, not just "testing."
+**Skill:** Load `verification-before-completion` for the hard gate requirements and `local-e2e-testing` for the complete local development workflow.
 
 ### project.conf
 
@@ -211,6 +209,7 @@ The `gnome-build-meta.bst` and `freedesktop-sdk.bst` junction elements pin speci
 - **YAML indentation**: 2 spaces
 - **Shell in workflows**: `${VAR}` notation, double-quote all expansions, single-quoted `bash -c` with `-e` env passthrough for podman
 - **Agent state**: `.opencode/` is gitignored -- never commit it (except `.opencode/skills/` which is tracked)
+- **Justfile style**: See `writing-justfiles` skill for complete style guide (exported variables, group decorators, quiet mode, etc.)
 
 ## Superpowers Skill System
 
@@ -232,6 +231,7 @@ All agents MUST load and follow these skills before acting:
 | `receiving-code-review` | When processing review feedback |
 | `using-git-worktrees` | When starting isolated feature work |
 | `dispatching-parallel-agents` | When facing 2+ independent tasks |
+| `writing-justfiles` | When creating or modifying Justfiles in this repository |
 | `adding-a-package` | When adding a new software package to the image |
 | `buildstream-element-reference` | When writing or reviewing .bst element files |
 | `packaging-pre-built-binaries` | When packaging pre-built static binaries |
@@ -241,6 +241,7 @@ All agents MUST load and follow these skills before acting:
 | `packaging-go-projects` | When packaging Go projects for BuildStream |
 | `oci-layer-composition` | When working with OCI layers or the image assembly pipeline |
 | `patching-upstream-junctions` | When patching freedesktop-sdk or gnome-build-meta elements |
+| `managing-bst-overrides` | When creating, evaluating, or removing BuildStream junction overrides |
 | `removing-packages` | When removing a package from the Bluefin image |
 | `updating-upstream-refs` | When updating upstream source refs or dependency versions |
 | `debugging-bst-build-failures` | When diagnosing BuildStream build errors |
@@ -297,32 +298,11 @@ Plans are the source of truth for what was decided and why. They include correct
 
 ### Subagent Workflow
 
-When executing a multi-task implementation plan in the current session, use the `subagent-driven-development` skill. This applies whenever a plan has two or more independent tasks.
+When executing a multi-task implementation plan in the current session, use the `subagent-driven-development` skill. Load the skill for:
 
-**Dispatch pattern:**
+- Dispatch patterns (one fresh subagent per task)
+- Two-stage review process (spec compliance, then code quality)
+- Parallelism rules (independent vs sequential tasks)
+- Question handling and issue resolution
 
-| Rule | Why |
-|---|---|
-| One fresh subagent per task | Isolation prevents cross-contamination of context |
-| Include full task text in the dispatch | Subagents must not read plan files -- they lack conversation context |
-| Provide surrounding context | Tell the subagent where the task fits in the plan and what other tasks exist |
-| Subagents ask questions if unclear | Better to block than to guess wrong |
-
-**Parallelism:**
-
-- Independent tasks (different files, no shared state) -- dispatch in parallel
-- Tasks that modify the same files -- dispatch sequentially, never in parallel
-- When in doubt, run sequentially
-
-**Two-stage review after each task:**
-
-1. **Spec compliance** -- Does the output match the plan's requirements exactly?
-2. **Code quality** -- Is the implementation clean, correct, and consistent with the codebase?
-
-Both stages must pass before the task is marked complete. If a reviewer finds issues, the implementer fixes them and the reviewer re-reviews. This loop repeats until both stages pass.
-
-**Completion:**
-
-- Load `verification-before-completion` before claiming any task or the overall plan is done
-- Run builds or checks as specified in the plan -- evidence before assertions
-- Mark todos complete only after verification passes
+The skill provides the complete workflow with flowcharts, examples, and red flags to avoid.

@@ -131,7 +131,7 @@ Add feature flags as needed:
       done
 ```
 
-**Custom make targets** (e.g., bootc with man pages, systemd units):
+**Custom make targets** (e.g., upstream bootc with man pages, systemd units):
 ```yaml
 variables:
   make-install-args: >-
@@ -215,11 +215,10 @@ sources:
 
 | Element | Location | Tracked By | Group |
 |---|---|---|---|
-| bootc | `elements/core/bootc.bst` | `bst source track` workflow | manual-merge |
 | sudo-rs | `elements/bluefin/sudo-rs.bst` | **Not tracked** | -- |
 | uutils-coreutils | `elements/bluefin/uutils-coreutils.bst` | **Not tracked** | -- |
 
-Elements in the `bst source track` workflow get automatic PRs when upstream refs change. Elements not tracked require manual version bumps.
+Elements in the `bst source track` workflow get automatic PRs when upstream refs change. Elements not tracked require manual version bumps. Note: `bootc` is an upstream gnome-build-meta element (`gnomeos-deps/bootc.bst`) and is tracked by GNOME upstream, not by this project.
 
 ## Common Mistakes
 
@@ -237,6 +236,5 @@ Elements in the `bst source track` workflow get automatic PRs when upstream refs
 ## Real Examples
 
 - **Simple binary with setuid:** `elements/bluefin/sudo-rs.bst` (41 lines)
-- **Multi-call binary with symlinks:** `elements/bluefin/uutils-coreutils.bst` (~1583 lines, mostly cargo2 deps)
-- **Complex with git crates:** `elements/core/bootc.bst` (~1358 lines, includes `kind: git` cargo2 entries)
+- **Complex with system integration:** `gnome-build-meta.bst:gnomeos-deps/bootc.bst` (upstream GNOME element, ~1358 lines, includes `kind: git` cargo2 entries for composefs-rs, systemd units, man pages)
 - **gen_cargo_lock pattern:** `gnomeos-deps/zram-generator.bst` (in gnome-build-meta junction)

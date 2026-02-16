@@ -46,11 +46,20 @@ jobs:
           du -sh /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
           df -h /home/runner/.cache/buildstream
 
-      - name: Install just
+      - name: Install just from GitHub releases
         run: |
-          # just is in ubuntu 24.04 universe; skopeo/podman are pre-installed
-          sudo apt-get install -y just
+          # Ubuntu 24.04 ships just 1.21.0, but we need 1.31.0+ for [group()] attribute
+          # Download and install latest just binary directly from GitHub releases
+          JUST_VERSION="1.46.0"
+          curl -fsSL "https://github.com/casey/just/releases/download/${JUST_VERSION}/just-${JUST_VERSION}-x86_64-unknown-linux-musl.tar.gz" -o just.tar.gz
+          tar xzf just.tar.gz
+          sudo install -m 755 just /usr/local/bin/just
+          rm just just.tar.gz
           just --version
+
+      - name: Capture build timestamp
+        id: timestamp
+        run: echo "created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
 
       # ── Generate CI-specific BuildStream config ───────────────────────
       # Tuned per gnome-build-meta CI patterns:
@@ -123,11 +132,13 @@ jobs:
       # lookups during validation.
 
       - name: Export OCI image from BuildStream
-        continue-on-error: true
         id: export
         env:
           BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
           BUILD_IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          OCI_IMAGE_CREATED: ${{ steps.timestamp.outputs.created }}
+          OCI_IMAGE_REVISION: ${{ github.sha }}
+          OCI_IMAGE_VERSION: latest
         run: |
           just export
           echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
@@ -138,7 +149,6 @@ jobs:
       # ── Validation ────────────────────────────────────────────────────
 
       - name: Validate with bootc container lint
-        continue-on-error: true
         run: |
           sudo podman run --rm --privileged --pull=never \
             "localhost/${{ steps.export.outputs.image_ref }}" \
@@ -159,15 +169,13 @@ jobs:
       # ── Publish to GHCR (main branch only) ───────────────────────────
 
       - name: Login to GHCR
-        continue-on-error: true
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
             sudo podman login ghcr.io --username ${{ github.actor }} --password-stdin
 
       - name: Tag image for GHCR
-        continue-on-error: true
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           sudo podman tag "localhost/${{ steps.export.outputs.image_ref }}" \
             "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
@@ -175,8 +183,7 @@ jobs:
             "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
       - name: Push to GHCR
-        continue-on-error: true
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           for tag in latest "${{ github.sha }}"; do
             for i in 1 2 3; do
