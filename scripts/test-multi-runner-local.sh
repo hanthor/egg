@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-# Default to 3 parallel chunks for local testing
-CHUNKS=${1:-3}
+# Default to 10 parallel chunks for local testing
+CHUNKS=${1:-10}
 BST2_IMAGE="registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1"
 
 # Prepare directories

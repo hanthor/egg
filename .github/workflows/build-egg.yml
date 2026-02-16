@@ -68,7 +68,7 @@ jobs:
             -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
             "$BST2_IMAGE" \
-            python3 scripts/generate-build-matrix.py oci/bluefin.bst 5 > matrix.json
+            python3 scripts/generate-build-matrix.py oci/bluefin.bst 10 > matrix.json
 
           cat matrix.json
           python3 -c "import json, sys; data = json.load(open('matrix.json')); [print(f'{k}={v}') for k,v in data.items()]" >> "$GITHUB_OUTPUT"
@@ -93,12 +93,6 @@ jobs:
     steps:
       - name: Free disk space
         uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
-        with:
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
 
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - run: podman pull "$BST2_IMAGE"
