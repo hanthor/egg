@@ -216,7 +216,7 @@ jobs:
             -v "$HOME/.cache/buildstream:/input:ro" \
             -v "${{ github.workspace }}:/output:rw" \
             "$BST2_IMAGE" \
-            tar -cf /output/cas-${{ matrix.chunk }}.tar -C /input . --exclude "cas/staging" --exclude "cas/tmp"
+            tar -cf /output/cas-${{ matrix.chunk }}.tar -C /input --exclude "cas/staging" --exclude "cas/tmp" .
             
           ls -lh "cas-${{ matrix.chunk }}.tar"
 
