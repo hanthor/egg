@@ -65,7 +65,12 @@ def main():
     print(f"Generating build plan for {target} with {num_chunks} chunks...", file=sys.stderr)
     
     elements = get_build_plan(target)
-    print(f"Found {len(elements)} elements to build.", file=sys.stderr)
+    
+    # Separate the final target from the dependencies
+    # Use suffix match to handle project prefixes returned by bst show (e.g., 'main:oci/bluefin.bst')
+    elements = [e for e in elements if not e.endswith(target)]
+    
+    print(f"Found {len(elements)} elements to build (excluding final target).", file=sys.stderr)
     
     chunks = chunk_list(elements, num_chunks)
     

@@ -113,11 +113,28 @@ jobs:
           fi
 
           mkdir -p ~/.cache/buildstream
-          podman run --rm --privileged --device /dev/fuse \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src "$BST2_IMAGE" \
-            bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-${{ matrix.chunk }}.log build $TARGETS"
+          # Retry loop for bst build
+          max_retries=3
+          count=0
+          success=false
+          while [ $count -lt $max_retries ]; do
+            if podman run --rm --privileged --device /dev/fuse \
+              -v "${{ github.workspace }}:/src:rw" \
+              -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+              -w /src "$BST2_IMAGE" \
+              bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-${{ matrix.chunk }}.log build $TARGETS"; then
+              success=true
+              break
+            fi
+            echo "Build failed, retrying in 10s... ($((count+1))/$max_retries)"
+            count=$((count+1))
+            sleep 10
+          done
+
+          if [ "$success" = "false" ]; then
+            echo "Build failed after $max_retries attempts."
+            exit 1
+          fi
 
       - name: Archive CAS
         if: steps.build.outputs.skipped != 'true'
