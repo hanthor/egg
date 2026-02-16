@@ -220,9 +220,11 @@ jobs:
             
             # cd into directory to ensure dot (.) works as expected
             cd "$HOME/.cache/buildstream"
-            tar -cf "$OUTPUT_TAR" . --exclude "cas/staging" --exclude "cas/tmp"
+            # Use sudo to ensure we can read files created by podman (root)
+            sudo tar -cf "$OUTPUT_TAR" . --exclude "cas/staging" --exclude "cas/tmp"
             
-            # Verify creation
+            # Verify creation and fix ownership of tarball so runner can upload it
+            sudo chown $(id -u):$(id -g) "$OUTPUT_TAR"
             ls -lh "$OUTPUT_TAR"
           else
             echo "Cache directory not found!"
