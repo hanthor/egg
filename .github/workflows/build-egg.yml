@@ -11,169 +11,201 @@ env:
   IMAGE_NAME: egg
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+  CACHE_GRPC_PORT: 9092
+  CACHE_HTTP_PORT: 8080
 
-# On PRs: group by branch so new pushes cancel stale runs.
-# On main: group by SHA so every push gets its own non-cancellable run.
-# (GitHub cancels even pending/queued runs in the same group regardless of
-#  cancel-in-progress when a newer run arrives, so main needs unique groups.)
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
-    permissions:
-      contents: read
-      packages: write
+  planning:
+    runs-on: ubuntu-24.04
+    outputs:
+      chunk1: ${{ steps.matrix.outputs.chunk1 }}
+      chunk2: ${{ steps.matrix.outputs.chunk2 }}
+      chunk3: ${{ steps.matrix.outputs.chunk3 }}
+      chunk4: ${{ steps.matrix.outputs.chunk4 }}
+      chunk5: ${{ steps.matrix.outputs.chunk5 }}
     steps:
+      - name: Free disk space
+        uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Pull BuildStream container image
         run: podman pull "$BST2_IMAGE"
 
-      - name: Mount BuildStream cache (sticky disk)
-        uses: useblacksmith/stickydisk@v1
-        with:
-          key: ${{ github.repository }}-bst-cache
-          path: ~/.cache/buildstream
-
-      - name: Prepare BuildStream cache layout
-        run: |
-          mkdir -p ~/.cache/buildstream/{cas,artifacts,source_protos,sources}
-          echo "=== Sticky disk status ==="
-          du -sh ~/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
-          df -h ~/.cache/buildstream
-
-      - name: Install just
-        run: |
-          # just is in ubuntu 24.04 universe; skopeo/podman are pre-installed
-          sudo apt-get install -y just
-          just --version
-
-      # ── Generate CI-specific BuildStream config ───────────────────────
-      # Tuned per gnome-build-meta CI patterns:
-      # - on-error: continue  -> find ALL failures, don't stop at first
-      # - fetchers: 12        -> parallel downloads from upstream caches
-      # - builders: 1         -> conservative to avoid OOM
-      # - retry-failed: True  -> auto-retry flaky builds
-      # - error-lines: 80     -> generous error context in logs
-      # - cache-buildtrees: never -> save disk (we only need final artifacts)
-      #
-      # No remote artifact server is configured. BuildStream uses only:
-      # 1. Local disk cache (persisted by sticky disk)
-      # 2. Upstream GNOME caches defined in project.conf (read-only)
-
       - name: Generate BuildStream CI config
+        run: ./scripts/setup-buildstream.sh
+
+      - name: Generate Build Matrix
+        id: matrix
         run: |
           mkdir -p logs
-          cat > buildstream-ci.conf <<'BSTCONF'
-          scheduler:
-            on-error: continue
-            fetchers: 12
-            builders: 1
-            network-retries: 3
+          # Run the script inside container to ensure python/bst environment matches
+          podman run --rm \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            python3 scripts/generate-build-matrix.py oci/bluefin.bst 5 > matrix.json
 
-          logging:
-            message-format: '[%{wallclock}][%{elapsed}][%{key}][%{element}] %{action} %{message}'
-            error-lines: 80
+          cat matrix.json
+          python3 -c "import json, sys; data = json.load(open('matrix.json')); [print(f'{k}={v}') for k,v in data.items()]" >> "$GITHUB_OUTPUT"
 
-          build:
-            max-jobs: 0
-            retry-failed: True
-
-          cache:
-            cache-buildtrees: never
-          BSTCONF
-
-          echo "=== BuildStream CI config ==="
-          cat buildstream-ci.conf
-
-      # ── BuildStream build ─────────────────────────────────────────────
-      # Uses the Justfile's `bst` wrapper to run BuildStream inside the
-      # bst2 container. CI-specific flags (--no-interactive, --config)
-      # are injected via BST_FLAGS env var.
-      # Additional --log-file flag is passed directly (build-specific).
-
-      - name: Build OCI image with BuildStream
-        env:
-          BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
-        run: |
-          just bst --log-file /src/logs/build.log build oci/bluefin.bst
-        timeout-minutes: 120
-
-      - name: Cache and disk status
-        if: always()
-        run: |
-          echo "=== Disk usage ==="
-          df -h ~/.cache/buildstream / 2>/dev/null || df -h /
-          echo ""
-          echo "=== BuildStream cache breakdown ==="
-          du -sh ~/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
-          echo ""
-          echo "=== Total ==="
-          du -sh ~/.cache/buildstream/ 2>/dev/null || true
-
-      # ── Export OCI image ──────────────────────────────────────────────
-      # Uses the Justfile's `export` recipe: checks out the OCI image
-      # layout from BuildStream, loads it into podman via skopeo, and
-      # applies the /usr/etc bootc fixup. Same logic as local builds.
-      # Creates image with local name (egg:latest) to avoid registry
-      # lookups during validation.
-
-      - name: Export OCI image from BuildStream
-        continue-on-error: true
-        id: export
-        env:
-          BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
-          BUILD_IMAGE_NAME: ${{ env.IMAGE_NAME }}
-        run: |
-          just export
-          echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
-
-      - name: Verify image loaded
-        run: sudo podman images
-
-      # ── Validation ────────────────────────────────────────────────────
-
-      - name: Validate with bootc container lint
-        continue-on-error: true
-        run: |
-          sudo podman run --rm --privileged --pull=never \
-            "localhost/${{ steps.export.outputs.image_ref }}" \
-            bootc container lint
-
-      # ── Upload build logs ─────────────────────────────────────────────
-      # Always upload, even on failure, so build failures can be diagnosed.
-
-      - name: Upload build logs
+      - name: Upload planning logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: buildstream-logs
+          name: planning-logs
           path: logs/
           retention-days: 7
           if-no-files-found: ignore
 
-      # ── Publish to GHCR (main branch only) ───────────────────────────
+  build:
+    needs: planning
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [chunk1, chunk2, chunk3, chunk4, chunk5]
+    name: Build ${{ matrix.chunk }}
+    steps:
+      - name: Free disk space
+        uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+        with:
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - run: podman pull "$BST2_IMAGE"
+      - run: ./scripts/setup-buildstream.sh
+
+      - name: Build Chunk
+        id: build
+        env:
+          TARGETS: ${{ needs.planning.outputs[matrix.chunk] }}
+        run: |
+          if [ -z "$TARGETS" ]; then
+            echo "No targets for this chunk, skipping."
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          mkdir -p ~/.cache/buildstream
+          podman run --rm --privileged --device /dev/fuse \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src "$BST2_IMAGE" \
+            bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-${{ matrix.chunk }}.log build $TARGETS"
+
+      - name: Archive CAS
+        if: steps.build.outputs.skipped != 'true'
+        run: |
+          # We archive the CAS and artifacts metadata.
+          # This is heavyIO but allows moving the state.
+          echo "Archiving CAS..."
+          du -sh ~/.cache/buildstream
+          tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" cas artifacts source_protos
+
+      - name: Upload CAS Artifact
+        if: steps.build.outputs.skipped != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cas-${{ matrix.chunk }}
+          path: cas-${{ matrix.chunk }}.tar
+          retention-days: 1
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: build-logs-${{ matrix.chunk }}
+          path: logs/
+          retention-days: 7
+
+  export:
+    needs: [planning, build]
+    if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Free disk space
+        uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - run: podman pull "$BST2_IMAGE"
+      - run: ./scripts/setup-buildstream.sh
+
+      - name: Download all CAS chunks
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
+        with:
+          pattern: cas-*
+          path: downloaded-cas
+          merge-multiple: true
+
+      - name: Merge CAS
+        run: |
+          mkdir -p ~/.cache/buildstream
+          echo "Merging CAS chunks..."
+          find downloaded-cas -name "cas-*.tar" -print0 | xargs -0 -I {} tar -xf {} -C "$HOME/.cache/buildstream"
+          echo "CAS merge complete."
+          du -sh ~/.cache/buildstream
+
+      # Ensure everything is pulled/built/merged before export
+      # The final build should be very fast as everything is in CAS
+      - name: Export OCI image from BuildStream
+        id: export
+        run: |
+          LOADED=$(podman run --rm --privileged --device /dev/fuse \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src "$BST2_IMAGE" \
+            bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar - oci/bluefin.bst' | podman load)
+          IMAGE_REF=$(echo "$LOADED" | grep -oP '(?<=Loaded image: ).*' || echo "$LOADED" | grep -oP '(?<=Loaded image\(s\): ).*')
+          echo "image_ref=$IMAGE_REF" >> "$GITHUB_OUTPUT"
+          echo "Loaded: $IMAGE_REF"
+
+      - name: Verify image loaded
+        run: podman images
+
+      - name: Validate with bootc container lint
+        run: |
+          podman run --rm --privileged \
+            -v /var/lib/containers:/var/lib/containers \
+            "${{ steps.export.outputs.image_ref }}" \
+            bootc container lint
+
+      - name: Upload export logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: export-logs
+          path: logs/
+          retention-days: 7
 
       - name: Login to GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
-            sudo podman login ghcr.io --username ${{ github.actor }} --password-stdin
+            podman login ghcr.io --username ${{ github.actor }} --password-stdin
 
       - name: Tag image for GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          sudo podman tag "${{ steps.export.outputs.image_ref }}" \
-            "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          sudo podman tag "${{ steps.export.outputs.image_ref }}" \
+          podman tag "${{ steps.export.outputs.image_ref }}" \
+            "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest" \
             "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
       - name: Push to GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          sudo podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          sudo podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
