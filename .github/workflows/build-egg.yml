@@ -95,6 +95,8 @@ jobs:
       fail-fast: false
       matrix:
         chunk: ${{ fromJson(needs.planning.outputs.matrix_keys) }}
+    env:
+      TARGETS: ${{ fromJson(needs.planning.outputs.matrix_data)[matrix.chunk] }}
     name: Build ${{ matrix.chunk }}
     steps:
       - name: Free disk space
@@ -102,11 +104,22 @@ jobs:
 
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - run: podman pull "$BST2_IMAGE"
+
+      - name: Cache BuildStream sources
+        uses: actions/cache@v4
+        with:
+          path: .cache/buildstream/sources
+          key: bst-sources-${{ runner.os }}-${{ hashFiles('project.conf', 'elements/**/*.bst') }}
+          restore-keys: |
+            bst-sources-${{ runner.os }}-
+
       - run: ./scripts/setup-buildstream.sh
 
       - name: Calculate Cache Key
         id: cache_key
         run: |
+          mkdir -p .cache/buildstream
+          mkdir -p logs
           # Calculate hash of the target elements to uniquely identify this chunk's workload
           echo "Calculating cache key for: $TARGETS"
           podman run --rm --privileged --device /dev/fuse \
