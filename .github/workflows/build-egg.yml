@@ -211,9 +211,16 @@ jobs:
           # We archive the CAS and artifacts metadata.
           # This is heavyIO but allows moving the state.
           echo "Archiving CAS..."
-          du -sh ~/.cache/buildstream
-          # Exclude staging/tmp to keep artifact small
-          tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" --exclude "cas/staging" --exclude "cas/tmp" cas artifacts source_protos
+          if [ -d "$HOME/.cache/buildstream" ]; then
+            ls -F "$HOME/.cache/buildstream"
+            du -sh ~/.cache/buildstream
+            # Exclude staging/tmp to keep artifact small
+            # Archive everything in .cache/buildstream to avoid errors with missing dirs (like source_protos)
+            tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" . --exclude "cas/staging" --exclude "cas/tmp"
+          else
+            echo "Cache directory not found!"
+            exit 1
+          fi
 
       - name: Push to GHCR
         if: always() && steps.restore.outputs.cache_hit != 'true' && steps.build.outputs.skipped != 'true' && env.CACHE_TAG != 'unknown' && env.CACHE_TAG != ''
