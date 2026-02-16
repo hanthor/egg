@@ -43,12 +43,12 @@ jobs:
       - name: Generate Build Matrix
         id: matrix
         run: |
-          mkdir -p ~/.cache/buildstream
+          mkdir -p .cache/buildstream
           mkdir -p logs
           # Run the script inside container to ensure python/bst environment matches
           podman run --rm \
             -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
             "$BST2_IMAGE" \
             python3 scripts/generate-build-matrix.py oci/bluefin.bst 5 > matrix.json
