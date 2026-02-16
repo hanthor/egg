@@ -88,6 +88,9 @@ jobs:
   build_deps:
     needs: planning
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -101,8 +104,60 @@ jobs:
       - run: podman pull "$BST2_IMAGE"
       - run: ./scripts/setup-buildstream.sh
 
+      - name: Calculate Cache Key
+        id: cache_key
+        run: |
+          # Calculate hash of the target elements to uniquely identify this chunk's workload
+          echo "Calculating cache key for: $TARGETS"
+          podman run --rm --privileged --device /dev/fuse \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src "$BST2_IMAGE" \
+            bash -c "bst --no-interactive --config buildstream-ci.conf show --deps none --format '%{full-key}' $TARGETS" > keys.txt
+          
+          if [ -s keys.txt ]; then
+            CACHE_TAG=$(cat keys.txt | sort | sha256sum | awk '{print $1}')
+            echo "CACHE_TAG=$CACHE_TAG" >> "$GITHUB_ENV"
+            echo "Cache Tag: $CACHE_TAG"
+          else
+            echo "Failed to generate keys for cache."
+            echo "CACHE_TAG=unknown" >> "$GITHUB_ENV"
+          fi
+
+      - name: Restore from GHCR
+        id: restore
+        continue-on-error: true
+        if: env.CACHE_TAG != 'unknown'
+        run: |
+          # Convert repository name to lowercase for Docker image compliance
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_TAG="ghcr.io/${REPO_LOWER}/cache-${{ matrix.chunk }}:${{ env.CACHE_TAG }}"
+          echo "Checking for cache image: $IMAGE_TAG"
+          
+          # Try to pull the cache image
+          if podman pull "$IMAGE_TAG"; then
+            echo "Cache Hit! Restoring CAS..."
+            echo "cache_hit=true" >> "$GITHUB_OUTPUT"
+            
+            mkdir -p ~/.cache/buildstream
+            # Extract cas.tar from the image
+            # We assume the image was built with 'COPY cas-chunk.tar /cas.tar'
+            id=$(podman create "$IMAGE_TAG")
+            podman cp "$id":/cas.tar cas-restore.tar
+            podman rm "$id"
+            
+            # Untar to local cache
+            tar -xf cas-restore.tar -C "$HOME/.cache/buildstream"
+            rm cas-restore.tar
+            echo "CAS restored from cache."
+          else
+            echo "Cache Miss. Will perform build."
+            echo "cache_hit=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build Chunk
         id: build
+        if: steps.restore.outputs.cache_hit != 'true'
         env:
           TARGETS: ${{ fromJson(needs.planning.outputs.matrix_data)[matrix.chunk] }}
         run: |
@@ -143,7 +198,27 @@ jobs:
           # This is heavyIO but allows moving the state.
           echo "Archiving CAS..."
           du -sh ~/.cache/buildstream
+          # Exclude staging/tmp to keep artifact small
           tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" --exclude "cas/staging" --exclude "cas/tmp" cas artifacts source_protos
+
+      - name: Push to GHCR
+        if: steps.restore.outputs.cache_hit != 'true' && steps.build.outputs.skipped != 'true' && env.CACHE_TAG != 'unknown' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Pushing new cache image to GHCR..."
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_TAG="ghcr.io/${REPO_LOWER}/cache-${{ matrix.chunk }}:${{ env.CACHE_TAG }}"
+          
+          # Create Minimal Dockerfile
+          # We use the tarball created in the previous step 'Archive CAS' => cas-{chunk}.tar
+          # We rename it to /cas.tar in the image for consistent restoration
+          echo -e "FROM scratch\nCOPY cas-${{ matrix.chunk }}.tar /cas.tar" > Dockerfile
+          
+          podman build -t "$IMAGE_TAG" .
+          
+          # Login and Push
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+          podman push "$IMAGE_TAG"
+          echo "Cache image pushed: $IMAGE_TAG"
 
       - name: Upload CAS Artifact
         if: steps.build.outputs.skipped != 'true'
