@@ -2,6 +2,7 @@
 import json
 import subprocess
 import sys
+import os
 import math
 
 def get_build_plan(target):
@@ -72,9 +73,27 @@ def main():
     # We produce a map where keys are 'chunk1', 'chunk2', etc.
     output = {}
     for i, chunk in enumerate(chunks):
+        if not chunk:
+            continue
+            
+        # Pick a representative name from the end of the chunk (topological top)
+        # Since the list is topologically sorted, the last element depends on the previous ones
+        representative = chunk[-1]
+        
+        # Clean up the name for GHA matrix key compatibility
+        # Get basename of the element (e.g. project.bst:dir/file.bst -> file)
+        element_path = representative.split(':')[-1]
+        base = os.path.basename(element_path)
+        safe_name = base.replace('.bst', '').replace('/', '-').replace(':', '-')
+        
+        # Limit length just in case
+        safe_name = safe_name[:30]
+        
+        key = f"chunk{i+1}-{safe_name}"
+        
         # Join with space for passing to bst build
-        output[f"chunk{i+1}"] = " ".join(chunk)
-        print(f"Chunk {i+1}: {len(chunk)} elements", file=sys.stderr)
+        output[key] = " ".join(chunk)
+        print(f"{key}: {len(chunk)} elements (ends with {representative})", file=sys.stderr)
 
     print(json.dumps(output))
 
