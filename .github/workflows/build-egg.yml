@@ -185,11 +185,16 @@ jobs:
       - name: Export OCI image from BuildStream
         id: export
         run: |
-          LOADED=$(podman run --rm --privileged --device /dev/fuse \
+          # Checkout to file to avoid stdout pollution/pipe errors
+          podman run --rm --privileged --device /dev/fuse \
             -v "${{ github.workspace }}:/src:rw" \
             -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src "$BST2_IMAGE" \
-            bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar - oci/bluefin.bst' | podman load)
+            bash -c 'ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf artifact checkout --tar image.tar oci/bluefin.bst'
+          
+          # Load the image
+          LOADED=$(podman load -i image.tar)
+          rm image.tar
           IMAGE_REF=$(echo "$LOADED" | grep -oP '(?<=Loaded image: ).*' || echo "$LOADED" | grep -oP '(?<=Loaded image\(s\): ).*')
           echo "image_ref=$IMAGE_REF" >> "$GITHUB_OUTPUT"
           echo "Loaded: $IMAGE_REF"
