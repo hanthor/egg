@@ -208,28 +208,17 @@ jobs:
       - name: Archive CAS
         if: always() && steps.build.outputs.skipped != 'true'
         run: |
-          # We archive the CAS and artifacts metadata.
-          # This is heavyIO but allows moving the state.
-          echo "Archiving CAS..."
-          if [ -d "$HOME/.cache/buildstream" ]; then
-            ls -F "$HOME/.cache/buildstream"
-            du -sh ~/.cache/buildstream
+          # Use podman to archive the CAS to bypass permission issues with root-owned files
+          echo "Archiving CAS using Podman..."
+          
+          # We use the BST2 image which is already pulled and has tar
+          podman run --rm \
+            -v "$HOME/.cache/buildstream:/input:ro" \
+            -v "${{ github.workspace }}:/output:rw" \
+            "$BST2_IMAGE" \
+            tar -cf /output/cas-${{ matrix.chunk }}.tar -C /input . --exclude "cas/staging" --exclude "cas/tmp"
             
-            # Use absolute path for output
-            OUTPUT_TAR="${{ github.workspace }}/cas-${{ matrix.chunk }}.tar"
-            
-            # cd into directory to ensure dot (.) works as expected
-            cd "$HOME/.cache/buildstream"
-            # Use sudo to ensure we can read files created by podman (root)
-            sudo tar -cf "$OUTPUT_TAR" . --exclude "cas/staging" --exclude "cas/tmp"
-            
-            # Verify creation and fix ownership of tarball so runner can upload it
-            sudo chown $(id -u):$(id -g) "$OUTPUT_TAR"
-            ls -lh "$OUTPUT_TAR"
-          else
-            echo "Cache directory not found!"
-            exit 1
-          fi
+          ls -lh "cas-${{ matrix.chunk }}.tar"
 
       - name: Push to GHCR
         if: always() && steps.restore.outputs.cache_hit != 'true' && steps.build.outputs.skipped != 'true' && env.CACHE_TAG != 'unknown' && env.CACHE_TAG != ''
