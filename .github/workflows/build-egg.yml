@@ -88,6 +88,7 @@ jobs:
   build_deps:
     needs: planning
     runs-on: ubuntu-24.04
+    timeout-minutes: 120
     permissions:
       contents: read
       packages: write
@@ -205,7 +206,7 @@ jobs:
           fi
 
       - name: Archive CAS
-        if: steps.build.outputs.skipped != 'true'
+        if: always() && steps.build.outputs.skipped != 'true'
         run: |
           # We archive the CAS and artifacts metadata.
           # This is heavyIO but allows moving the state.
@@ -215,7 +216,7 @@ jobs:
           tar -cf cas-${{ matrix.chunk }}.tar -C "$HOME/.cache/buildstream" --exclude "cas/staging" --exclude "cas/tmp" cas artifacts source_protos
 
       - name: Push to GHCR
-        if: steps.restore.outputs.cache_hit != 'true' && steps.build.outputs.skipped != 'true' && env.CACHE_TAG != 'unknown'
+        if: always() && steps.restore.outputs.cache_hit != 'true' && steps.build.outputs.skipped != 'true' && env.CACHE_TAG != 'unknown' && env.CACHE_TAG != ''
         run: |
           echo "Pushing new cache image to GHCR..."
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
