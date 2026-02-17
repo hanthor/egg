@@ -507,5 +507,5 @@ jobs:
       - name: Push to GHCR
         if: github.event_name == 'push' || github.event_name == 'pull_request'
         run: |
-          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          podman push "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          podman push "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
