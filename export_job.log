@@ -1,0 +1,290 @@
+export	Set up job	﻿2026-02-16T06:35:05.8492433Z Current runner version: '2.331.0'
+export	Set up job	2026-02-16T06:35:05.8516605Z ##[group]Runner Image Provisioner
+export	Set up job	2026-02-16T06:35:05.8517561Z Hosted Compute Agent
+export	Set up job	2026-02-16T06:35:05.8518128Z Version: 20260123.484
+export	Set up job	2026-02-16T06:35:05.8518811Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+export	Set up job	2026-02-16T06:35:05.8519525Z Build Date: 2026-01-23T19:41:17Z
+export	Set up job	2026-02-16T06:35:05.8520169Z Worker ID: {6107b8a6-1e4d-4d47-b05e-7c0d77fd2923}
+export	Set up job	2026-02-16T06:35:05.8520942Z Azure Region: northcentralus
+export	Set up job	2026-02-16T06:35:05.8521548Z ##[endgroup]
+export	Set up job	2026-02-16T06:35:05.8523055Z ##[group]Operating System
+export	Set up job	2026-02-16T06:35:05.8523768Z Ubuntu
+export	Set up job	2026-02-16T06:35:05.8524221Z 24.04.3
+export	Set up job	2026-02-16T06:35:05.8524705Z LTS
+export	Set up job	2026-02-16T06:35:05.8525169Z ##[endgroup]
+export	Set up job	2026-02-16T06:35:05.8525739Z ##[group]Runner Image
+export	Set up job	2026-02-16T06:35:05.8526291Z Image: ubuntu-24.04
+export	Set up job	2026-02-16T06:35:05.8527139Z Version: 20260209.23.1
+export	Set up job	2026-02-16T06:35:05.8528289Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260209.23/images/ubuntu/Ubuntu2404-Readme.md
+export	Set up job	2026-02-16T06:35:05.8530050Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260209.23
+export	Set up job	2026-02-16T06:35:05.8530925Z ##[endgroup]
+export	Set up job	2026-02-16T06:35:05.8532034Z ##[group]GITHUB_TOKEN Permissions
+export	Set up job	2026-02-16T06:35:05.8534157Z Contents: read
+export	Set up job	2026-02-16T06:35:05.8534748Z Metadata: read
+export	Set up job	2026-02-16T06:35:05.8535299Z Packages: write
+export	Set up job	2026-02-16T06:35:05.8535899Z ##[endgroup]
+export	Set up job	2026-02-16T06:35:05.8538050Z Secret source: Actions
+export	Set up job	2026-02-16T06:35:05.8539230Z Prepare workflow directory
+export	Set up job	2026-02-16T06:35:05.9080511Z Prepare all required actions
+export	Set up job	2026-02-16T06:35:05.9117457Z Getting action download info
+export	Set up job	2026-02-16T06:35:06.2768308Z Download action repository 'ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6' (SHA:695eb75bc387dbcd9685a8e72d23439d8686cba6)
+export	Set up job	2026-02-16T06:35:06.7478876Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+export	Set up job	2026-02-16T06:35:06.7844777Z Download action repository 'actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16' (SHA:fa0a91b85d4f404e444e00e005971372dc801d16)
+export	Set up job	2026-02-16T06:35:07.2122803Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+export	Set up job	2026-02-16T06:35:07.4256919Z Complete job name: export
+export	Free disk space	﻿2026-02-16T06:35:07.4871988Z ##[group]Run ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+export	Free disk space	2026-02-16T06:35:07.4873174Z with:
+export	Free disk space	2026-02-16T06:35:07.4873587Z   extra-squeeze: false
+export	Free disk space	2026-02-16T06:35:07.4874206Z env:
+export	Free disk space	2026-02-16T06:35:07.4874595Z   IMAGE_NAME: egg
+export	Free disk space	2026-02-16T06:35:07.4875023Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Free disk space	2026-02-16T06:35:07.4876117Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Free disk space	2026-02-16T06:35:07.4877791Z   CACHE_GRPC_PORT: 9092
+export	Free disk space	2026-02-16T06:35:07.4878253Z   CACHE_HTTP_PORT: 8080
+export	Free disk space	2026-02-16T06:35:07.4878695Z ##[endgroup]
+export	Free disk space	2026-02-16T06:35:07.4974772Z ##[group]Run echo "==> Available space before cleanup"
+export	Free disk space	2026-02-16T06:35:07.4975560Z [36;1mecho "==> Available space before cleanup"[0m
+export	Free disk space	2026-02-16T06:35:07.4976146Z [36;1mdf -h[0m
+export	Free disk space	2026-02-16T06:35:07.4976586Z [36;1m# Remove swapfile (3gb)[0m
+export	Free disk space	2026-02-16T06:35:07.4977356Z [36;1m# swapoff is required for arm, but not for x64?[0m
+export	Free disk space	2026-02-16T06:35:07.4978131Z [36;1msudo swapoff -a || true; sudo rm -f /swapfile || true[0m
+export	Free disk space	2026-02-16T06:35:07.4978775Z [36;1m# Remove toolchains, browsers[0m
+export	Free disk space	2026-02-16T06:35:07.4979300Z [36;1mshopt -s nullglob[0m
+export	Free disk space	2026-02-16T06:35:07.4979755Z [36;1mEXTRAPKG=""[0m
+export	Free disk space	2026-02-16T06:35:07.4980194Z [36;1mif [ "false" = "true" ]; then[0m
+export	Free disk space	2026-02-16T06:35:07.4980858Z [36;1m  # These have a lot of small files and are a bit slower to remove[0m
+export	Free disk space	2026-02-16T06:35:07.4981670Z [36;1m  EXTRAPKG="/usr/share/miniconda /opt/hostedtoolcache"[0m
+export	Free disk space	2026-02-16T06:35:07.4982294Z [36;1mfi[0m
+export	Free disk space	2026-02-16T06:35:07.4982881Z [36;1mprintf '%s\0' /opt/PyPy /opt/az /opt/node/ /opt/pipx /opt/go /opt/Ruby \[0m
+export	Free disk space	2026-02-16T06:35:07.4984059Z [36;1m    /usr/lib/llvm-* /usr/local/julia* /usr/local/lib/android /usr/share/dotnet \[0m
+export	Free disk space	2026-02-16T06:35:07.4985016Z [36;1m    /usr/share/swift /usr/local/.ghcup /usr/lib/firefox /opt/google/chrome \[0m
+export	Free disk space	2026-02-16T06:35:07.4985782Z [36;1m    /opt/microsoft/msedge $EXTRAPKG \[0m
+export	Free disk space	2026-02-16T06:35:07.4986364Z [36;1m    | sudo xargs -0 -n1 -P4 rm -rf[0m
+export	Free disk space	2026-02-16T06:35:07.4987279Z [36;1mecho "==> Available space after cleanup"[0m
+export	Free disk space	2026-02-16T06:35:07.4988062Z [36;1mdf -h[0m
+export	Free disk space	2026-02-16T06:35:07.5041433Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+export	Free disk space	2026-02-16T06:35:07.5042188Z env:
+export	Free disk space	2026-02-16T06:35:07.5042774Z   IMAGE_NAME: egg
+export	Free disk space	2026-02-16T06:35:07.5043255Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Free disk space	2026-02-16T06:35:07.5044532Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Free disk space	2026-02-16T06:35:07.5045783Z   CACHE_GRPC_PORT: 9092
+export	Free disk space	2026-02-16T06:35:07.5046298Z   CACHE_HTTP_PORT: 8080
+export	Free disk space	2026-02-16T06:35:07.5047128Z ##[endgroup]
+export	Free disk space	2026-02-16T06:35:07.5184790Z ==> Available space before cleanup
+export	Free disk space	2026-02-16T06:35:07.5279221Z Filesystem      Size  Used Avail Use% Mounted on
+export	Free disk space	2026-02-16T06:35:07.5280243Z /dev/root       145G   53G   92G  37% /
+export	Free disk space	2026-02-16T06:35:07.5281519Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+export	Free disk space	2026-02-16T06:35:07.5282720Z tmpfs           3.2G 1000K  3.2G   1% /run
+export	Free disk space	2026-02-16T06:35:07.5283597Z tmpfs           5.0M     0  5.0M   0% /run/lock
+export	Free disk space	2026-02-16T06:35:07.5284469Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+export	Free disk space	2026-02-16T06:35:07.5285187Z /dev/sda16      881M   63M  757M   8% /boot
+export	Free disk space	2026-02-16T06:35:07.5285860Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+export	Free disk space	2026-02-16T06:35:07.5286667Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+export	Free disk space	2026-02-16T06:35:59.1276157Z ==> Available space after cleanup
+export	Free disk space	2026-02-16T06:35:59.1293830Z Filesystem      Size  Used Avail Use% Mounted on
+export	Free disk space	2026-02-16T06:35:59.1295665Z /dev/root       145G   24G  121G  17% /
+export	Free disk space	2026-02-16T06:35:59.1296602Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+export	Free disk space	2026-02-16T06:35:59.1297537Z tmpfs           3.2G 1000K  3.2G   1% /run
+export	Free disk space	2026-02-16T06:35:59.1298459Z tmpfs           5.0M     0  5.0M   0% /run/lock
+export	Free disk space	2026-02-16T06:35:59.1299370Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+export	Free disk space	2026-02-16T06:35:59.1300250Z /dev/sda16      881M   63M  757M   8% /boot
+export	Free disk space	2026-02-16T06:35:59.1301497Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+export	Free disk space	2026-02-16T06:35:59.1302338Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	﻿2026-02-16T06:35:59.1563940Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1564400Z with:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1564621Z   repository: hanthor/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1565088Z   token: ***
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1565303Z   ssh-strict: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1565575Z   ssh-user: git
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1565803Z   persist-credentials: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1566048Z   clean: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1566280Z   sparse-checkout-cone-mode: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1566564Z   fetch-depth: 1
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1567108Z   fetch-tags: false
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1567341Z   show-progress: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1567569Z   lfs: false
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1567774Z   submodules: false
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1568001Z   set-safe-directory: true
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1568239Z env:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1568433Z   IMAGE_NAME: egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1568658Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1569293Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1570013Z   CACHE_GRPC_PORT: 9092
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1570284Z   CACHE_HTTP_PORT: 8080
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.1570514Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2650207Z Syncing repository: hanthor/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2652103Z ##[group]Getting Git version info
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2652764Z Working directory is '/home/runner/work/egg/egg'
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2653732Z [command]/usr/bin/git version
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2658187Z git version 2.52.0
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2684042Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2697658Z Temporarily overriding HOME='/home/runner/work/_temp/c26cd9d9-c64a-435d-b12e-538bca715c15' before making global git config changes
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2698536Z Adding repository directory to the temporary git global config as a safe directory
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2704168Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/egg/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2745523Z Deleting the contents of '/home/runner/work/egg/egg'
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2749755Z ##[group]Initializing the repository
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2754342Z [command]/usr/bin/git init /home/runner/work/egg/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2860953Z hint: Using 'master' as the name for the initial branch. This default branch name
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2862165Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2862763Z hint: to use in all of your new repositories, which will suppress this warning,
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2863195Z hint: call:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2863400Z hint:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2863845Z hint: 	git config --global init.defaultBranch <name>
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2864496Z hint:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2865092Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2866041Z hint: 'development'. The just-created branch can be renamed via this command:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2867033Z hint:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2867490Z hint: 	git branch -m <name>
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2867967Z hint:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2868641Z hint: Disable this message with "git config set advice.defaultBranchName false"
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2869749Z Initialized empty Git repository in /home/runner/work/egg/egg/.git/
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2877749Z [command]/usr/bin/git remote add origin https://github.com/hanthor/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2911981Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2912760Z ##[group]Disabling automatic garbage collection
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2917373Z [command]/usr/bin/git config --local gc.auto 0
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2945900Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2946645Z ##[group]Setting up auth
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2953941Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.2985112Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3311701Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3343335Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3573830Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3605028Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3841364Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3875551Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3876374Z ##[group]Fetching the repository
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.3885837Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d0d4eba61898b57ae4a417f4d1a848e02e03da7d:refs/remotes/pull/2/merge
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7168019Z From https://github.com/hanthor/egg
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7168881Z  * [new ref]         d0d4eba61898b57ae4a417f4d1a848e02e03da7d -> pull/2/merge
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7208192Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7208904Z ##[group]Determining the checkout info
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7212103Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7218590Z [command]/usr/bin/git sparse-checkout disable
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7266901Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7298175Z ##[group]Checking out the ref
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7302867Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7458590Z Note: switching to 'refs/remotes/pull/2/merge'.
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7459356Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7459988Z You are in 'detached HEAD' state. You can look around, make experimental
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7461298Z changes and commit them, and you can discard any commits you make in this
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7462442Z state without impacting any branches by switching back to a branch.
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7463083Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7463419Z If you want to create a new branch to retain commits you create, you may
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7464193Z do so (now or later) by using -c with the switch command. Example:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7464690Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7464879Z   git switch -c <new-branch-name>
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7465198Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7465377Z Or undo this operation with:
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7465671Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7465842Z   git switch -
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7466050Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7466472Z Turn off this advice by setting config variable advice.detachedHead to false
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7467277Z 
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7467917Z HEAD is now at d0d4eba Merge fa9398fcfb8b3cb03fa295b4a09ee9ef3113c43a into 64741dbb8cfc41ef04228a075698457e4f2004aa
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7469703Z ##[endgroup]
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7508653Z [command]/usr/bin/git log -1 --format=%H
+export	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-16T06:35:59.7534532Z d0d4eba61898b57ae4a417f4d1a848e02e03da7d
+export	Run podman pull "$BST2_IMAGE"	﻿2026-02-16T06:35:59.7665533Z ##[group]Run podman pull "$BST2_IMAGE"
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7665849Z [36;1mpodman pull "$BST2_IMAGE"[0m
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7712571Z shell: /usr/bin/bash -e {0}
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7712815Z env:
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7712983Z   IMAGE_NAME: egg
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7713179Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7713799Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7714447Z   CACHE_GRPC_PORT: 9092
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7714647Z   CACHE_HTTP_PORT: 8080
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.7714836Z ##[endgroup]
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:35:59.9321497Z Trying to pull registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1...
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:00.7262496Z Getting image source signatures
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:00.7264037Z Copying blob sha256:310d34cd6fa6ba2610968900e09f45a69236bcc45dd78af2ac13023212bd914c
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:00.7265148Z Copying blob sha256:9b141fb22193d37cff5e81fb83503ca4708ad99449adf45bf4e7c60a4c141f1c
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:17.1898515Z Copying config sha256:5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:17.1918458Z Writing manifest to image destination
+export	Run podman pull "$BST2_IMAGE"	2026-02-16T06:36:17.2829818Z 5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+export	Run ./scripts/setup-buildstream.sh	﻿2026-02-16T06:36:17.3104850Z ##[group]Run ./scripts/setup-buildstream.sh
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3105226Z [36;1m./scripts/setup-buildstream.sh[0m
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3149121Z shell: /usr/bin/bash -e {0}
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3149347Z env:
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3149512Z   IMAGE_NAME: egg
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3149703Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3150329Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3150974Z   CACHE_GRPC_PORT: 9092
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3151168Z   CACHE_HTTP_PORT: 8080
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3151410Z ##[endgroup]
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3259222Z scheduler:
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3259539Z   on-error: continue
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3259758Z   fetchers: 12
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3259933Z   builders: 1
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3260175Z   network-retries: 3
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3260401Z 
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3260516Z logging:
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3261043Z   message-format: '[%{wallclock}][%{elapsed}][%{key}][%{element}] %{action} %{message}'
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3261756Z   error-lines: 80
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3262002Z 
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3262348Z build:
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3262613Z   max-jobs: 0
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3262880Z   retry-failed: True
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3263004Z 
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3263075Z cache:
+export	Run ./scripts/setup-buildstream.sh	2026-02-16T06:36:17.3263238Z   cache-buildtrees: never
+export	Download all CAS chunks	﻿2026-02-16T06:36:17.3316135Z ##[group]Run actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+export	Download all CAS chunks	2026-02-16T06:36:17.3316535Z with:
+export	Download all CAS chunks	2026-02-16T06:36:17.3318132Z   pattern: cas-*
+export	Download all CAS chunks	2026-02-16T06:36:17.3318366Z   path: downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.3318571Z   merge-multiple: true
+export	Download all CAS chunks	2026-02-16T06:36:17.3318775Z   repository: hanthor/egg
+export	Download all CAS chunks	2026-02-16T06:36:17.3318970Z   run-id: 22049492629
+export	Download all CAS chunks	2026-02-16T06:36:17.3319149Z env:
+export	Download all CAS chunks	2026-02-16T06:36:17.3319298Z   IMAGE_NAME: egg
+export	Download all CAS chunks	2026-02-16T06:36:17.3319567Z   IMAGE_REGISTRY: ghcr.io/hanthor
+export	Download all CAS chunks	2026-02-16T06:36:17.3320272Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+export	Download all CAS chunks	2026-02-16T06:36:17.3320888Z   CACHE_GRPC_PORT: 9092
+export	Download all CAS chunks	2026-02-16T06:36:17.3321102Z   CACHE_HTTP_PORT: 8080
+export	Download all CAS chunks	2026-02-16T06:36:17.3321286Z ##[endgroup]
+export	Download all CAS chunks	2026-02-16T06:36:17.6773399Z Found 20 artifact(s)
+export	Download all CAS chunks	2026-02-16T06:36:17.6774626Z Filtering artifacts by pattern 'cas-*'
+export	Download all CAS chunks	2026-02-16T06:36:17.6794662Z Preparing to download the following artifacts:
+export	Download all CAS chunks	2026-02-16T06:36:17.6795609Z - cas-chunk10-bluefin (ID: 5521442116, Size: 16227312986)
+export	Download all CAS chunks	2026-02-16T06:36:17.6796325Z - cas-chunk4-mesa-headers (ID: 5520557755, Size: 3413855231)
+export	Download all CAS chunks	2026-02-16T06:36:17.6797184Z - cas-chunk9-mtab (ID: 5520547013, Size: 6818601809)
+export	Download all CAS chunks	2026-02-16T06:36:17.6797788Z - cas-chunk1-sqlite (ID: 5520511370, Size: 4668797823)
+export	Download all CAS chunks	2026-02-16T06:36:17.6798450Z - cas-chunk7-xorg-lib-xcvt (ID: 5520508650, Size: 5945350998)
+export	Download all CAS chunks	2026-02-16T06:36:17.6799144Z - cas-chunk3-netavark (ID: 5520502485, Size: 4373340530)
+export	Download all CAS chunks	2026-02-16T06:36:17.6799793Z - cas-chunk2-libpng (ID: 5520480943, Size: 2313060987)
+export	Download all CAS chunks	2026-02-16T06:36:17.6800382Z - cas-chunk8-spice (ID: 5520477256, Size: 5047471252)
+export	Download all CAS chunks	2026-02-16T06:36:17.6800979Z - cas-chunk5-frei0r (ID: 5520455989, Size: 3524369947)
+export	Download all CAS chunks	2026-02-16T06:36:17.6801677Z - cas-chunk6-blueprint-compiler (ID: 5520447353, Size: 1796989697)
+export	Download all CAS chunks	2026-02-16T06:36:17.7811448Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-cef415b9-e344-5c9e-8ea8-27e8a42d42ce/artifacts/b11e0eb16bfa8e97c793ef9e998c4254ba6cb4a0fabc5cd0ca53c53b0b898b54.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.7814160Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8256242Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-f2a71a84-662e-5eb9-9d4c-5b8129e941db/artifacts/b2134cd6e867b268758f1ee172484d999b2fffb75e74413f73db882cd1437d5f.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8258125Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8287381Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-2a4f8c78-6d62-5bd4-aa45-6c9b7b6a05d3/artifacts/89636b548898df8a830d54de1e3772a4eb97f55f85dae77e9be497c911d82226.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8288854Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8351945Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-c13119a3-1f08-5041-bc18-364c31413759/artifacts/0b00ef42d139f32cc675811f5d049dafd033eec34da2a92934695f0bab576ed8.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8353230Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8362813Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-dc3640f2-fe93-508d-9b37-8fc7f2ea16e7/artifacts/92501f958db064c6569555eb61cffd5c8e5dc949f532e49b880cc73fbd9b6762.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8365442Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8412929Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-4105af0f-5c50-56ea-8969-40069cab7bb1/artifacts/9cc6633a2dd1acc653721653ab2fa8b692a39835317547cb66d82c79d2d48c56.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8415573Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8528488Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-983fbbec-8291-5ab5-a9b3-66ecea827732/artifacts/80d4fb0ff8dd3bc60e82683af42f680b0e447784b34c19121a62fa0ef8bc25f1.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8530772Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8540274Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-224eb45c-d5bd-5b15-89d8-f20be1619d25/artifacts/e22d0d13ba8d1930ea88e0a62c6120340612190fdf03dbe23cc62092502afc38.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8542594Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8551835Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-b6fae425-d0f1-5ef1-9180-2a6a5f064bf4/artifacts/2197cbecf6e6c0e9bbed6b7b6addccd2e06e066c9696c524f0fd759d596c4edf.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8553352Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.8659480Z Redirecting to blob download url: https://productionresultssa5.blob.core.windows.net/actions-results/752a92ee-1633-45c7-a08e-34b27a14d998/workflow-job-run-ecf7f0f2-bfaa-5000-8916-25222b63794f/artifacts/47565a6c00bdae79b6ffe7fd1fb41f61cd63362315229f8cb1129eb7d123a00c.zip
+export	Download all CAS chunks	2026-02-16T06:36:17.8661847Z Starting download of artifact to: /home/runner/work/egg/egg/downloaded-cas
+export	Download all CAS chunks	2026-02-16T06:36:17.9313956Z (node:2330) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+export	Download all CAS chunks	2026-02-16T06:36:17.9315677Z (Use `node --trace-deprecation ...` to show where the warning was created)
+export	Download all CAS chunks	2026-02-16T06:38:56.8973872Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:38:57.6213103Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:40:17.0893833Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:40:44.5685910Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:41:26.4369882Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:41:29.8956321Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:41:48.7205626Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:42:17.5691318Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:42:41.9595828Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:45:17.2636619Z Artifact download completed successfully.
+export	Download all CAS chunks	2026-02-16T06:45:17.2637210Z Total of 10 artifact(s) downloaded
+export	Download all CAS chunks	2026-02-16T06:45:17.2645214Z Download artifact has finished successfully

@@ -1,0 +1,585 @@
+planning	UNKNOWN STEP	﻿2026-02-16T09:02:17.6911829Z Current runner version: '2.331.0'
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6935684Z ##[group]Runner Image Provisioner
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6936628Z Hosted Compute Agent
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6937185Z Version: 20260123.484
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6937792Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6938421Z Build Date: 2026-01-23T19:41:17Z
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6939167Z Worker ID: {759d9f45-e553-412f-86dc-7402c508fe62}
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6939852Z Azure Region: eastus2
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6940376Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6943254Z ##[group]Operating System
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6944139Z Ubuntu
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6944842Z 24.04.3
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6945671Z LTS
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6946394Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6947168Z ##[group]Runner Image
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6948158Z Image: ubuntu-24.04
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6948982Z Version: 20260209.23.1
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6951186Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260209.23/images/ubuntu/Ubuntu2404-Readme.md
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6953796Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260209.23
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6955316Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6960210Z ##[group]GITHUB_TOKEN Permissions
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6963388Z Actions: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6964409Z ArtifactMetadata: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6965535Z Attestations: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6966381Z Checks: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6967334Z Contents: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6968304Z Deployments: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6969133Z Discussions: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6970012Z Issues: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6971075Z Metadata: read
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6971981Z Models: read
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6972798Z Packages: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6973847Z Pages: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6974886Z PullRequests: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6975907Z RepositoryProjects: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6977012Z SecurityEvents: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6977924Z Statuses: write
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6978906Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6982285Z Secret source: Actions
+planning	UNKNOWN STEP	2026-02-16T09:02:17.6983926Z Prepare workflow directory
+planning	UNKNOWN STEP	2026-02-16T09:02:17.7759167Z Prepare all required actions
+planning	UNKNOWN STEP	2026-02-16T09:02:17.7815140Z Getting action download info
+planning	UNKNOWN STEP	2026-02-16T09:02:18.1167324Z Download action repository 'ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6' (SHA:695eb75bc387dbcd9685a8e72d23439d8686cba6)
+planning	UNKNOWN STEP	2026-02-16T09:02:18.4874505Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+planning	UNKNOWN STEP	2026-02-16T09:02:18.5268775Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+planning	UNKNOWN STEP	2026-02-16T09:02:18.6368378Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+planning	UNKNOWN STEP	2026-02-16T09:02:18.8524761Z Complete job name: planning
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9116968Z ##[group]Run ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9118088Z with:
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9118464Z   extra-squeeze: false
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9119038Z env:
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9119393Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9119788Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9121035Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9122176Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9122587Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9122987Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9216812Z ##[group]Run echo "==> Available space before cleanup"
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9217558Z [36;1mecho "==> Available space before cleanup"[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9218119Z [36;1mdf -h[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9218526Z [36;1m# Remove swapfile (3gb)[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9219132Z [36;1m# swapoff is required for arm, but not for x64?[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9219822Z [36;1msudo swapoff -a || true; sudo rm -f /swapfile || true[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9220867Z [36;1m# Remove toolchains, browsers[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9221368Z [36;1mshopt -s nullglob[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9221803Z [36;1mEXTRAPKG=""[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9222218Z [36;1mif [ "false" = "true" ]; then[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9222847Z [36;1m  # These have a lot of small files and are a bit slower to remove[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9223623Z [36;1m  EXTRAPKG="/usr/share/miniconda /opt/hostedtoolcache"[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9224199Z [36;1mfi[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9224756Z [36;1mprintf '%s\0' /opt/PyPy /opt/az /opt/node/ /opt/pipx /opt/go /opt/Ruby \[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9225686Z [36;1m    /usr/lib/llvm-* /usr/local/julia* /usr/local/lib/android /usr/share/dotnet \[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9226604Z [36;1m    /usr/share/swift /usr/local/.ghcup /usr/lib/firefox /opt/google/chrome \[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9227345Z [36;1m    /opt/microsoft/msedge $EXTRAPKG \[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9227894Z [36;1m    | sudo xargs -0 -n1 -P4 rm -rf[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9228451Z [36;1mecho "==> Available space after cleanup"[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9228967Z [36;1mdf -h[0m
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9282473Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9283112Z env:
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9283448Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9283853Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9284916Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9286009Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9286415Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9286812Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9424072Z ==> Available space before cleanup
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9518868Z Filesystem      Size  Used Avail Use% Mounted on
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9519612Z /dev/root       145G   53G   92G  37% /
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9520734Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9521677Z tmpfs           3.2G 1000K  3.2G   1% /run
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9522583Z tmpfs           5.0M     0  5.0M   0% /run/lock
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9523600Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9524236Z /dev/sda16      881M   63M  757M   8% /boot
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9524762Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+planning	UNKNOWN STEP	2026-02-16T09:02:18.9525337Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9315326Z ==> Available space after cleanup
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9330996Z Filesystem      Size  Used Avail Use% Mounted on
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9335705Z /dev/root       145G   24G  121G  17% /
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9336799Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9337481Z tmpfs           3.2G 1000K  3.2G   1% /run
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9338028Z tmpfs           5.0M     0  5.0M   0% /run/lock
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9338737Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9339848Z /dev/sda16      881M   63M  757M   8% /boot
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9340776Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9341380Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9586191Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9587045Z with:
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9587486Z   repository: hanthor/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9588223Z   token: ***
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9588684Z   ssh-strict: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9589106Z   ssh-user: git
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9589494Z   persist-credentials: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9590114Z   clean: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9590779Z   sparse-checkout-cone-mode: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9591267Z   fetch-depth: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9591706Z   fetch-tags: false
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9592124Z   show-progress: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9592535Z   lfs: false
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9592919Z   submodules: false
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9593394Z   set-safe-directory: true
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9593832Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9594185Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9594596Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9596136Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9597392Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9597853Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:16.9598254Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0632815Z Syncing repository: hanthor/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0634128Z ##[group]Getting Git version info
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0634525Z Working directory is '/home/runner/work/egg/egg'
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0635087Z [command]/usr/bin/git version
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0651764Z git version 2.52.0
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0676570Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0691171Z Temporarily overriding HOME='/home/runner/work/_temp/24fecb42-8764-4862-907e-9861bda90be2' before making global git config changes
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0692574Z Adding repository directory to the temporary git global config as a safe directory
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0696383Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/egg/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0737685Z Deleting the contents of '/home/runner/work/egg/egg'
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0741283Z ##[group]Initializing the repository
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0745216Z [command]/usr/bin/git init /home/runner/work/egg/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0838917Z hint: Using 'master' as the name for the initial branch. This default branch name
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0840078Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0841190Z hint: to use in all of your new repositories, which will suppress this warning,
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0841899Z hint: call:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0842255Z hint:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0842641Z hint: 	git config --global init.defaultBranch <name>
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0843091Z hint:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0843666Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0844670Z hint: 'development'. The just-created branch can be renamed via this command:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0845394Z hint:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0845813Z hint: 	git branch -m <name>
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0846246Z hint:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0846858Z hint: Disable this message with "git config set advice.defaultBranchName false"
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0847683Z Initialized empty Git repository in /home/runner/work/egg/egg/.git/
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0854773Z [command]/usr/bin/git remote add origin https://github.com/hanthor/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0890183Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0891185Z ##[group]Disabling automatic garbage collection
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0896228Z [command]/usr/bin/git config --local gc.auto 0
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0925965Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0926718Z ##[group]Setting up auth
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0933781Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+planning	UNKNOWN STEP	2026-02-16T09:03:17.0965613Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1314891Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1344293Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1578151Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1611445Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1858266Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1894980Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1895806Z ##[group]Fetching the repository
+planning	UNKNOWN STEP	2026-02-16T09:03:17.1904814Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +cb0c38037d3578138aed1c12573902fe4c09a850:refs/remotes/pull/2/merge
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4316289Z From https://github.com/hanthor/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4317090Z  * [new ref]         cb0c38037d3578138aed1c12573902fe4c09a850 -> pull/2/merge
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4356708Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4357334Z ##[group]Determining the checkout info
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4360822Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4367073Z [command]/usr/bin/git sparse-checkout disable
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4419163Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4452239Z ##[group]Checking out the ref
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4457214Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4603279Z Note: switching to 'refs/remotes/pull/2/merge'.
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4604081Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4604538Z You are in 'detached HEAD' state. You can look around, make experimental
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4605467Z changes and commit them, and you can discard any commits you make in this
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4606407Z state without impacting any branches by switching back to a branch.
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4606967Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4607364Z If you want to create a new branch to retain commits you create, you may
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4608197Z do so (now or later) by using -c with the switch command. Example:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4608679Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4608873Z   git switch -c <new-branch-name>
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4609179Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4609371Z Or undo this operation with:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4609658Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4609809Z   git switch -
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4610022Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4610662Z Turn off this advice by setting config variable advice.detachedHead to false
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4611231Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4611898Z HEAD is now at cb0c380 Merge 0a66901646b1dce0763e9835bc22579db7232429 into 64741dbb8cfc41ef04228a075698457e4f2004aa
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4613587Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4654297Z [command]/usr/bin/git log -1 --format=%H
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4692830Z cb0c38037d3578138aed1c12573902fe4c09a850
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4848908Z ##[group]Run podman pull "$BST2_IMAGE"
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4849413Z [36;1mpodman pull "$BST2_IMAGE"[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4906341Z shell: /usr/bin/bash -e {0}
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4906614Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4906791Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4907105Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4907926Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4908687Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4908917Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:17.4909234Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:17.6758046Z Trying to pull registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1...
+planning	UNKNOWN STEP	2026-02-16T09:03:18.4712894Z Getting image source signatures
+planning	UNKNOWN STEP	2026-02-16T09:03:18.4714497Z Copying blob sha256:310d34cd6fa6ba2610968900e09f45a69236bcc45dd78af2ac13023212bd914c
+planning	UNKNOWN STEP	2026-02-16T09:03:18.4715753Z Copying blob sha256:9b141fb22193d37cff5e81fb83503ca4708ad99449adf45bf4e7c60a4c141f1c
+planning	UNKNOWN STEP	2026-02-16T09:03:40.2947788Z Copying config sha256:5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+planning	UNKNOWN STEP	2026-02-16T09:03:40.2975226Z Writing manifest to image destination
+planning	UNKNOWN STEP	2026-02-16T09:03:40.3897660Z 5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5172497Z ##[group]Run actions/cache@v4
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5172754Z with:
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5172944Z   path: .cache/buildstream/sources
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5173374Z   key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5173846Z   restore-keys: bst-sources-Linux-
+planning	UNKNOWN STEP	
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5174100Z   enableCrossOsArchive: false
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5174332Z   fail-on-cache-miss: false
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5174550Z   lookup-only: false
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5174734Z   save-always: false
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5174971Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5175411Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5175597Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5176195Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5176797Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5176995Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:40.5177185Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:40.7569802Z Cache hit for: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:40.9423964Z Received 6712141 of 6712141 (100.0%), 48.5 MBs/sec
+planning	UNKNOWN STEP	2026-02-16T09:03:40.9424946Z Cache Size: ~6 MB (6712141 B)
+planning	UNKNOWN STEP	2026-02-16T09:03:40.9452386Z [command]/usr/bin/tar -xf /home/runner/work/_temp/2b6fb19a-d1f4-474c-b644-bcc8765feb92/cache.tzst -P -C /home/runner/work/egg/egg --use-compress-program unzstd
+planning	UNKNOWN STEP	2026-02-16T09:03:40.9639539Z Cache restored successfully
+planning	UNKNOWN STEP	2026-02-16T09:03:40.9734660Z Cache restored from key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0685923Z ##[group]Run actions/cache@v4
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0686173Z with:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0686361Z   path: .cache/buildstream/sources
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0686795Z   key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0687254Z   restore-keys: bst-sources-Linux-
+planning	UNKNOWN STEP	
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0687529Z   enableCrossOsArchive: false
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0687776Z   fail-on-cache-miss: false
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0687994Z   lookup-only: false
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0688187Z   save-always: false
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0688370Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0688532Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0688728Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0689340Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0689955Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0690152Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:41.0690360Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:41.2771736Z Cache hit for: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:41.4870936Z Received 6712141 of 6712141 (100.0%), 41.0 MBs/sec
+planning	UNKNOWN STEP	2026-02-16T09:03:41.4871639Z Cache Size: ~6 MB (6712141 B)
+planning	UNKNOWN STEP	2026-02-16T09:03:41.4901063Z [command]/usr/bin/tar -xf /home/runner/work/_temp/964ffbe9-4f4a-43b3-8936-004749c756ff/cache.tzst -P -C /home/runner/work/egg/egg --use-compress-program unzstd
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5087073Z Cache restored successfully
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5181735Z Cache restored from key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5276747Z ##[group]Run ./scripts/setup-buildstream.sh
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5277179Z [36;1m./scripts/setup-buildstream.sh[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5322285Z shell: /usr/bin/bash -e {0}
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5322530Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5322708Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5322912Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5323569Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5324211Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5324426Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5324631Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5431844Z scheduler:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5432184Z   on-error: continue
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5432419Z   fetchers: 12
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5432613Z   builders: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5432946Z   network-retries: 3
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5433164Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5433293Z logging:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5433894Z   message-format: '[%{wallclock}][%{elapsed}][%{key}][%{element}] %{action} %{message}'
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5434621Z   error-lines: 80
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5434820Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5434937Z build:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5435204Z   max-jobs: 0
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5435479Z   retry-failed: True
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5435616Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5435683Z cache:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5436068Z   cache-buildtrees: never
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5460977Z ##[group]Run mkdir -p .cache/buildstream
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5461367Z [36;1mmkdir -p .cache/buildstream[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5461649Z [36;1mmkdir -p logs[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5462024Z [36;1m# Run the script inside container to ensure python/bst environment matches[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5462492Z [36;1mpodman run --rm --privileged --device /dev/fuse \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5462913Z [36;1m  --security-opt apparmor=unconfined --cap-add SYS_ADMIN \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5463306Z [36;1m  -v "/home/runner/work/egg/egg:/src:rw" \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5463763Z [36;1m  -v "/home/runner/work/egg/egg/.cache/buildstream:/root/.cache/buildstream:rw" \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5464192Z [36;1m  -w /src \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5464406Z [36;1m  "$BST2_IMAGE" \[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5464793Z [36;1m  python3 scripts/generate-build-matrix.py oci/bluefin.bst 10 > matrix.json[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5465203Z [36;1m[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5465399Z [36;1mcat matrix.json[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5465737Z [36;1m# Output keys for strategy.matrix (e.g. ["chunk1", "chunk2"])[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5466419Z [36;1mpython3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_keys={json.dumps(list(data.keys()))}')" >> "$GITHUB_OUTPUT"[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5467139Z [36;1m# Output full data for looking up targets (e.g. {"chunk1": "target1 target2"})[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5467820Z [36;1mpython3 -c "import json; data = json.load(open('matrix.json')); print(f'matrix_data={json.dumps(data)}')" >> "$GITHUB_OUTPUT"[0m
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5530665Z shell: /usr/bin/bash -e {0}
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5530953Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5531139Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5531359Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5531987Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5532646Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5532882Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:41.5533092Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:41.9815205Z Generating build plan for oci/bluefin.bst with 10 chunks...
+planning	UNKNOWN STEP	2026-02-16T09:03:42.4241833Z [--:--:--][        ][    main:core activity                 ] START   Loading elements
+planning	UNKNOWN STEP	2026-02-16T09:03:42.4883715Z [--:--:--][e3d5e9d9][   fetch:plugins/buildstream-plugins-community.bst] START   bluefin/plugins-buildstream-plugins-community/e3d5e9d9-fetch.20260216-090342.log
+planning	UNKNOWN STEP	2026-02-16T09:03:42.4885860Z [00:00:00][e3d5e9d9][   fetch:plugins/buildstream-plugins-community.bst] SUCCESS bluefin/plugins-buildstream-plugins-community/e3d5e9d9-fetch.20260216-090342.log
+planning	UNKNOWN STEP	2026-02-16T09:03:43.6251234Z [--:--:--][6972e463][   fetch:gnome-build-meta.bst          ] START   bluefin/gnome-build-meta/6972e463-fetch.20260216-090342.log
+planning	UNKNOWN STEP	2026-02-16T09:03:43.6252716Z [--:--:--][6972e463][   fetch:gnome-build-meta.bst          ] STATUS  Checking out c1c661ff62b12f0e45ece25eda61de763a263d8d
+planning	UNKNOWN STEP	2026-02-16T09:03:43.6253935Z [--:--:--][6972e463][   fetch:gnome-build-meta.bst          ] STATUS  Adding 3091 objects
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6255470Z [--:--:--][6972e463][   fetch:gnome-build-meta.bst          ] START   Applying patch queue: patches/gnome-build-meta
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6256546Z [--:--:--][6972e463][   fetch:gnome-build-meta.bst          ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6257106Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6258759Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdir7q5qtX --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdir7q5qtX/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdir7q5qtX apply /src/patches/gnome-build-meta/736f7794f272f9d9e4b60e9f3a7f32f40518addf.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6260844Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6261376Z [00:00:00][6972e463][   fetch:gnome-build-meta.bst          ] SUCCESS Applying patch queue: patches/gnome-build-meta
+planning	UNKNOWN STEP	2026-02-16T09:03:44.6603893Z [00:00:02][6972e463][   fetch:gnome-build-meta.bst          ] SUCCESS bluefin/gnome-build-meta/6972e463-fetch.20260216-090342.log
+planning	UNKNOWN STEP	2026-02-16T09:03:46.3457190Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] START   bluefin/freedesktop-sdk/5aa6c3bb-fetch.20260216-090345.log
+planning	UNKNOWN STEP	2026-02-16T09:03:46.3458189Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Checking out 8287748d639f575825280f6d67eec48d60718efa
+planning	UNKNOWN STEP	2026-02-16T09:03:46.3459094Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Adding 213 objects
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7026637Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] START   Applying patch queue: patches/freedesktop-sdk
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7028166Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7028524Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7030140Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0001-project-Specify-more-limits-to-the-CAS-configs.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7031708Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7031956Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7032291Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7033391Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0002-project.conf-Add-GNOME-CAS-servers.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7035252Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7035647Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7036183Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7038005Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0003-linux-Backport-patches-for-OnePlus-6-s-panel.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7039949Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7040334Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7041111Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7042778Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0004-openssh-Use-etc-ssh-as-sysconfdir.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7044647Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7045062Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7045658Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7047426Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0005-openssh-Include-ssh-_config.d-.conf.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7049415Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7049826Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7050425Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7052376Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0006-linux-Add-missing-soc-button-module.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7054340Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7054751Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7055356Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7057178Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/0007-lvm2-Disable-event-activation-by-default.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7059536Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7060063Z [--:--:--][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] STATUS  Running host command
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7060414Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7061594Z     /usr/sbin/git -C /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp --git-dir /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp/.git --work-tree /root/.cache/buildstream/cas/staging/cas-tmpdirQUjHNp apply /src/patches/freedesktop-sdk/flatpak-1.16.3.patch
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7062567Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7062866Z [00:00:00][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] SUCCESS Applying patch queue: patches/freedesktop-sdk
+planning	UNKNOWN STEP	2026-02-16T09:03:46.7063601Z [00:00:01][5aa6c3bb][   fetch:freedesktop-sdk.bst           ] SUCCESS bluefin/freedesktop-sdk/5aa6c3bb-fetch.20260216-090345.log
+planning	UNKNOWN STEP	2026-02-16T09:03:47.9621855Z [00:00:05][        ][    main:core activity                 ] SUCCESS Loading elements
+planning	UNKNOWN STEP	2026-02-16T09:03:47.9622471Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:47.9622659Z     1104 subtasks processed
+planning	UNKNOWN STEP	2026-02-16T09:03:47.9623004Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:48.0144524Z [--:--:--][        ][    main:core activity                 ] START   Resolving elements
+planning	UNKNOWN STEP	2026-02-16T09:03:48.0146143Z [--:--:--][1c22c942][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins-community.bst] START   freedesktop-sdk/plugins-buildstream-plugins-community/1c22c942-fetch.20260216-090347.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.0148489Z [00:00:00][1c22c942][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins-community.bst] SUCCESS freedesktop-sdk/plugins-buildstream-plugins-community/1c22c942-fetch.20260216-090347.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.1850818Z [--:--:--][b1b2d62b][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins.bst] START   freedesktop-sdk/plugins-buildstream-plugins/b1b2d62b-fetch.20260216-090348.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.1852768Z [--:--:--][b1b2d62b][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins.bst] STATUS  Checking out 79649529cffb695d0d22195ed9a4910c80ca6907
+planning	UNKNOWN STEP	2026-02-16T09:03:48.1854258Z [--:--:--][b1b2d62b][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins.bst] STATUS  Adding 82 objects
+planning	UNKNOWN STEP	2026-02-16T09:03:48.1855935Z [00:00:00][b1b2d62b][   fetch:freedesktop-sdk.bst:plugins/buildstream-plugins.bst] SUCCESS freedesktop-sdk/plugins-buildstream-plugins/b1b2d62b-fetch.20260216-090348.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.4333840Z [--:--:--][e8537401][   fetch:plugins/buildstream-plugins.bst] START   bluefin/plugins-buildstream-plugins/e8537401-fetch.20260216-090348.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.4335307Z [00:00:00][e8537401][   fetch:plugins/buildstream-plugins.bst] SUCCESS bluefin/plugins-buildstream-plugins/e8537401-fetch.20260216-090348.log
+planning	UNKNOWN STEP	2026-02-16T09:03:48.6190944Z [--:--:--][        ][    main:core/bootc.bst                ] WARNING [unaliased-url]: cargo2 source at core/bootc.bst [line 8 column 2]: Use of unaliased source download URL: https://static.crates.io/crates/
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3874763Z gpg: keybox '/root/.config/buildstream-generate/tmp8th0yabc/private-key/pubring.kbx' created
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3895134Z gpg: /root/.config/buildstream-generate/tmp8th0yabc/private-key/trustdb.gpg: trustdb created
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3897075Z gpg: key 330B692A70353BFC: public key "GNOME OS" imported
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3984406Z gpg: key 330B692A70353BFC: secret key imported
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3984954Z gpg: Total number processed: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3985365Z gpg:               imported: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3985750Z gpg:       secret keys read: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:49.3986147Z gpg:   secret keys imported: 1
+planning	UNKNOWN STEP	2026-02-16T09:03:49.4231180Z writing RSA key
+planning	UNKNOWN STEP	2026-02-16T09:03:49.4290077Z writing RSA key
+planning	UNKNOWN STEP	2026-02-16T09:03:49.4337913Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:49.4340148Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:49.4340769Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:49.5317086Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:49.5317849Z 100  1516  100  1516    0     0  15475      0 --:--:-- --:--:-- --:--:-- 15628
+planning	UNKNOWN STEP	2026-02-16T09:03:49.5547600Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:49.5553308Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:49.5553784Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:49.7396112Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:49.7396993Z 100  1462  100  1462    0     0   7906      0 --:--:-- --:--:-- --:--:--  7945
+planning	UNKNOWN STEP	2026-02-16T09:03:49.7636913Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:49.7637580Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:49.7637931Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:49.8429933Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:49.8430869Z 100  1499  100  1499    0     0  18818      0 --:--:-- --:--:-- --:--:-- 18974
+planning	UNKNOWN STEP	2026-02-16T09:03:49.8669391Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:49.8670661Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:49.8671112Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:49.9548910Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:49.9549780Z 100  1454  100  1454    0     0  16442      0 --:--:-- --:--:-- --:--:-- 16522
+planning	UNKNOWN STEP	2026-02-16T09:03:49.9777879Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:49.9779574Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:49.9780238Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:50.1110994Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:50.1111866Z 100  1556  100  1556    0     0  11645      0 --:--:-- --:--:-- --:--:-- 11699
+planning	UNKNOWN STEP	2026-02-16T09:03:50.1339941Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:50.1342859Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:50.1343338Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2184156Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2185084Z 100  1448  100  1448    0     0  17094      0 --:--:-- --:--:-- --:--:-- 17238
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2417439Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2418330Z                                  Dload  Upload   Total   Spent    Left  Speed
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2419091Z 
+planning	UNKNOWN STEP	2026-02-16T09:03:50.2427251Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:50.3782615Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+planning	UNKNOWN STEP	2026-02-16T09:03:50.3783699Z 100  1459  100  1459    0     0  10667      0 --:--:-- --:--:-- --:--:-- 10649
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8526140Z [--:--:--][        ][    main:bluefin/sudo-rs.bst           ] WARNING [unaliased-url]: git_repo source at bluefin/sudo-rs.bst [line 27 column 2]: Use of unaliased source download URL: https://github.com/memorysafety/sudo-rs.git
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8529151Z [--:--:--][        ][    main:bluefin/sudo-rs.bst           ] WARNING [unaliased-url]: cargo2 source at bluefin/sudo-rs.bst [line 31 column 2]: Use of unaliased source download URL: https://static.crates.io/crates/
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8546731Z [--:--:--][        ][    main:bluefin/uutils-coreutils.bst  ] WARNING [unaliased-url]: git_repo source at bluefin/uutils-coreutils.bst [line 22 column 2]: Use of unaliased source download URL: https://github.com/uutils/coreutils.git
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8588486Z [--:--:--][        ][    main:bluefin/uutils-coreutils.bst  ] WARNING [unaliased-url]: cargo2 source at bluefin/uutils-coreutils.bst [line 26 column 2]: Use of unaliased source download URL: https://static.crates.io/crates/
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8820204Z [00:00:02][        ][    main:core activity                 ] SUCCESS Resolving elements
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8869055Z [--:--:--][        ][    main:core activity                 ] START   Initializing remote caches
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8871297Z [00:00:00][        ][    main:core activity                 ] SUCCESS Initializing remote caches
+planning	UNKNOWN STEP	2026-02-16T09:03:50.8951503Z [--:--:--][        ][    main:core activity                 ] START   Query cache
+planning	UNKNOWN STEP	2026-02-16T09:03:50.9390723Z [00:00:00][        ][    main:core activity                 ] SUCCESS Query cache
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6728747Z Skipping malformed line: name=PK;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6729446Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6730160Z Skipping malformed line: cat "snakeoil/${key_name}" >"PK.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6733384Z Skipping malformed line: name=PK_MIC;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6734029Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6734770Z Skipping malformed line: cat "snakeoil/${key_name}" >"PK_MIC.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6735402Z Skipping malformed line: name=KEK;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6736037Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6737013Z Skipping malformed line: cat "snakeoil/${key_name}" >"KEK.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6737838Z Skipping malformed line: name=KEK_MIC;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6738613Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6739547Z Skipping malformed line: cat "snakeoil/${key_name}" >"KEK_MIC.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6740307Z Skipping malformed line: name=DB;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6741198Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6742073Z Skipping malformed line: cat "snakeoil/${key_name}" >"DB.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6742657Z Skipping malformed line: name=VENDOR;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6743253Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6743970Z Skipping malformed line: cat "snakeoil/${key_name}" >"VENDOR.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6744808Z Skipping malformed line: name=MODULES;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6745780Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6746530Z Skipping malformed line: cat "snakeoil/${key_name}" >"MODULES.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6747163Z Skipping malformed line: name=SYSEXT;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6747771Z Skipping malformed line: key_name=SECURE_BOOT_${name}_KEY;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6748460Z Skipping malformed line: cat "snakeoil/${key_name}" >"SYSEXT.key"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6749072Z Skipping malformed line: name=PK;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6749652Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6750363Z Skipping malformed line: cat "snakeoil/${crt_name}" >"PK.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6751151Z Skipping malformed line: name=PK_MIC;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6751745Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6752463Z Skipping malformed line: cat "snakeoil/${crt_name}" >"PK_MIC.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6753097Z Skipping malformed line: name=KEK;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6753720Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6754452Z Skipping malformed line: cat "snakeoil/${crt_name}" >"KEK.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6755044Z Skipping malformed line: name=KEK_MIC;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6755597Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6756304Z Skipping malformed line: cat "snakeoil/${crt_name}" >"KEK_MIC.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6756869Z Skipping malformed line: name=DB;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6757425Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6758070Z Skipping malformed line: cat "snakeoil/${crt_name}" >"DB.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6758629Z Skipping malformed line: name=VENDOR;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6759181Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6759871Z Skipping malformed line: cat "snakeoil/${crt_name}" >"VENDOR.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6760626Z Skipping malformed line: name=MODULES;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6761183Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6762396Z Skipping malformed line: cat "snakeoil/${crt_name}" >"MODULES.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6762810Z Skipping malformed line: name=SYSEXT;			\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6763211Z Skipping malformed line: crt_name=SECURE_BOOT_${name}_CRT;		\
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6763902Z Skipping malformed line: cat "snakeoil/${crt_name}" >"SYSEXT.crt"
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6764568Z Skipping malformed line: (umask 0077; mkdir private-key)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6765473Z Skipping malformed line: cat snakeoil/SECURE_BOOT_DISTRIBUTION_KEY | gpg --homedir=private-key --import
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6766860Z Skipping malformed line: echo "default-key $(gpg --homedir=private-key -k --with-colons  | sed '/^fpr:/q;d' | cut -d: -f10)" >private-key/gpg.conf
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6768252Z Skipping malformed line: gpg --homedir=private-key --export >import-pubring.pgp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6769071Z Skipping malformed line: cat MODULES.crt SYSEXT.crt >modules/linux-module-cert.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6769972Z Skipping malformed line: cp snakeoil/SECURE_BOOT_TPM_PCR_KEY tpm2-pcr-private.pem
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6771239Z Skipping malformed line: openssl rsa -pubout -in tpm2-pcr-private.pem -out tpm2-pcr-public.pem
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6772282Z Skipping malformed line: cp snakeoil/SECURE_BOOT_FSTAB_TPM_PCR_KEY fstab-tpm2-pcr-private.pem
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6773418Z Skipping malformed line: openssl rsa -pubout -in fstab-tpm2-pcr-private.pem -out fstab-tpm2-pcr-public.pem
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6774807Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/MicCorKEKCA2011_2011-06-24.crt -o extra-kek-mic/mic-kek-2011.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6776952Z Skipping malformed line: echo "35c385cbf73c78e6b834406eca29edfbd9dd1de6a05e9d1d916c121b7999f4587ce308416b92f8d131021c19d4604479c08c6ca4ae050684d276a7eecaf03aac  extra-kek-mic/mic-kek-2011.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6778810Z Skipping malformed line: extra-kek-mic/mic-kek-2011.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6779756Z Skipping malformed line: mv extra-kek-mic/mic-kek-2011.cer.tmp extra-kek-mic/mic-kek-2011.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6781216Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-kek-mic/mic-kek-2011.cer -out extra-kek-mic/mic-kek-2011.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6782607Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/microsoft%20corporation%20kek%202k%20ca%202023.crt -o extra-kek-mic/mic-kek-2023.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6784625Z Skipping malformed line: echo "378891143b38e3665aeede69659d53f78e42db8502728213f0de3e12824872716bd3ce1ff548c4e483d1c677121844d86faa53b1a12364d60e7665630324bb90  extra-kek-mic/mic-kek-2023.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6786265Z Skipping malformed line: extra-kek-mic/mic-kek-2023.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6787130Z Skipping malformed line: mv extra-kek-mic/mic-kek-2023.cer.tmp extra-kek-mic/mic-kek-2023.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6788434Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-kek-mic/mic-kek-2023.cer -out extra-kek-mic/mic-kek-2023.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6789994Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/MicWinProPCA2011_2011-10-19.crt -o extra-db-mic/mic-win-2011.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6792085Z Skipping malformed line: echo "a30b1e92b99b839d0076808e38f1c65fb42b1a9608778a0596f5350b3ef80dd15f2e226e1624298ff44135e736717d27642225adfe8a9d10e24b5fa22d912c18  extra-db-mic/mic-win-2011.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6793539Z Skipping malformed line: extra-db-mic/mic-win-2011.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6794352Z Skipping malformed line: mv extra-db-mic/mic-win-2011.cer.tmp extra-db-mic/mic-win-2011.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6795541Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-db-mic/mic-win-2011.cer -out extra-db-mic/mic-win-2011.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6797054Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/windows%20uefi%20ca%202023.crt -o extra-db-mic/mic-win-2023.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6799029Z Skipping malformed line: echo "0d50602060fdb388b89761236b02f526ffba448b5735e324c292608df060ae17187f06f3a477b1a31cd13c8ce5b23f3889c73883011160a7e5ef761feb9b28fd  extra-db-mic/mic-win-2023.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6800164Z Skipping malformed line: extra-db-mic/mic-win-2023.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6800960Z Skipping malformed line: mv extra-db-mic/mic-win-2023.cer.tmp extra-db-mic/mic-win-2023.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6802143Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-db-mic/mic-win-2023.cer -out extra-db-mic/mic-win-2023.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6803202Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/MicCorUEFCA2011_2011-06-27.crt -o extra-db-mic/mic-other-2011.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6805191Z Skipping malformed line: echo "a6b068c3a84d31785b0745546546efed1ed1faa0db85144f99ff3a12524564212e09b493bd8d54773270bb2376eba28a29f84dfa5df5cea20e1dbf628c969a0c  extra-db-mic/mic-other-2011.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6807015Z Skipping malformed line: extra-db-mic/mic-other-2011.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6808097Z Skipping malformed line: mv extra-db-mic/mic-other-2011.cer.tmp extra-db-mic/mic-other-2011.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6809458Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-db-mic/mic-other-2011.cer -out extra-db-mic/mic-other-2011.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6811254Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/microsoft%20uefi%20ca%202023.crt -o extra-db-mic/mic-other-2023.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6813521Z Skipping malformed line: echo "32029942c3b3a60feb2cfaa1e8378961e046967fce96e60eac9aeb69cef54c461d664c1e835fdb4c21b9116a3cc971b6217684edcc9463dd2a816e3d3617c5e7  extra-db-mic/mic-other-2023.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6815388Z Skipping malformed line: extra-db-mic/mic-other-2023.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6816254Z Skipping malformed line: mv extra-db-mic/mic-other-2023.cer.tmp extra-db-mic/mic-other-2023.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6817381Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-db-mic/mic-other-2023.cer -out extra-db-mic/mic-other-2023.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6818387Z Skipping malformed line: curl https://www.microsoft.com/pkiops/certs/microsoft%20option%20rom%20uefi%20ca%202023.crt -o extra-db-mic/mic-optionrom-2023.cer.tmp
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6819706Z Skipping malformed line: echo "ea4b0b3da50d14d86f390885d3f695c2afce468299d284479badf3260b700209717f0139c52ddebe6f41b40a76f14f4e119b6ee7506ae5b9c839c6884b5ca746  extra-db-mic/mic-optionrom-2023.cer.tmp" | sha512sum -c
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6820964Z Skipping malformed line: extra-db-mic/mic-optionrom-2023.cer.tmp: OK
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6821539Z Skipping malformed line: mv extra-db-mic/mic-optionrom-2023.cer.tmp extra-db-mic/mic-optionrom-2023.cer
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6822577Z Skipping malformed line: openssl x509 -inform der -outform pem -in extra-db-mic/mic-optionrom-2023.cer -out extra-db-mic/mic-optionrom-2023.crt
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6823382Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-kek-mic/mic-kek-2011.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6824041Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-kek-mic/mic-kek-2023.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6824675Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-db-mic/mic-win-2011.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6825298Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-db-mic/mic-win-2023.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6825933Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-db-mic/mic-other-2011.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6826567Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-db-mic/mic-other-2023.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6827227Z Skipping malformed line: echo 77fa9abd-0359-4d32-bd60-28f4e78f784b >extra-db-mic/mic-optionrom-2023.owner
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6827708Z Found 1070 elements to build.
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6828072Z chunk1-sqlite: 107 elements (ends with freedesktop-sdk.bst:components/sqlite.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6828900Z chunk2-libpng: 107 elements (ends with freedesktop-sdk.bst:components/libpng.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6830059Z chunk3-netavark: 107 elements (ends with freedesktop-sdk.bst:components/netavark.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6831105Z chunk4-mesa-headers: 107 elements (ends with freedesktop-sdk.bst:components/mesa-headers.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6831695Z chunk5-frei0r: 107 elements (ends with freedesktop-sdk.bst:components/frei0r.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6832287Z chunk6-blueprint-compiler: 107 elements (ends with gnome-build-meta.bst:sdk/blueprint-compiler.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6832940Z chunk7-xorg-lib-xcvt: 107 elements (ends with freedesktop-sdk.bst:components/xorg-lib-xcvt.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6833515Z chunk8-spice: 107 elements (ends with gnome-build-meta.bst:core-deps/spice.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6834019Z chunk9-mtab: 107 elements (ends with freedesktop-sdk.bst:integration/mtab.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.6834470Z chunk10-bluefin: 107 elements (ends with oci/bluefin.bst)
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7560401Z {"chunk1-sqlite": "freedesktop-sdk.bst:bootstrap/base-sdk/binary-seed-x86_64.bst freedesktop-sdk.bst:bootstrap/base-sdk/binary-seed.bst freedesktop-sdk.bst:bootstrap/gnu-config.bst freedesktop-sdk.bst:bootstrap/base-sdk/perl.bst freedesktop-sdk.bst:bootstrap/base-sdk/texinfo.bst freedesktop-sdk.bst:bootstrap/base-sdk/xxhash.bst freedesktop-sdk.bst:bootstrap/build/dwz-build.bst freedesktop-sdk.bst:bootstrap/base-sdk/m4.bst freedesktop-sdk.bst:bootstrap/base-sdk/autoconf.bst freedesktop-sdk.bst:bootstrap/base-sdk/automake.bst freedesktop-sdk.bst:bootstrap/base-sdk/libtool.bst freedesktop-sdk.bst:bootstrap/base-sdk/pkg-config.bst freedesktop-sdk.bst:bootstrap/base-sdk/zstd.bst freedesktop-sdk.bst:bootstrap/build/elfutils-build.bst freedesktop-sdk.bst:bootstrap/build/file-stage1.bst freedesktop-sdk.bst:bootstrap/build/debugedit-build.bst freedesktop-sdk.bst:bootstrap/build/stripper.bst freedesktop-sdk.bst:bootstrap/build/debug-utils.bst freedesktop-sdk.bst:bootstrap/base-sdk/flex.bst freedesktop-sdk.bst:bootstrap/base-sdk/bison.bst freedesktop-sdk.bst:bootstrap/base-sdk/tar.bst freedesktop-sdk.bst:bootstrap/base-sdk/gettext.bst freedesktop-sdk.bst:bootstrap/build/python3.bst freedesktop-sdk.bst:bootstrap/base-sdk/autoconf2.69.bst freedesktop-sdk.bst:bootstrap/build/binutils-stage1.bst freedesktop-sdk.bst:bootstrap/build/gcc-stage1.bst freedesktop-sdk.bst:bootstrap/build/rsync.bst freedesktop-sdk.bst:bootstrap/linux-headers.bst freedesktop-sdk.bst:bootstrap/symlinks.bst freedesktop-sdk.bst:bootstrap/glibc.bst freedesktop-sdk.bst:bootstrap/libxcrypt.bst freedesktop-sdk.bst:bootstrap/build/gcc-stage2.bst freedesktop-sdk.bst:bootstrap/diffutils.bst freedesktop-sdk.bst:bootstrap/build/libgcc_s.bst freedesktop-sdk.bst:bootstrap/zlib.bst freedesktop-sdk.bst:bootstrap/zstd.bst freedesktop-sdk.bst:bootstrap/bzip2.bst freedesktop-sdk.bst:bootstrap/xz.bst freedesktop-sdk.bst:bootstrap/elfutils.bst freedesktop-sdk.bst:bootstrap/binutils.bst freedesktop-sdk.bst:bootstrap/gcc.bst freedesktop-sdk.bst:bootstrap/make.bst freedesktop-sdk.bst:bootstrap/xxhash.bst freedesktop-sdk.bst:bootstrap/debugedit.bst freedesktop-sdk.bst:bootstrap/dwz.bst freedesktop-sdk.bst:bootstrap/stripper.bst freedesktop-sdk.bst:bootstrap/build/ncurses-stage1.bst freedesktop-sdk.bst:bootstrap/ncurses-pkgconfig-dir.bst freedesktop-sdk.bst:bootstrap/ncurses.bst freedesktop-sdk.bst:bootstrap/readline.bst freedesktop-sdk.bst:bootstrap/bash.bst freedesktop-sdk.bst:bootstrap/build/coreutils-manpages.bst freedesktop-sdk.bst:bootstrap/attr.bst freedesktop-sdk.bst:bootstrap/acl.bst freedesktop-sdk.bst:bootstrap/pcre2.bst freedesktop-sdk.bst:bootstrap/libsepol.bst freedesktop-sdk.bst:bootstrap/libselinux.bst freedesktop-sdk.bst:bootstrap/coreutils.bst freedesktop-sdk.bst:bootstrap/findutils.bst freedesktop-sdk.bst:bootstrap/gawk.bst freedesktop-sdk.bst:bootstrap/grep.bst freedesktop-sdk.bst:bootstrap/sed.bst freedesktop-sdk.bst:bootstrap/gzip.bst freedesktop-sdk.bst:components/utf-locale.bst freedesktop-sdk.bst:components/tar.bst freedesktop-sdk.bst:components/gzip.bst freedesktop-sdk.bst:components/gettext.bst freedesktop-sdk.bst:components/m4.bst freedesktop-sdk.bst:components/perl.bst freedesktop-sdk.bst:components/autoconf2.69.bst freedesktop-sdk.bst:components/autoconf.bst freedesktop-sdk.bst:components/automake.bst freedesktop-sdk.bst:bootstrap/file.bst freedesktop-sdk.bst:components/libtool.bst freedesktop-sdk.bst:components/texinfo.bst freedesktop-sdk.bst:components/flex-base.bst freedesktop-sdk.bst:components/libfl.bst freedesktop-sdk.bst:components/flex.bst freedesktop-sdk.bst:components/pkg-config.bst freedesktop-sdk.bst:components/python3-minimal.bst freedesktop-sdk.bst:components/gcc-base.bst freedesktop-sdk.bst:components/gcc-manifest.bst freedesktop-sdk.bst:components/gcc-libs.bst freedesktop-sdk.bst:public-stacks/runtime-minimal.bst freedesktop-sdk.bst:components/gcc.bst freedesktop-sdk.bst:components/stripper.bst freedesktop-sdk.bst:components/diffutils.bst freedesktop-sdk.bst:components/findutils.bst freedesktop-sdk.bst:components/gawk.bst freedesktop-sdk.bst:components/grep.bst freedesktop-sdk.bst:components/make.bst freedesktop-sdk.bst:components/sed.bst freedesktop-sdk.bst:public-stacks/buildsystem-make.bst freedesktop-sdk.bst:components/libcap.bst freedesktop-sdk.bst:components/fakecap.bst freedesktop-sdk.bst:components/bluez-headers.bst freedesktop-sdk.bst:components/openssl.bst freedesktop-sdk.bst:components/ninja.bst freedesktop-sdk.bst:components/cmake-stage1.bst freedesktop-sdk.bst:components/expat.bst freedesktop-sdk.bst:components/autoconf-archive.bst freedesktop-sdk.bst:components/which.bst freedesktop-sdk.bst:public-stacks/buildsystem-autotools.bst freedesktop-sdk.bst:components/gdbm.bst freedesktop-sdk.bst:components/libffi.bst freedesktop-sdk.bst:components/zlib.bst freedesktop-sdk.bst:components/sqlite.bst", "chunk2-libpng": "freedesktop-sdk.bst:components/python3.bst freedesktop-sdk.bst:components/python3-build-bootstrap.bst freedesktop-sdk.bst:components/python3-installer-bootstrap.bst freedesktop-sdk.bst:components/python3-flit-core.bst freedesktop-sdk.bst:components/python3-installer.bst freedesktop-sdk.bst:components/python3-packaging.bst freedesktop-sdk.bst:components/python3-pyproject-hooks.bst freedesktop-sdk.bst:components/python3-build.bst freedesktop-sdk.bst:components/python3-setuptools.bst freedesktop-sdk.bst:public-stacks/buildsystem-python-flit.bst freedesktop-sdk.bst:components/python3-wheel.bst freedesktop-sdk.bst:public-stacks/buildsystem-python-setuptools.bst freedesktop-sdk.bst:components/libyaml.bst freedesktop-sdk.bst:components/cython.bst freedesktop-sdk.bst:components/python3-pyyaml.bst freedesktop-sdk.bst:components/oci-builder.bst freedesktop-sdk.bst:components/python3-docutils.bst freedesktop-sdk.bst:components/meson.bst freedesktop-sdk.bst:components/git-minimal.bst freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst freedesktop-sdk.bst:components/ruby.bst freedesktop-sdk.bst:components/asciidoctor.bst freedesktop-sdk.bst:components/bash-completion.bst freedesktop-sdk.bst:components/gperf.bst freedesktop-sdk.bst:components/help2man.bst freedesktop-sdk.bst:components/bison.bst freedesktop-sdk.bst:components/file.bst freedesktop-sdk.bst:components/libcap-ng.bst freedesktop-sdk.bst:components/libeconf.bst freedesktop-sdk.bst:components/perl-yaml-tiny.bst freedesktop-sdk.bst:components/icu.bst freedesktop-sdk.bst:components/libxml2.bst freedesktop-sdk.bst:components/clean-xml-catalog.bst freedesktop-sdk.bst:components/docbook-xml.bst freedesktop-sdk.bst:components/docbook-xsl.bst freedesktop-sdk.bst:components/libxslt.bst freedesktop-sdk.bst:components/perl-build.bst freedesktop-sdk.bst:components/perl-pod-parser.bst freedesktop-sdk.bst:components/po4a.bst freedesktop-sdk.bst:components/util-linux-base.bst freedesktop-sdk.bst:components/util-linux-manifest.bst freedesktop-sdk.bst:components/util-linux.bst gnome-build-meta.bst:sdk-deps/glib-stage1.bst freedesktop-sdk.bst:components/itstool.bst freedesktop-sdk.bst:components/python3-editables.bst freedesktop-sdk.bst:components/python3-pathspec.bst freedesktop-sdk.bst:components/python3-typing-extensions.bst freedesktop-sdk.bst:components/python3-setuptools-scm.bst freedesktop-sdk.bst:components/python3-pluggy.bst freedesktop-sdk.bst:components/python3-calver.bst freedesktop-sdk.bst:components/python3-trove-classifiers.bst freedesktop-sdk.bst:components/python3-hatchling.bst freedesktop-sdk.bst:components/python3-hatch-vcs.bst freedesktop-sdk.bst:public-stacks/buildsystem-python-hatchling.bst freedesktop-sdk.bst:components/python3-pygments.bst gnome-build-meta.bst:sdk/gtk-doc.bst gnome-build-meta.bst:sdk-deps/gobject-introspection-stage1.bst freedesktop-sdk.bst:components/python3-markupsafe.bst freedesktop-sdk.bst:components/python3-jinja2.bst freedesktop-sdk.bst:components/python3-markdown.bst freedesktop-sdk.bst:components/python3-smartypants.bst freedesktop-sdk.bst:components/python3-typogrify.bst gnome-build-meta.bst:sdk/gi-docgen.bst freedesktop-sdk.bst:components/libunwind.bst gnome-build-meta.bst:sdk/sysprof-minimal.bst gnome-build-meta.bst:sdk/glib.bst freedesktop-sdk.bst:components/scdoc.bst freedesktop-sdk.bst:components/xz.bst freedesktop-sdk.bst:components/zstd.bst freedesktop-sdk.bst:components/kmod.bst freedesktop-sdk.bst:components/tzdata.bst freedesktop-sdk.bst:components/audit.bst freedesktop-sdk.bst:components/linux-pam-base.bst freedesktop-sdk.bst:components/swig.bst freedesktop-sdk.bst:components/apparmor-base.bst freedesktop-sdk.bst:components/apparmor-manifest.bst freedesktop-sdk.bst:components/libapparmor.bst freedesktop-sdk.bst:components/apparmor.bst freedesktop-sdk.bst:components/libnghttp2.bst freedesktop-sdk.bst:components/libidn2.bst freedesktop-sdk.bst:components/libunistring.bst freedesktop-sdk.bst:components/libpsl.bst freedesktop-sdk.bst:components/asciidoc.bst freedesktop-sdk.bst:components/patch.bst freedesktop-sdk.bst:components/libtasn1.bst freedesktop-sdk.bst:components/p11-kit.bst freedesktop-sdk.bst:components/ca-certificates.bst freedesktop-sdk.bst:components/curl.bst freedesktop-sdk.bst:components/lz4.bst freedesktop-sdk.bst:components/libarchive.bst freedesktop-sdk.bst:components/cmake.bst freedesktop-sdk.bst:public-stacks/buildsystem-cmake.bst freedesktop-sdk.bst:components/json-c.bst freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/lvm2-stage1.bst freedesktop-sdk.bst:components/popt.bst freedesktop-sdk.bst:components/cracklib.bst freedesktop-sdk.bst:components/pwquality.bst freedesktop-sdk.bst:components/util-linux-full.bst freedesktop-sdk.bst:components/cryptsetup-base.bst freedesktop-sdk.bst:components/cryptsetup-manifest.bst freedesktop-sdk.bst:components/cryptsetup-lvm2-stage1.bst freedesktop-sdk.bst:components/libmnl.bst freedesktop-sdk.bst:components/libnftnl.bst freedesktop-sdk.bst:components/iptables.bst freedesktop-sdk.bst:components/libgpg-error.bst freedesktop-sdk.bst:components/libpng.bst", "chunk3-netavark": "freedesktop-sdk.bst:components/libqrencode.bst freedesktop-sdk.bst:components/binutils.bst freedesktop-sdk.bst:components/bpf.bst freedesktop-sdk.bst:components/vmlinuxh-pregenerated.bst freedesktop-sdk.bst:components/vmlinuxh.bst freedesktop-sdk.bst:components/bpf-maybe.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/libbpf.bst freedesktop-sdk.bst:components/libseccomp.bst freedesktop-sdk.bst:components/libgcrypt.bst freedesktop-sdk.bst:components/gmp.bst freedesktop-sdk.bst:components/nettle.bst freedesktop-sdk.bst:components/gnutls.bst freedesktop-sdk.bst:components/libmicrohttpd.bst freedesktop-sdk.bst:components/xorg-util-macros.bst freedesktop-sdk.bst:components/xorg-proto-xorgproto.bst freedesktop-sdk.bst:components/xorg-lib-xau.bst freedesktop-sdk.bst:components/xorg-proto-xcb.bst freedesktop-sdk.bst:components/xorg-lib-xcb.bst freedesktop-sdk.bst:components/xorg-lib-xtrans.bst freedesktop-sdk.bst:components/xorg-lib-x11.bst freedesktop-sdk.bst:components/xorg-lib-xkbfile.bst freedesktop-sdk.bst:components/xorg-app-xkbcomp.bst freedesktop-sdk.bst:components/xorg-data-xkeyboard-config.bst freedesktop-sdk.bst:components/libxkbcommon.bst freedesktop-sdk.bst:components/linux-pam.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/pyelftools.bst freedesktop-sdk.bst:components/libcbor.bst freedesktop-sdk.bst:components/systemd-stage1.bst freedesktop-sdk.bst:components/libfido2.bst freedesktop-sdk.bst:components/python3-pefile.bst freedesktop-sdk.bst:components/doxygen.bst freedesktop-sdk.bst:components/tpm2-tss.bst gnome-build-meta.bst:core-deps/systemd-base.bst freedesktop-sdk.bst:components/kbd.bst freedesktop-sdk.bst:components/systemd-manifest.bst gnome-build-meta.bst:core-deps/systemd-libs.bst freedesktop-sdk.bst:components/lvm2-base.bst freedesktop-sdk.bst:components/libdevmapper.bst freedesktop-sdk.bst:components/cryptsetup.bst freedesktop-sdk.bst:components/shadow.bst freedesktop-sdk.bst:components/systemd-hwdb.bst gnome-build-meta.bst:core-deps/systemd.bst freedesktop-sdk.bst:vm/prepare-image.bst freedesktop-sdk.bst:components/procps.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/rdfind.bst freedesktop-sdk.bst:components/linux-firmware.bst freedesktop-sdk.bst:bootstrap/go.bst freedesktop-sdk.bst:components/go.bst freedesktop-sdk.bst:components/go-md2man.bst freedesktop-sdk.bst:components/fuse3.bst freedesktop-sdk.bst:components/composefs.bst freedesktop-sdk.bst:components/xmlto.bst freedesktop-sdk.bst:components/dbus-base.bst freedesktop-sdk.bst:components/dbus-manifest.bst freedesktop-sdk.bst:components/libdbus.bst freedesktop-sdk.bst:components/dbus-tools.bst freedesktop-sdk.bst:components/dbus.bst freedesktop-sdk.bst:components/libdaemon.bst freedesktop-sdk.bst:components/python3-dbus.bst freedesktop-sdk.bst:components/perl-xml-parser.bst freedesktop-sdk.bst:components/xmltoman.bst freedesktop-sdk.bst:components/python3-mako.bst gnome-build-meta.bst:sdk/gobject-introspection.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/ed.bst freedesktop-sdk.bst:components/bc.bst freedesktop-sdk.bst:components/brotli.bst freedesktop-sdk.bst:components/freetype-stage1.bst freedesktop-sdk.bst:components/wayland.bst freedesktop-sdk.bst:components/xorg-lib-xrender.bst freedesktop-sdk.bst:components/xorg-lib-xrandr.bst freedesktop-sdk.bst:components/graphite2.bst freedesktop-sdk.bst:components/harfbuzz.bst freedesktop-sdk.bst:components/freetype.bst freedesktop-sdk.bst:components/fontconfig.bst freedesktop-sdk.bst:components/lzo.bst freedesktop-sdk.bst:components/pixman.bst gnome-build-meta.bst:sdk/cairo.bst freedesktop-sdk.bst:components/pycairo.bst gnome-build-meta.bst:sdk/pygobject.bst freedesktop-sdk.bst:components/avahi-base.bst freedesktop-sdk.bst:components/avahi-libs.bst freedesktop-sdk.bst:components/avahi-manifest.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/e2fsprogs.bst freedesktop-sdk.bst:components/bzip2.bst freedesktop-sdk.bst:components/libassuan.bst freedesktop-sdk.bst:components/libksba.bst freedesktop-sdk.bst:components/npth.bst freedesktop-sdk.bst:components/gnupg.bst freedesktop-sdk.bst:components/gpgme.bst freedesktop-sdk.bst:components/ostree.bst freedesktop-sdk.bst:components/rust-stage1-x86_64.bst freedesktop-sdk.bst:components/rust-stage1.bst freedesktop-sdk.bst:components/rust.bst freedesktop-sdk.bst:components/containers-common.bst freedesktop-sdk.bst:components/catatonit.bst freedesktop-sdk.bst:components/conmon.bst freedesktop-sdk.bst:components/crun.bst freedesktop-sdk.bst:components/fuse-overlayfs.bst freedesktop-sdk.bst:components/abseil-cpp.bst freedesktop-sdk.bst:components/protobuf.bst freedesktop-sdk.bst:components/aardvark-dns.bst freedesktop-sdk.bst:components/netavark.bst", "chunk4-mesa-headers": "freedesktop-sdk.bst:components/passt.bst freedesktop-sdk.bst:components/libslirp.bst freedesktop-sdk.bst:components/slirp4netns.bst freedesktop-sdk.bst:components/podman.bst freedesktop-sdk.bst:components/python3-alabaster.bst freedesktop-sdk.bst:components/python3-pytz.bst freedesktop-sdk.bst:components/python3-babel.bst freedesktop-sdk.bst:components/python3-imagesize.bst freedesktop-sdk.bst:components/python3-certifi.bst freedesktop-sdk.bst:components/python3-chardet.bst freedesktop-sdk.bst:components/python3-charset-normalizer.bst freedesktop-sdk.bst:components/python3-idna.bst freedesktop-sdk.bst:components/python3-urllib3.bst freedesktop-sdk.bst:components/python3-requests.bst freedesktop-sdk.bst:components/python3-roman-numerals-py.bst freedesktop-sdk.bst:components/python3-snowballstemmer.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-applehelp.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-devhelp.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-htmlhelp.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-qthelp.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-serializinghtml.bst freedesktop-sdk.bst:components/python3-sphinx.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jquery.bst freedesktop-sdk.bst:components/python3-sphinx-rtd-theme.bst freedesktop-sdk.bst:components/btrfs-progs.bst freedesktop-sdk.bst:components/skopeo.bst core/bootc.bst freedesktop-sdk.bst:components/xorg-lib-pciaccess.bst freedesktop-sdk.bst:components/libdrm.bst gnome-build-meta.bst:sdk/cantarell-fonts.bst freedesktop-sdk.bst:components/libevdev.bst freedesktop-sdk.bst:components/fribidi.bst freedesktop-sdk.bst:components/libdatrie.bst freedesktop-sdk.bst:components/libthai.bst freedesktop-sdk.bst:components/xorg-lib-xft.bst gnome-build-meta.bst:sdk/json-glib.bst gnome-build-meta.bst:sdk/pango.bst gnome-build-meta.bst:core-deps/plymouth.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/bash-config.bst freedesktop-sdk.bst:components/libusb.bst freedesktop-sdk.bst:components/duktape.bst freedesktop-sdk.bst:components/strace.bst freedesktop-sdk.bst:components/polkit-base.bst freedesktop-sdk.bst:components/polkit-manifest.bst freedesktop-sdk.bst:components/polkit-gobject.bst freedesktop-sdk.bst:components/pcsc-lite.bst freedesktop-sdk.bst:components/ccid.bst freedesktop-sdk.bst:components/perl-module-build.bst freedesktop-sdk.bst:components/perl-module-scandeps.bst freedesktop-sdk.bst:components/perl-module-install.bst freedesktop-sdk.bst:components/perl-sasl.bst freedesktop-sdk.bst:components/perl-ssleay.bst freedesktop-sdk.bst:components/perl-ssl.bst freedesktop-sdk.bst:components/git.bst freedesktop-sdk.bst:components/git-lfs.bst freedesktop-sdk.bst:components/iproute2.bst freedesktop-sdk.bst:components/iputils.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/groff.bst freedesktop-sdk.bst:components/less.bst freedesktop-sdk.bst:components/libpipeline.bst freedesktop-sdk.bst:components/lzip.bst freedesktop-sdk.bst:components/man-db.bst freedesktop-sdk.bst:components/nano.bst freedesktop-sdk.bst:components/open-isns.bst freedesktop-sdk.bst:components/open-iscsi.bst freedesktop-sdk.bst:components/openssh.bst freedesktop-sdk.bst:components/openssh-systemd.bst freedesktop-sdk.bst:components/rsync.bst freedesktop-sdk.bst:components/lua.bst freedesktop-sdk.bst:components/python3-appdirs.bst freedesktop-sdk.bst:components/python3-backports-entrypoints-selectable.bst freedesktop-sdk.bst:components/python3-poetry-core.bst freedesktop-sdk.bst:public-stacks/buildsystem-python-poetry.bst freedesktop-sdk.bst:components/python3-pkgconfig.bst freedesktop-sdk.bst:components/python3-faust-cchardet.bst freedesktop-sdk.bst:components/python3-lxml.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/python3-dbus-deviation.bst freedesktop-sdk.bst:components/python3-networkx.bst freedesktop-sdk.bst:components/python3-contextlib2.bst freedesktop-sdk.bst:components/python3-schema.bst freedesktop-sdk.bst:components/python3-toposort.bst freedesktop-sdk.bst:components/python3-wheezy-template.bst freedesktop-sdk.bst:components/hotdoc.bst freedesktop-sdk.bst:components/alsa-lib.bst freedesktop-sdk.bst:components/ell.bst freedesktop-sdk.bst:components/vala-bootstrap.bst gnome-build-meta.bst:sdk/vala.bst freedesktop-sdk.bst:components/libical.bst freedesktop-sdk.bst:components/bluez-base.bst freedesktop-sdk.bst:components/bluez-manifest.bst freedesktop-sdk.bst:components/bluez-libs.bst freedesktop-sdk.bst:components/bluez.bst freedesktop-sdk.bst:components/orc.bst freedesktop-sdk.bst:components/nasm.bst freedesktop-sdk.bst:components/svt-av1.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/iso-codes.bst freedesktop-sdk.bst:components/jpeg.bst freedesktop-sdk.bst:components/libogg.bst freedesktop-sdk.bst:components/libtheora.bst freedesktop-sdk.bst:components/libvorbis.bst freedesktop-sdk.bst:components/libglvnd.bst freedesktop-sdk.bst:components/mesa-headers.bst", "chunk5-frei0r": "freedesktop-sdk.bst:components/opus.bst freedesktop-sdk.bst:components/wayland-protocols.bst freedesktop-sdk.bst:components/xorg-lib-xv.bst freedesktop-sdk.bst:components/giflib.bst freedesktop-sdk.bst:components/libwebp.bst freedesktop-sdk.bst:components/libtiff.bst freedesktop-sdk.bst:components/shared-mime-info.bst freedesktop-sdk.bst:components/lcms.bst freedesktop-sdk.bst:components/bubblewrap.bst gnome-build-meta.bst:sdk/libglycin.bst gnome-build-meta.bst:sdk/gdk-pixbuf.bst gnome-build-meta.bst:sdk/graphene.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/python3-attrs.bst freedesktop-sdk.bst:components/libei.bst freedesktop-sdk.bst:components/xorg-lib-xfixes.bst freedesktop-sdk.bst:components/xorg-lib-xi.bst freedesktop-sdk.bst:components/xorg-lib-xtst.bst gnome-build-meta.bst:sdk/at-spi2-core.bst freedesktop-sdk.bst:components/cups-base.bst freedesktop-sdk.bst:components/cups-manifest.bst freedesktop-sdk.bst:components/cups.bst freedesktop-sdk.bst:components/hicolor-icon-theme.bst freedesktop-sdk.bst:components/libepoxy.bst freedesktop-sdk.bst:components/xorg-lib-xcomposite.bst freedesktop-sdk.bst:components/xorg-lib-xcursor.bst freedesktop-sdk.bst:components/xorg-lib-xdamage.bst freedesktop-sdk.bst:components/xorg-lib-xinerama.bst freedesktop-sdk.bst:components/aom.bst freedesktop-sdk.bst:components/dav1d.bst freedesktop-sdk.bst:components/openjpeg.bst freedesktop-sdk.bst:components/libheif.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libjxl.bst freedesktop-sdk.bst:components/cargo-c.bst gnome-build-meta.bst:sdk/librsvg.bst gnome-build-meta.bst:sdk/glycin.bst freedesktop-sdk.bst:components/dejavu-fonts.bst gnome-build-meta.bst:core-deps/graphviz.bst freedesktop-sdk.bst:components/keyutils.bst gnome-build-meta.bst:sdk/krb5.bst gnome-build-meta.bst:sdk/gsettings-desktop-schemas.bst freedesktop-sdk.bst:components/patchelf.bst freedesktop-sdk.bst:components/libproxy.bst gnome-build-meta.bst:sdk/glib-networking.bst gnome-build-meta.bst:sdk/libsoup.bst gnome-build-meta.bst:sdk/tinysparql.bst gnome-build-meta.bst:sdk/gtk+-3.bst freedesktop-sdk.bst:components/gstreamer-plugins-base.bst freedesktop-sdk.bst:components/libevent.bst freedesktop-sdk.bst:components/python3-ply.bst freedesktop-sdk.bst:components/libcamera.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/liblc3.bst freedesktop-sdk.bst:components/cunit.bst freedesktop-sdk.bst:components/libmysofa.bst freedesktop-sdk.bst:components/libflac.bst freedesktop-sdk.bst:components/sndfile.bst freedesktop-sdk.bst:components/libpulse.bst freedesktop-sdk.bst:components/vim.bst freedesktop-sdk.bst:components/polkit.bst freedesktop-sdk.bst:components/rtkit.bst freedesktop-sdk.bst:components/sbc.bst freedesktop-sdk.bst:components/vulkan-headers.bst freedesktop-sdk.bst:components/webrtc-audio-processing.bst freedesktop-sdk.bst:components/pipewire-base.bst freedesktop-sdk.bst:components/pipewire-manifest.bst freedesktop-sdk.bst:components/pipewire.bst freedesktop-sdk.bst:components/wireplumber.bst freedesktop-sdk.bst:components/pipewire-daemon.bst freedesktop-sdk.bst:components/sof-firmware.bst freedesktop-sdk.bst:components/steam-devices.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/wireless-regdb-bin.bst freedesktop-sdk.bst:components/python3-pyparsing.bst freedesktop-sdk.bst:components/xdg-dbus-proxy.bst freedesktop-sdk.bst:components/ostree-minimal.bst freedesktop-sdk.bst:components/libxmlb.bst freedesktop-sdk.bst:components/appstream-minimal.bst freedesktop-sdk.bst:components/flatpak-minimal.bst freedesktop-sdk.bst:components/libgudev.bst freedesktop-sdk.bst:components/avahi-gobject.bst gnome-build-meta.bst:core-deps/libmbim.bst gnome-build-meta.bst:core-deps/libqrtr-glib.bst gnome-build-meta.bst:core-deps/libqmi.bst gnome-build-meta.bst:core-deps/ModemManager.bst gnome-build-meta.bst:gnomeos-deps/geoclue-base.bst freedesktop-sdk.bst:components/geoclue-manifest.bst freedesktop-sdk.bst:components/geoclue-libs.bst freedesktop-sdk.bst:components/xdg-desktop-portal-base.bst freedesktop-sdk.bst:components/appstream.bst freedesktop-sdk.bst:components/flatpak.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/xdg-portal-interfaces.bst freedesktop-sdk.bst:components/xdg-desktop-portal.bst gnome-build-meta.bst:core-deps/boltd.bst gnome-build-meta.bst:core-deps/dnsmasq.bst gnome-build-meta.bst:core-deps/phodav.bst gnome-build-meta.bst:core-deps/systemd-hwdb.bst freedesktop-sdk.bst:components/glslang.bst freedesktop-sdk.bst:components/spirv-headers.bst freedesktop-sdk.bst:components/spirv-tools.bst freedesktop-sdk.bst:components/shaderc.bst gnome-build-meta.bst:sdk-deps/libsass.bst gnome-build-meta.bst:sdk-deps/sassc.bst freedesktop-sdk.bst:components/vulkan-icd-loader.bst freedesktop-sdk.bst:components/frei0r.bst", "chunk6-blueprint-compiler": "freedesktop-sdk.bst:components/ladspa-sdk.bst freedesktop-sdk.bst:components/libnice.bst freedesktop-sdk.bst:components/libsrtp2.bst freedesktop-sdk.bst:components/libva.bst freedesktop-sdk.bst:components/openal.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gstreamer-plugins-bad.bst gnome-build-meta.bst:sdk/gtk.bst gnome-build-meta.bst:core/gnome-desktop.bst gnome-build-meta.bst:sdk/libadwaita.bst gnome-build-meta.bst:core-deps/xdg-desktop-portal-gnome.bst gnome-build-meta.bst:core-deps/xdg-desktop-portal-gtk.bst freedesktop-sdk.bst:components/desktop-file-utils.bst gnome-build-meta.bst:sdk/adwaita-icon-theme.bst gnome-build-meta.bst:core/baobab.bst gnome-build-meta.bst:core-deps/libdvdcss.bst gnome-build-meta.bst:core-deps/libdvdread.bst freedesktop-sdk.bst:components/libatasmart.bst freedesktop-sdk.bst:components/mpfr.bst freedesktop-sdk.bst:components/libbytesize.bst freedesktop-sdk.bst:components/liburing.bst freedesktop-sdk.bst:components/libnvme.bst freedesktop-sdk.bst:components/lvm2.bst freedesktop-sdk.bst:components/mdadm.bst freedesktop-sdk.bst:components/parted.bst freedesktop-sdk.bst:components/gyp.bst freedesktop-sdk.bst:components/nspr.bst freedesktop-sdk.bst:components/nss.bst freedesktop-sdk.bst:components/volume-key.bst freedesktop-sdk.bst:components/libblockdev.bst freedesktop-sdk.bst:components/dosfstools.bst freedesktop-sdk.bst:components/exfat-progs.bst freedesktop-sdk.bst:components/f2fs-tools.bst gnome-build-meta.bst:core-deps/udisks2.bst freedesktop-sdk.bst:components/gdb.bst freedesktop-sdk.bst:components/valgrind.bst freedesktop-sdk.bst:components/valgrind-maybe.bst gnome-build-meta.bst:sdk/libsecret.bst freedesktop-sdk.bst:components/libwacom.bst gnome-build-meta.bst:core-deps/libpcap.bst gnome-build-meta.bst:core-deps/ppp.bst gnome-build-meta.bst:core-deps/mobile-broadband-provider-info.bst freedesktop-sdk.bst:components/libndp.bst gnome-build-meta.bst:core-deps/NetworkManager.bst freedesktop-sdk.bst:components/libgusb.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/cups-pk-helper.bst gnome-build-meta.bst:core-deps/geocode-glib.bst gnome-build-meta.bst:core-deps/dconf.bst gnome-build-meta.bst:sdk-deps/ibus.bst gnome-build-meta.bst:sdk/libibus.bst gnome-build-meta.bst:core-deps/ibus-daemon.bst gnome-build-meta.bst:core-deps/intltool.bst gnome-build-meta.bst:core-deps/xdg-sound-theme.bst gnome-build-meta.bst:core-deps/libcanberra.bst gnome-build-meta.bst:core-deps/gweather-locations.bst gnome-build-meta.bst:core-deps/libgweather.bst gnome-build-meta.bst:core-deps/plist.bst gnome-build-meta.bst:core-deps/libusbmuxd.bst gnome-build-meta.bst:core-deps/libimobiledevice.bst gnome-build-meta.bst:core-deps/upower.bst gnome-build-meta.bst:sdk/gcr.bst gnome-build-meta.bst:sdk/libnotify.bst gnome-build-meta.bst:core/gnome-settings-daemon.bst gnome-build-meta.bst:core/gnome-disk-utility.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/mm-common.bst gnome-build-meta.bst:core-deps/libsigcplusplus.bst gnome-build-meta.bst:core-deps/glibmm.bst gnome-build-meta.bst:core-deps/cairomm.bst gnome-build-meta.bst:core-deps/pangomm.bst gnome-build-meta.bst:core-deps/gtkmm.bst gnome-build-meta.bst:core-deps/libgtop.bst gnome-build-meta.bst:core/gnome-system-monitor.bst freedesktop-sdk.bst:components/inih.bst gnome-build-meta.bst:core-deps/exiv2.bst gnome-build-meta.bst:core-deps/gexiv2.bst gnome-build-meta.bst:core-deps/gnome-autoar.bst gnome-build-meta.bst:core-deps/libcloudproviders.bst gnome-build-meta.bst:core-deps/libportal.bst freedesktop-sdk.bst:components/libexif.bst gnome-build-meta.bst:core-deps/exempi.bst freedesktop-sdk.bst:components/gpgmepp.bst freedesktop-sdk.bst:components/poppler.bst gnome-build-meta.bst:core-deps/libgsf.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/libosinfo.bst freedesktop-sdk.bst:components/lame.bst freedesktop-sdk.bst:components/libvdpau.bst freedesktop-sdk.bst:components/libvpx.bst freedesktop-sdk.bst:components/mpg123.bst freedesktop-sdk.bst:components/nv-codec-headers.bst freedesktop-sdk.bst:components/speexdsp.bst freedesktop-sdk.bst:components/speex.bst freedesktop-sdk.bst:components/v4l-utils.bst freedesktop-sdk.bst:components/libdecor.bst freedesktop-sdk.bst:components/libsamplerate.bst freedesktop-sdk.bst:components/sdl3.bst freedesktop-sdk.bst:components/sdl2-compat.bst freedesktop-sdk.bst:components/ffmpeg.bst gnome-build-meta.bst:core-deps/libcue.bst gnome-build-meta.bst:core-deps/libgxps.bst gnome-build-meta.bst:core-deps/libzip.bst gnome-build-meta.bst:core-deps/python-dbusmock.bst gnome-build-meta.bst:core-deps/totem-pl-parser.bst gnome-build-meta.bst:core-deps/localsearch.bst gnome-build-meta.bst:sdk/blueprint-compiler.bst", "chunk7-xorg-lib-xcvt": "gnome-build-meta.bst:sdk/libglycin-gtk4.bst freedesktop-sdk.bst:components/xdg-user-dirs.bst gnome-build-meta.bst:core-deps/xdg-user-dirs-gtk.bst gnome-build-meta.bst:core/nautilus.bst freedesktop-sdk.bst:components/fmtlib.bst gnome-build-meta.bst:core-deps/fast-float.bst gnome-build-meta.bst:core-deps/simdutf.bst gnome-build-meta.bst:core-deps/vte.bst core/ptyxis.bst gnome-build-meta.bst:sdk/gcab.bst gnome-build-meta.bst:sdk-deps/appstream-glib.bst freedesktop-sdk.bst:extensions/mesa/libdrm.bst freedesktop-sdk.bst:components/dummy-gbm.bst freedesktop-sdk.bst:components/hyphen.bst gnome-build-meta.bst:sdk-deps/unifdef.bst freedesktop-sdk.bst:components/libavif.bst freedesktop-sdk.bst:components/xorg-lib-ice.bst freedesktop-sdk.bst:components/xorg-lib-sm.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst freedesktop-sdk.bst:components/hunspell.bst gnome-build-meta.bst:sdk/nuspell.bst gnome-build-meta.bst:sdk/enchant-2.bst gnome-build-meta.bst:sdk/hidapi.bst gnome-build-meta.bst:sdk/libmanette-0.2.bst gnome-build-meta.bst:sdk/woff2.bst freedesktop-sdk.bst:components/gstreamer-libav.bst freedesktop-sdk.bst:components/utf8cpp.bst freedesktop-sdk.bst:components/taglib.bst freedesktop-sdk.bst:components/wavpack.bst freedesktop-sdk.bst:components/gstreamer-plugins-good.bst gnome-build-meta.bst:sdk/webkitgtk-6.0.bst gnome-build-meta.bst:sdk/yelp-xsl.bst gnome-build-meta.bst:sdk/yelp.bst core/meta-gnome-core-apps.bst freedesktop-sdk.bst:components/geoclue.bst gnome-build-meta.bst:core-deps/accountsservice.bst gnome-build-meta.bst:core/gst-thumbnailers.bst gnome-build-meta.bst:core/meta-gnome-core-os-services.bst gnome-build-meta.bst:core-deps/libcheck.bst gnome-build-meta.bst:sdk/yelp-tools.bst gnome-build-meta.bst:core/gdm.bst gnome-build-meta.bst:core/gnome-backgrounds.bst gnome-build-meta.bst:core-deps/gsound.bst gnome-build-meta.bst:core/gnome-bluetooth.bst gnome-build-meta.bst:core-deps/colord-gtk.bst gnome-build-meta.bst:core/gnome-color-manager.bst gnome-build-meta.bst:core-deps/setxkbmap.bst gnome-build-meta.bst:sdk/gtksourceview.bst gnome-build-meta.bst:core-deps/librest.bst gnome-build-meta.bst:core-deps/gnome-online-accounts.bst gnome-build-meta.bst:core-deps/libnma.bst gnome-build-meta.bst:core-deps/glib-testing.bst gnome-build-meta.bst:core-deps/libgsystemservice.bst gnome-build-meta.bst:core-deps/malcontent.bst gnome-build-meta.bst:core-deps/openldap.bst gnome-build-meta.bst:core-deps/perl-parse-yapp.bst gnome-build-meta.bst:core-deps/rpcsvc-proto.bst gnome-build-meta.bst:core-deps/samba.bst freedesktop-sdk.bst:components/cups-daemon-only.bst freedesktop-sdk.bst:components/libpaper.bst freedesktop-sdk.bst:components/ghostscript.bst freedesktop-sdk.bst:components/mutool.bst freedesktop-sdk.bst:components/qpdf.bst freedesktop-sdk.bst:components/libcupsfilters.bst freedesktop-sdk.bst:components/libppd.bst freedesktop-sdk.bst:components/cups-filters.bst freedesktop-sdk.bst:components/foomatic-db.bst freedesktop-sdk.bst:components/cups-daemon.bst gnome-build-meta.bst:core-deps/pycups.bst gnome-build-meta.bst:core-deps/system-config-printer.bst freedesktop-sdk.bst:components/libtirpc.bst freedesktop-sdk.bst:components/xorg-font-util.bst freedesktop-sdk.bst:components/xorg-lib-xdmcp.bst freedesktop-sdk.bst:components/xorg-lib-fontenc.bst freedesktop-sdk.bst:components/xorg-lib-xfont2.bst gnome-build-meta.bst:core-deps/xorg-lib-xmu.bst gnome-build-meta.bst:core-deps/xauth.bst gnome-build-meta.bst:core-deps/xvfb.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:core-deps/umockdev.bst gnome-build-meta.bst:core-deps/power-profiles-daemon.bst gnome-build-meta.bst:core/gnome-control-center.bst gnome-build-meta.bst:sdk/gcr-3.bst gnome-build-meta.bst:core/gnome-keyring.bst gnome-build-meta.bst:core/gnome-initial-setup.bst gnome-build-meta.bst:core/gnome-menus.bst gnome-build-meta.bst:core-deps/LibVNCServer.bst gnome-build-meta.bst:core-deps/fdk-aac-free.bst gnome-build-meta.bst:core-deps/cjson.bst gnome-build-meta.bst:core-deps/pkcs11-helper.bst gnome-build-meta.bst:core-deps/freerdp.bst gnome-build-meta.bst:core-deps/nv-codec-headers.bst gnome-build-meta.bst:core/gnome-remote-desktop.bst gnome-build-meta.bst:core/gnome-session.bst freedesktop-sdk.bst:components/xcb-util.bst gnome-build-meta.bst:core-deps/startup-notification.bst gnome-build-meta.bst:core-deps/evolution-data-server.bst freedesktop-sdk.bst:components/rust-cbindgen.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:sdk/gjs.bst gnome-build-meta.bst:core-deps/jasmine-gjs.bst gnome-build-meta.bst:core-deps/python-argcomplete.bst gnome-build-meta.bst:core-deps/hwdata.bst gnome-build-meta.bst:core-deps/libdisplay-info.bst freedesktop-sdk.bst:components/mtdev.bst freedesktop-sdk.bst:components/libinput.bst freedesktop-sdk.bst:components/xorg-lib-xcvt.bst", "chunk8-spice": "freedesktop-sdk.bst:components/xorg-lib-xshmfence.bst freedesktop-sdk.bst:components/xwayland.bst gnome-build-meta.bst:core-deps/zenity.bst gnome-build-meta.bst:sdk-deps/libpanel.bst gnome-build-meta.bst:sdk/libdex.bst gnome-build-meta.bst:sdk-deps/sysprof.bst gnome-build-meta.bst:core/sysprof-app.bst gnome-build-meta.bst:core/mutter.bst gnome-build-meta.bst:core/gnome-shell.bst gnome-build-meta.bst:core/gnome-tour.bst gnome-build-meta.bst:core/gnome-user-docs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/libbluray.bst gnome-build-meta.bst:core-deps/libcdio.bst gnome-build-meta.bst:core-deps/libcdio-paranoia.bst gnome-build-meta.bst:sdk/gssproxy.bst gnome-build-meta.bst:core-deps/libnfs.bst gnome-build-meta.bst:core-deps/libgphoto2.bst gnome-build-meta.bst:core-deps/libmtp.bst gnome-build-meta.bst:core-deps/msgraph.bst gnome-build-meta.bst:sdk-deps/gvfs.bst gnome-build-meta.bst:sdk/gvfs-client.bst gnome-build-meta.bst:core/gvfs-daemon.bst gnome-build-meta.bst:core-deps/dasbus.bst gnome-build-meta.bst:core-deps/tcl.bst gnome-build-meta.bst:core-deps/brltty.bst gnome-build-meta.bst:core-deps/pyatspi.bst gnome-build-meta.bst:core-deps/dotconf.bst gnome-build-meta.bst:core-deps/espeak-ng.bst gnome-build-meta.bst:core-deps/speech-dispatcher.bst gnome-build-meta.bst:core/orca.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:core-deps/gst-editing-services.bst gnome-build-meta.bst:core-deps/gupnp.bst gnome-build-meta.bst:core-deps/gupnp-av.bst gnome-build-meta.bst:core-deps/gupnp-dlna.bst gnome-build-meta.bst:core-deps/libmediaart.bst gnome-build-meta.bst:sdk/libgee.bst gnome-build-meta.bst:core/rygel.bst gnome-build-meta.bst:sdk/libhandy.bst gnome-build-meta.bst:core-deps/evince.bst gnome-build-meta.bst:core-deps/gtksourceview-4.bst gnome-build-meta.bst:sdk/webkit2gtk-4.1.bst gnome-build-meta.bst:core/sushi.bst gnome-build-meta.bst:core/meta-gnome-core-shell.bst gnome-build-meta.bst:core/systemd-presets.bst gnome-build-meta.bst:gnomeos-deps/vpnc-scripts.bst gnome-build-meta.bst:gnomeos-deps/openconnect.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openconnect.bst freedesktop-sdk.bst:components/libnl.bst gnome-build-meta.bst:gnomeos-deps/openvpn.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/vpnc.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-vpnc.bst gnome-build-meta.bst:gnomeos-deps/alsa-ucm-conf.bst gnome-build-meta.bst:gnomeos-deps/android-udev-rules.bst gnome-build-meta.bst:gnomeos-deps/bindfs.bst gnome-build-meta.bst:gnomeos-deps/disable-iscsi.bst gnome-build-meta.bst:gnomeos-deps/distrobox.bst freedesktop-sdk.bst:components/gnu-efi.bst freedesktop-sdk.bst:components/perl-slurp.bst freedesktop-sdk.bst:components/sbsigntools.bst gnome-build-meta.bst:gnomeos-deps/efitools.bst gnome-build-meta.bst:gnomeos-deps/efitools-maybe.bst freedesktop-sdk.bst:components/jansson.bst gnome-build-meta.bst:gnomeos-deps/nftables.bst gnome-build-meta.bst:gnomeos-deps/firewalld.bst gnome-build-meta.bst:gnomeos-deps/fish.bst gnome-build-meta.bst:gnomeos-deps/flathub-config.bst gnome-build-meta.bst:gnomeos-deps/libfprint.bst gnome-build-meta.bst:gnomeos-deps/pam-wrapper.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/gnome-nightly-config.bst gnome-build-meta.bst:gnomeos-deps/hidraw-udev.bst gnome-build-meta.bst:gnomeos-deps/anthy.bst gnome-build-meta.bst:gnomeos-deps/ibus-anthy.bst gnome-build-meta.bst:gnomeos-deps/libhangul.bst gnome-build-meta.bst:gnomeos-deps/ibus-hangul.bst gnome-build-meta.bst:gnomeos-deps/kyotocabinet.bst gnome-build-meta.bst:gnomeos-deps/libpinyin.bst gnome-build-meta.bst:gnomeos-deps/ibus-libpinyin.bst gnome-build-meta.bst:gnomeos-deps/m17n-db.bst gnome-build-meta.bst:gnomeos-deps/m17n-lib.bst gnome-build-meta.bst:gnomeos-deps/ibus-typing-booster.bst gnome-build-meta.bst:gnomeos-deps/journald-config.bst gnome-build-meta.bst:gnomeos/ldconfig-always.bst gnome-build-meta.bst:gnomeos-deps/ld-config.bst gnome-build-meta.bst:gnomeos-deps/modprobe-config.bst gnome-build-meta.bst:gnomeos-deps/nm-connectivity-config.bst gnome-build-meta.bst:gnomeos-deps/nss-mdns.bst gnome-build-meta.bst:gnomeos-deps/opensc.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:gnomeos-deps/pcrlock-config.bst gnome-build-meta.bst:gnomeos-deps/preset-all.bst gnome-build-meta.bst:gnomeos-deps/sysupdate-config.bst gnome-build-meta.bst:gnomeos-deps/vte-config.bst gnome-build-meta.bst:incubator/meta-gnome-incubator-apps.bst gnome-build-meta.bst:core/d-spy.bst gnome-build-meta.bst:core/dconf-editor.bst freedesktop-sdk.bst:components/cyrus-sasl.bst freedesktop-sdk.bst:components/dmidecode.bst gnome-build-meta.bst:core-deps/ebtables.bst gnome-build-meta.bst:core-deps/libssh2.bst freedesktop-sdk.bst:components/dtc.bst gnome-build-meta.bst:core-deps/libcacard.bst gnome-build-meta.bst:core-deps/spice-protocol.bst gnome-build-meta.bst:core-deps/spice.bst", "chunk9-mtab": "gnome-build-meta.bst:core-deps/usbredir.bst gnome-build-meta.bst:core-deps/virglrenderer.bst gnome-build-meta.bst:core-deps/qemu.bst gnome-build-meta.bst:core-deps/slirp-helper.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core-deps/libvirt-glib.bst gnome-build-meta.bst:core-deps/osinfo-db.bst freedesktop-sdk.bst:components/python3-six.bst gnome-build-meta.bst:core-deps/python-pyparsing.bst gnome-build-meta.bst:core-deps/spice-gtk.bst gnome-build-meta.bst:core/gnome-boxes.bst gnome-build-meta.bst:core-deps/cmark.bst gnome-build-meta.bst:core-deps/editorconfig-core-c.bst gnome-build-meta.bst:core-deps/gom.bst gnome-build-meta.bst:core-deps/jsonrpc-glib.bst gnome-build-meta.bst:core-deps/libgit2.bst gnome-build-meta.bst:core-deps/libgit2-glib.bst gnome-build-meta.bst:core-deps/libpeas.bst gnome-build-meta.bst:core-deps/libspelling.bst gnome-build-meta.bst:core-deps/template-glib.bst freedesktop-sdk.bst:components/flatpak-builder.bst gnome-build-meta.bst:core/gnome-builder.bst gnome-build-meta.bst:core-deps/foundry.bst gnome-build-meta.bst:core/manuals.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:core-deps/callaudiod.bst gnome-build-meta.bst:core-deps/gmobile.bst gnome-build-meta.bst:core-deps/feedbackd.bst gnome-build-meta.bst:core-deps/folks.bst gnome-build-meta.bst:core-deps/sofia-sip.bst gnome-build-meta.bst:core/calls.bst gnome-build-meta.bst:core/meta-gnome-core-mobile.bst gnome-build-meta.bst:core.bst gnome-build-meta.bst:gnomeos-deps/gnome-mimeapps.bst gnome-build-meta.bst:core-deps/protobuf-c.bst gnome-build-meta.bst:gnomeos-deps/libssc.bst gnome-build-meta.bst:gnomeos-deps/iio-sensor-proxy.bst freedesktop-sdk.bst:components/mandoc.bst freedesktop-sdk.bst:components/efivar.bst gnome-build-meta.bst:gnomeos-deps/mokutil.bst gnome-build-meta.bst:gnomeos-deps/nano-default-editor.bst gnome-build-meta.bst:gnomeos-deps/noise-suppression-for-voice.bst gnome-build-meta.bst:gnomeos-deps/noto-cjk.bst gnome-build-meta.bst:gnomeos-deps/nvme-cli.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst gnome-build-meta.bst:gnomeos-deps/switcheroo-control.bst gnome-build-meta.bst:gnomeos-deps/fake-toolbox-env.bst gnome-build-meta.bst:gnomeos-deps/toolbox.bst gnome-build-meta.bst:gnomeos-deps/udev-hide-usr.bst gnome-build-meta.bst:gnomeos-deps/uinput.bst gnome-build-meta.bst:gnomeos-deps/uresourced.bst freedesktop-sdk.bst:components/aspell.bst gnome-build-meta.bst:gnomeos-deps/words.bst freedesktop-sdk.bst:components/wpa-supplicant.bst gnome-build-meta.bst:gnomeos-deps/wpa-supplicant-config.bst gnome-build-meta.bst:gnomeos-deps/wsdd.bst gnome-build-meta.bst:gnomeos-deps/zram-generator.bst gnome-build-meta.bst:sdk/adwaita-fonts.bst freedesktop-sdk.bst:components/extra-cmake-modules.bst gnome-build-meta.bst:sdk/fcitx5-gtk.bst freedesktop-sdk.bst:components/fftw.bst freedesktop-sdk.bst:components/compat-vulkan-link.bst freedesktop-sdk.bst:components/fdsdk-lic-dedup.bst freedesktop-sdk.bst:components/glibc-gconv-cache.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/google-crosextra-caladea.bst freedesktop-sdk.bst:components/google-crosextra-carlito.bst freedesktop-sdk.bst:components/iana-config.bst freedesktop-sdk.bst:components/gamemode-base.bst freedesktop-sdk.bst:components/gamemode-manifest.bst freedesktop-sdk.bst:components/libgamemode.bst freedesktop-sdk.bst:components/libtraceevent.bst freedesktop-sdk.bst:components/supported-locales.bst freedesktop-sdk.bst:components/locales.bst freedesktop-sdk.bst:components/mythes.bst freedesktop-sdk.bst:components/noto-emoji.bst freedesktop-sdk.bst:components/opencl.bst freedesktop-sdk.bst:components/dictionaries.bst freedesktop-sdk.bst:components/flatpak-xdg-utils.bst freedesktop-sdk.bst:components/pciutils.bst freedesktop-sdk.bst:components/unzip.bst freedesktop-sdk.bst:components/alsa-plugins.bst freedesktop-sdk.bst:components/wget2.bst freedesktop-sdk.bst:components/xz-docs.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/gstreamer-plugins-rs.bst freedesktop-sdk.bst:components/gstreamer-plugins-ugly.bst freedesktop-sdk.bst:components/liberation-fonts.bst freedesktop-sdk.bst:components/libp11.bst freedesktop-sdk.bst:components/opusfile.bst freedesktop-sdk.bst:components/sdl2-mixer.bst freedesktop-sdk.bst:components/sdl2-net.bst freedesktop-sdk.bst:components/sdl3-ttf.bst freedesktop-sdk.bst:components/slang.bst freedesktop-sdk.bst:components/tex-gyre-fonts.bst freedesktop-sdk.bst:components/webp-pixbuf-loader.bst freedesktop-sdk.bst:components/xcb-util-image.bst freedesktop-sdk.bst:components/xcb-util-renderutil.bst freedesktop-sdk.bst:components/xcb-util-cursor.bst freedesktop-sdk.bst:components/xcb-util-keysyms.bst freedesktop-sdk.bst:components/xcb-util-wm.bst freedesktop-sdk.bst:components/sdl3-image.bst freedesktop-sdk.bst:components/xorg-lib-xpm.bst freedesktop-sdk.bst:components/xorg-lib-xscrnsaver.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:components/xxhash.bst freedesktop-sdk.bst:integration/mtab.bst", "chunk10-bluefin": "gnome-build-meta.bst:void/zenity.bst freedesktop-sdk.bst:platform.bst gnome-build-meta.bst:sdk/gst-plugin-gtk4.bst gnome-build-meta.bst:sdk/libmanette.bst gnome-build-meta.bst:sdk/librice.bst gnome-build-meta.bst:sdk/pinentry.bst gnome-build-meta.bst:sdk/xwayland-satellite.bst gnome-build-meta.bst:sdk-platform.bst freedesktop-sdk.bst:components/sudo.bst freedesktop-sdk.bst:vm/config/sudo.bst freedesktop-sdk.bst:components/python3-pycparser.bst freedesktop-sdk.bst:components/rust-bindgen.bst freedesktop-sdk.bst:components/spirv-llvm-translator.bst freedesktop-sdk.bst:extensions/mesa/libclc.bst freedesktop-sdk.bst:extensions/mesa/llvm.bst freedesktop-sdk.bst:extensions/mesa/mesa.bst freedesktop-sdk.bst:integration/ldconfig.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/deps.bst freedesktop-sdk.bst:components/genpeimg.bst gnome-build-meta.bst:core-deps/fwupd-efi.bst gnome-build-meta.bst:gnomeos/fwupd-efi-signed.bst gnome-build-meta.bst:gnomeos/fwupd-efi-signed-maybe.bst gnome-build-meta.bst:gnomeos/import-deployment-pub-key.bst freedesktop-sdk.bst:components/cpio.bst freedesktop-sdk.bst:components/pahole.bst gnome-build-meta.bst:gnomeos/linux-module-cert.bst freedesktop-sdk.bst:components/linux.bst freedesktop-sdk.bst:components/sign-file.bst gnome-build-meta.bst:gnomeos/initramfs/signed-modules.bst gnome-build-meta.bst:gnomeos/public-keys.bst gnome-build-meta.bst:gnomeos/reload-sysext.bst gnome-build-meta.bst:gnomeos/replace-signed-systemd-boot.bst gnome-build-meta.bst:gnomeos/systemd-pcrlock-workaround.bst gnome-build-meta.bst:oci/integration/lvm2-enable-activation.bst oci/os-release.bst freedesktop-sdk.bst:components/python3-pyelftools.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:gnomeos/generate-initramfs.bst freedesktop-sdk.bst:components/tpm2-tools.bst gnome-build-meta.bst:gnomeos-deps/iucode-tool.bst gnome-build-meta.bst:gnomeos-deps/intel-ucode.bst gnome-build-meta.bst:gnomeos-deps/shim.bst gnome-build-meta.bst:gnomeos-deps/shim-maybe.bst gnome-build-meta.bst:oci/initramfs/deps.bst gnome-build-meta.bst:oci/initramfs/initial-scripts.bst gnome-build-meta.bst:oci/initramfs.bst gnome-build-meta.bst:oci/integration/bootc-config.bst freedesktop-sdk.bst:vm/config/sudo-nopasswd.bst freedesktop-sdk.bst:vm/config/useradd-ostree.bst gnome-build-meta.bst:oci/layers/gnomeos-stack.bst gnome-build-meta.bst:oci/layers/gnomeos-init-scripts.bst gnome-build-meta.bst:oci/layers/gnomeos-manifest.bst gnome-build-meta.bst:oci/layers/gnomeos.bst gnome-build-meta.bst:oci/layers/platform-init-scripts.bst gnome-build-meta.bst:oci/integration/extrafs.bst gnome-build-meta.bst:sdk/os-release.bst gnome-build-meta.bst:oci/layers/platform-stack.bst gnome-build-meta.bst:oci/layers/platform-manifest.bst gnome-build-meta.bst:oci/layers/platform.bst freedesktop-sdk.bst:oci/oci-builder.bst freedesktop-sdk.bst:components/flatpak-minimal-image.bst freedesktop-sdk.bst:components/os-release.bst freedesktop-sdk.bst:integration/extra-fs.bst freedesktop-sdk.bst:oci/layers/minimal-stack.bst freedesktop-sdk.bst:oci/layers/platform-stack.bst freedesktop-sdk.bst:oci/layers/platform-init-script.bst freedesktop-sdk.bst:oci/layers/platform.bst freedesktop-sdk.bst:oci/layers/minimal-init-script.bst freedesktop-sdk.bst:oci/layers/minimal.bst freedesktop-sdk.bst:oci/minimal-oci.bst freedesktop-sdk.bst:oci/platform-oci.bst gnome-build-meta.bst:oci/platform.bst oci/gnomeos.bst bluefin/brew.bst bluefin/brew-tarball.bst bluefin/common.bst bluefin/fzf.bst bluefin/zig.bst bluefin/gtk4-layer-shell.bst bluefin/ghostty.bst bluefin/glow.bst bluefin/shell-extensions/app-indicators.bst bluefin/shell-extensions/blur-my-shell.bst bluefin/shell-extensions/caffeine.bst bluefin/shell-extensions/dash-to-dock.bst bluefin/shell-extensions/disable-ext-validator.bst bluefin/shell-extensions/gsconnect.bst bluefin/shell-extensions/logomenu.bst bluefin/shell-extensions/search-light.bst bluefin/gnome-shell-extensions.bst bluefin/gum.bst bluefin/jetbrains-mono-nerd-font.bst bluefin/jetbrains-mono.bst bluefin/sudo-rs.bst bluefin/tailscale-x86_64.bst bluefin/tailscale.bst bluefin/uutils-coreutils.bst bluefin/wallpapers.bst gnome-build-meta.bst:gnomeos-deps/just.bst gnome-build-meta.bst:gnomeos-deps/wl-clipboard.bst bluefin/deps.bst oci/layers/bluefin-stack.bst oci/layers/bluefin-init-scripts.bst oci/layers/bluefin-runtime.bst oci/layers/bluefin.bst oci/bluefin.bst"}
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7877274Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7877700Z with:
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7877897Z   name: planning-logs
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7878114Z   path: logs/
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7878302Z   retention-days: 7
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7878510Z   if-no-files-found: ignore
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7878734Z   compression-level: 6
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7878941Z   overwrite: false
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7879156Z   include-hidden-files: false
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7879380Z env:
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7879548Z   IMAGE_NAME: egg
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7879750Z   IMAGE_REGISTRY: ghcr.io/hanthor
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7880363Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7881144Z   CACHE_GRPC_PORT: 9092
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7881360Z   CACHE_HTTP_PORT: 8080
+planning	UNKNOWN STEP	2026-02-16T09:03:51.7881561Z ##[endgroup]
+planning	UNKNOWN STEP	2026-02-16T09:03:52.0029203Z No files were found with the provided path: logs/. No artifacts will be uploaded.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.0957088Z Post job cleanup.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.2316768Z Cache hit occurred on the primary key bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6, not saving cache.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.3269557Z Post job cleanup.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.4635127Z Cache hit occurred on the primary key bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6, not saving cache.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.4754991Z Post job cleanup.
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5712361Z [command]/usr/bin/git version
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5748733Z git version 2.52.0
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5798852Z Temporarily overriding HOME='/home/runner/work/_temp/0341d7ad-1d1c-4dd5-8481-857015fb995b' before making global git config changes
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5800232Z Adding repository directory to the temporary git global config as a safe directory
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5805165Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/egg/egg
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5840238Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+planning	UNKNOWN STEP	2026-02-16T09:03:52.5874875Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6125011Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6150287Z http.https://github.com/.extraheader
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6164940Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6200125Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6467035Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6506290Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6872972Z Evaluate and set job outputs
+planning	UNKNOWN STEP	2026-02-16T09:03:52.6921155Z Set output 'matrix_keys'
+planning	UNKNOWN STEP	2026-02-16T09:03:52.7098449Z Set output 'matrix_data'
+planning	UNKNOWN STEP	2026-02-16T09:03:52.7099643Z Cleaning up orphan processes
+planning	UNKNOWN STEP	2026-02-16T09:03:52.7357997Z Terminate orphan process: pid (2212) (catatonit)

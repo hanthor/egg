@@ -66,7 +66,8 @@ jobs:
             -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
             "$BST2_IMAGE" \
-            python3 scripts/generate-build-matrix.py oci/bluefin.bst 10 > matrix.json
+            "$BST2_IMAGE" \
+            python3 scripts/generate-build-matrix.py oci/bluefin.bst 20 > matrix.json
 
           cat matrix.json
           # Output keys for strategy.matrix (e.g. ["chunk1", "chunk2"])

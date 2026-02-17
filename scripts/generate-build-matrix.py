@@ -46,13 +46,10 @@ def chunk_list(data, num_chunks):
     if not data:
         return [[] for _ in range(num_chunks)]
     
-    # Simple chunking of the sorted list
-    # Since the list is topologically sorted (leaves first),
-    # Chunk 0 will have leaves, Chunk N will have roots.
-    # This is perfect for sequential stages.
-    
-    k, m = divmod(len(data), num_chunks)
-    return [data[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(num_chunks)]
+    # Round-robin distribution (Stride slicing)
+    # This spreads the tail (heavy leaf nodes) across all chunks
+    # instead of clumping them in the last chunk.
+    return [data[i::num_chunks] for i in range(num_chunks)]
 
 def main():
     if len(sys.argv) < 2:
