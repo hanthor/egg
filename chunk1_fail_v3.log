@@ -1,0 +1,350 @@
+Build chunk1-uutils-coreutils	Set up job	﻿2026-02-17T03:42:13.0503901Z Current runner version: '2.331.0'
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0528079Z ##[group]Runner Image Provisioner
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0528928Z Hosted Compute Agent
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0529600Z Version: 20260123.484
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0530190Z Commit: 6bd6555ca37d84114959e1c76d2c01448ff61c5d
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0530915Z Build Date: 2026-01-23T19:41:17Z
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0531682Z Worker ID: {db6e594f-adb5-416d-b1e5-f31d1de2b823}
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0532365Z Azure Region: westus
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0532932Z ##[endgroup]
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0534675Z ##[group]Operating System
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0535343Z Ubuntu
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0535800Z 24.04.3
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0536531Z LTS
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0537029Z ##[endgroup]
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0537590Z ##[group]Runner Image
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0538212Z Image: ubuntu-24.04
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0538731Z Version: 20260209.23.1
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0539779Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260209.23/images/ubuntu/Ubuntu2404-Readme.md
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0541443Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260209.23
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0542383Z ##[endgroup]
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0543537Z ##[group]GITHUB_TOKEN Permissions
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0545621Z Contents: read
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0546256Z Metadata: read
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0547118Z Packages: write
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0547666Z ##[endgroup]
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0549626Z Secret source: Actions
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.0550468Z Prepare workflow directory
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.1114177Z Prepare all required actions
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.1150813Z Getting action download info
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:13.6189533Z Download action repository 'ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6' (SHA:695eb75bc387dbcd9685a8e72d23439d8686cba6)
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:14.2428114Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:14.2815917Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:14.3821809Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Build chunk1-uutils-coreutils	Set up job	2026-02-17T03:42:14.6049317Z Complete job name: Build chunk1-uutils-coreutils
+Build chunk1-uutils-coreutils	Free disk space	﻿2026-02-17T03:42:14.6680787Z ##[group]Run ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6681998Z with:
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6682491Z   extra-squeeze: false
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6683160Z env:
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6683615Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6684118Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6685303Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6686700Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6687217Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6699350Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6712274Z ##[endgroup]
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6811583Z ##[group]Run echo "==> Available space before cleanup"
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6812447Z [36;1mecho "==> Available space before cleanup"[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6813085Z [36;1mdf -h[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6813612Z [36;1m# Remove swapfile (3gb)[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6814247Z [36;1m# swapoff is required for arm, but not for x64?[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6815039Z [36;1msudo swapoff -a || true; sudo rm -f /swapfile || true[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6815773Z [36;1m# Remove toolchains, browsers[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6816492Z [36;1mshopt -s nullglob[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6817031Z [36;1mEXTRAPKG=""[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6817535Z [36;1mif [ "false" = "true" ]; then[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6818266Z [36;1m  # These have a lot of small files and are a bit slower to remove[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6819121Z [36;1m  EXTRAPKG="/usr/share/miniconda /opt/hostedtoolcache"[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6819797Z [36;1mfi[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6820440Z [36;1mprintf '%s\0' /opt/PyPy /opt/az /opt/node/ /opt/pipx /opt/go /opt/Ruby \[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6821470Z [36;1m    /usr/lib/llvm-* /usr/local/julia* /usr/local/lib/android /usr/share/dotnet \[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6822504Z [36;1m    /usr/share/swift /usr/local/.ghcup /usr/lib/firefox /opt/google/chrome \[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6823330Z [36;1m    /opt/microsoft/msedge $EXTRAPKG \[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6824206Z [36;1m    | sudo xargs -0 -n1 -P4 rm -rf[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6824858Z [36;1mecho "==> Available space after cleanup"[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6825476Z [36;1mdf -h[0m
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6879830Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6880559Z env:
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6881096Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6881588Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6882743Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6883924Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6884425Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6896769Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.6909591Z ##[endgroup]
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7047392Z ==> Available space before cleanup
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7140425Z Filesystem      Size  Used Avail Use% Mounted on
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7141331Z /dev/root       145G   53G   92G  37% /
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7142365Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7143387Z tmpfs           3.2G 1008K  3.2G   1% /run
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7144445Z tmpfs           5.0M     0  5.0M   0% /run/lock
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7145186Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7145881Z /dev/sda16      881M   63M  757M   8% /boot
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7146771Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:14.7147455Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2232131Z ==> Available space after cleanup
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2248615Z Filesystem      Size  Used Avail Use% Mounted on
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2249251Z /dev/root       145G   24G  121G  17% /
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2249856Z tmpfs           7.9G   84K  7.9G   1% /dev/shm
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2250400Z tmpfs           3.2G 1000K  3.2G   1% /run
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2250955Z tmpfs           5.0M     0  5.0M   0% /run/lock
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2251583Z efivarfs        128M   26K  128M   1% /sys/firmware/efi/efivars
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2252634Z /dev/sda16      881M   63M  757M   8% /boot
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2253187Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+Build chunk1-uutils-coreutils	Free disk space	2026-02-17T03:42:36.2253729Z tmpfs           1.6G   12K  1.6G   1% /run/user/1001
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	﻿2026-02-17T03:42:36.2506647Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2507117Z with:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2507352Z   repository: hanthor/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2507783Z   token: ***
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2508026Z   ssh-strict: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2508305Z   ssh-user: git
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2508553Z   persist-credentials: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2508818Z   clean: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2509062Z   sparse-checkout-cone-mode: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2509361Z   fetch-depth: 1
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2509590Z   fetch-tags: false
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2509822Z   show-progress: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2510063Z   lfs: false
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2510277Z   submodules: false
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2510523Z   set-safe-directory: true
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2510778Z env:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2510982Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2511224Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2511873Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2512583Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2512874Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2520513Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.2528549Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3574578Z Syncing repository: hanthor/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3575940Z ##[group]Getting Git version info
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3576633Z Working directory is '/home/runner/work/egg/egg'
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3577290Z [command]/usr/bin/git version
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3588952Z git version 2.52.0
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3614835Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3628682Z Temporarily overriding HOME='/home/runner/work/_temp/56bbc539-dd45-4029-9f0f-b6c72456f1d1' before making global git config changes
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3630063Z Adding repository directory to the temporary git global config as a safe directory
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3633744Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/egg/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3672270Z Deleting the contents of '/home/runner/work/egg/egg'
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3676106Z ##[group]Initializing the repository
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3680298Z [command]/usr/bin/git init /home/runner/work/egg/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3777263Z hint: Using 'master' as the name for the initial branch. This default branch name
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3778438Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3779405Z hint: to use in all of your new repositories, which will suppress this warning,
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3780268Z hint: call:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3780659Z hint:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3780997Z hint: 	git config --global init.defaultBranch <name>
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3781487Z hint:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3782133Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3783212Z hint: 'development'. The just-created branch can be renamed via this command:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3784136Z hint:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3784622Z hint: 	git branch -m <name>
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3785145Z hint:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3785878Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3787202Z Initialized empty Git repository in /home/runner/work/egg/egg/.git/
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3793729Z [command]/usr/bin/git remote add origin https://github.com/hanthor/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3828923Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3829701Z ##[group]Disabling automatic garbage collection
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3834297Z [command]/usr/bin/git config --local gc.auto 0
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3863787Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3864553Z ##[group]Setting up auth
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3871432Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.3903460Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4236091Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4266280Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4498435Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4529749Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4763507Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4798734Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4799469Z ##[group]Fetching the repository
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:36.4807063Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3115a95e62767722a8ae751940c116f010db6e2a:refs/remotes/pull/2/merge
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1603528Z From https://github.com/hanthor/egg
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1604586Z  * [new ref]         3115a95e62767722a8ae751940c116f010db6e2a -> pull/2/merge
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1643424Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1644103Z ##[group]Determining the checkout info
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1647108Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1652670Z [command]/usr/bin/git sparse-checkout disable
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1697019Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1726695Z ##[group]Checking out the ref
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.1731240Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2010104Z Note: switching to 'refs/remotes/pull/2/merge'.
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2011054Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2011578Z You are in 'detached HEAD' state. You can look around, make experimental
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2013593Z changes and commit them, and you can discard any commits you make in this
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2014556Z state without impacting any branches by switching back to a branch.
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2015422Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2015751Z If you want to create a new branch to retain commits you create, you may
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2016765Z do so (now or later) by using -c with the switch command. Example:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2017215Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2017391Z   git switch -c <new-branch-name>
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2017690Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2017848Z Or undo this operation with:
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2018109Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2018261Z   git switch -
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2018490Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2018838Z Turn off this advice by setting config variable advice.detachedHead to false
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2019361Z 
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2019925Z HEAD is now at 3115a95 Merge 6daa7701751508d105c339250248dd0832783dd5 into 64741dbb8cfc41ef04228a075698457e4f2004aa
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2022425Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2063244Z [command]/usr/bin/git log -1 --format=%H
+Build chunk1-uutils-coreutils	Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:42:37.2088240Z 3115a95e62767722a8ae751940c116f010db6e2a
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	﻿2026-02-17T03:42:37.2213346Z ##[group]Run podman pull "$BST2_IMAGE"
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2213664Z [36;1mpodman pull "$BST2_IMAGE"[0m
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2261098Z shell: /usr/bin/bash -e {0}
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2261344Z env:
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2261511Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2261726Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2262340Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2263130Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2263336Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2270862Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.2278521Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:37.3804485Z Trying to pull registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1...
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:38.4504406Z Getting image source signatures
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:38.4506280Z Copying blob sha256:310d34cd6fa6ba2610968900e09f45a69236bcc45dd78af2ac13023212bd914c
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:38.4507481Z Copying blob sha256:9b141fb22193d37cff5e81fb83503ca4708ad99449adf45bf4e7c60a4c141f1c
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:55.1747388Z Copying config sha256:5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:55.1766459Z Writing manifest to image destination
+Build chunk1-uutils-coreutils	Run podman pull "$BST2_IMAGE"	2026-02-17T03:42:55.2680118Z 5006b72956f5bf0ae195974af2770fbb6f503e267397810846ac3ba73df4836f
+Build chunk1-uutils-coreutils	Cache BuildStream sources	﻿2026-02-17T03:42:55.3815487Z ##[group]Run actions/cache@v4
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3815760Z with:
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3815949Z   path: .cache/buildstream/sources
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3816679Z   key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3817211Z   restore-keys: bst-sources-Linux-
+Build chunk1-uutils-coreutils	Cache BuildStream sources	
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3817469Z   enableCrossOsArchive: false
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3817708Z   fail-on-cache-miss: false
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3817918Z   lookup-only: false
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3818109Z   save-always: false
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3818279Z env:
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3818436Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3818622Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3819216Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3819822Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3820019Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3827510Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.3835221Z ##[endgroup]
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:55.7930629Z Cache hit for: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:57.0478614Z Received 6712141 of 6712141 (100.0%), 6.6 MBs/sec
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:57.0479401Z Cache Size: ~6 MB (6712141 B)
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:57.0508660Z [command]/usr/bin/tar -xf /home/runner/work/_temp/04569ffc-681e-4731-85ff-852ae6a37108/cache.tzst -P -C /home/runner/work/egg/egg --use-compress-program unzstd
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:57.0690068Z Cache restored successfully
+Build chunk1-uutils-coreutils	Cache BuildStream sources	2026-02-17T03:42:57.0783407Z Cache restored from key: bst-sources-Linux-3870696863d2b71c22eb904338418fd389e67b919bf27ec1ab4448b2e0ff4ac6
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	﻿2026-02-17T03:42:57.0868214Z ##[group]Run ./scripts/setup-buildstream.sh
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0868581Z [36;1m./scripts/setup-buildstream.sh[0m
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0912857Z shell: /usr/bin/bash -e {0}
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0913096Z env:
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0913269Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0913615Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0914230Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0914863Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0915079Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0922472Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.0930457Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1038296Z scheduler:
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1038652Z   on-error: continue
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1039007Z   fetchers: 12
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1039285Z   builders: 1
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1039475Z   network-retries: 3
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1039611Z 
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1039683Z logging:
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040012Z   message-format: '[%{wallclock}][%{elapsed}][%{key}][%{element}] %{action} %{message}'
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040450Z   error-lines: 80
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040572Z 
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040644Z build:
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040808Z   max-jobs: 0
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1040988Z   retry-failed: True
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1041113Z 
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1041183Z cache:
+Build chunk1-uutils-coreutils	Run ./scripts/setup-buildstream.sh	2026-02-17T03:42:57.1041389Z   cache-buildtrees: never
+Build chunk1-uutils-coreutils	Pull Core Cache	﻿2026-02-17T03:42:57.1067554Z ##[group]Run mkdir -p ~/.cache/buildstream
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1067907Z [36;1mmkdir -p ~/.cache/buildstream[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1068272Z [36;1mREPO_LOWER=$(echo "hanthor/egg" | tr '[:upper:]' '[:lower:]')[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1068688Z [36;1mCORE_TAG="ghcr.io/${REPO_LOWER}/cache-core:latest"[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1068991Z [36;1m[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1069176Z [36;1mif podman pull "$CORE_TAG"; then[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1069503Z [36;1m  echo "Pulling Core Cache to avoid rebuilding base..."[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1069844Z [36;1m  id=$(podman create "$CORE_TAG")[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1070129Z [36;1m  podman cp "$id":/cas.tar cas-core.tar[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1070408Z [36;1m  podman rm "$id"[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1070692Z [36;1m  tar -xf cas-core.tar -C "$HOME/.cache/buildstream"[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1071000Z [36;1m  rm cas-core.tar[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1071201Z [36;1melse[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1071461Z [36;1m  echo "No Core Cache found. Proceeding (might be slow)..."[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1071803Z [36;1mfi[0m
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1112022Z shell: /usr/bin/bash -e {0}
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1112276Z env:
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1112449Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1112653Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1113278Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1113907Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1114118Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1121510Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1129436Z ##[endgroup]
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.1545912Z Trying to pull ghcr.io/hanthor/egg/cache-core:latest...
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.6365880Z Getting image source signatures
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.6367706Z Copying blob sha256:7492f42746b975fd3ba991685d7000661390f9f44fd3f3f862e5f7dfe29c791c
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:42:57.6368618Z Copying blob sha256:2a88f647d45b2abbab7762053dbb38d34980eaf1272f2bb722e9a7ee654e58cf
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:39.4558005Z Copying config sha256:c5cab5da9103228619fe3da11b02c30bc64783f3e348487669ceeaa5c0026128
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:39.4606136Z Writing manifest to image destination
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:40.0597433Z c5cab5da9103228619fe3da11b02c30bc64783f3e348487669ceeaa5c0026128
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:40.0643607Z Pulling Core Cache to avoid rebuilding base...
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:40.1071547Z Error: no command or entrypoint provided, and no CMD or ENTRYPOINT from image
+Build chunk1-uutils-coreutils	Pull Core Cache	2026-02-17T03:44:40.1113251Z ##[error]Process completed with exit code 125.
+Build chunk1-uutils-coreutils	Archive CAS	﻿2026-02-17T03:44:40.1218838Z ##[group]Run # Use podman to archive the CAS to bypass permission issues with root-owned files
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1219498Z [36;1m# Use podman to archive the CAS to bypass permission issues with root-owned files[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1219941Z [36;1mecho "Archiving CAS using Podman..."[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1220206Z [36;1m[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1220460Z [36;1m# We use the BST2 image which is already pulled and has tar[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1221023Z [36;1m  # Allow tar to return exit code 1 (file changed as we read it) which is common during active build interruptions[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1221510Z [36;1m  podman run --rm \[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1221806Z [36;1m    -v "$HOME/.cache/buildstream:/input:ro" \[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1222145Z [36;1m    -v "/home/runner/work/egg/egg:/output:rw" \[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1222442Z [36;1m    "$BST2_IMAGE" \[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1223002Z [36;1m    sh -c "tar -cf /output/cas-chunk1-uutils-coreutils.tar -C /input --exclude 'cas/staging' --exclude 'cas/tmp' . || [ \$? -eq 1 ]"[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1223603Z [36;1m  [0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1223834Z [36;1mls -lh "cas-chunk1-uutils-coreutils.tar"[0m
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1622622Z shell: /usr/bin/bash -e {0}
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1622976Z env:
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1623228Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1623534Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1624500Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1625515Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1625853Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1638979Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.1652060Z ##[endgroup]
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.2552294Z Archiving CAS using Podman...
+Build chunk1-uutils-coreutils	Archive CAS	2026-02-17T03:44:40.7504610Z -rw-r--r-- 1 runner runner 10K Feb 17 03:44 cas-chunk1-uutils-coreutils.tar
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	﻿2026-02-17T03:44:40.7567314Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7567733Z with:
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7567936Z   name: build-logs-chunk1-uutils-coreutils
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7568208Z   path: logs/
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7568395Z   retention-days: 7
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7568590Z   if-no-files-found: warn
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7568808Z   compression-level: 6
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7569011Z   overwrite: false
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7569205Z   include-hidden-files: false
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7569424Z env:
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7569591Z   IMAGE_NAME: egg
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7569787Z   IMAGE_REGISTRY: ghcr.io/hanthor
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7570393Z   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7571023Z   CACHE_GRPC_PORT: 9092
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7571230Z   CACHE_HTTP_PORT: 8080
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7578646Z   TARGETS: freedesktop-sdk.bst:components/libaio.bst freedesktop-sdk.bst:components/elfutils.bst freedesktop-sdk.bst:components/llvm.bst freedesktop-sdk.bst:components/parallel.bst freedesktop-sdk.bst:components/xorg-lib-xext.bst freedesktop-sdk.bst:components/avahi.bst freedesktop-sdk.bst:components/netavark.bst freedesktop-sdk.bst:components/python3-sphinxcontrib-jsmath.bst bluefin/plymouth-bluefin-theme.bst freedesktop-sdk.bst:components/jq.bst freedesktop-sdk.bst:components/python3-setuptools-git.bst freedesktop-sdk.bst:components/gstreamer.bst freedesktop-sdk.bst:components/python3-hatch-fancy-pypi-readme.bst freedesktop-sdk.bst:components/highway.bst freedesktop-sdk.bst:components/libebur128.bst freedesktop-sdk.bst:components/usbutils.bst freedesktop-sdk.bst:components/xdg-desktop-portal-manifest.bst freedesktop-sdk.bst:components/wildmidi.bst freedesktop-sdk.bst:components/gyp.bst gnome-build-meta.bst:core-deps/colord.bst gnome-build-meta.bst:core-deps/catch2.bst gnome-build-meta.bst:core-deps/osinfo-db-tools.bst gnome-build-meta.bst:core-deps/localsearch.bst freedesktop-sdk.bst:components/xorg-lib-xt.bst gnome-build-meta.bst:core-deps/libcheck.bst freedesktop-sdk.bst:components/cups-daemon-only.bst gnome-build-meta.bst:core/tecla.bst gnome-build-meta.bst:sdk/mozjs.bst gnome-build-meta.bst:core/gnome-user-share.bst gnome-build-meta.bst:core-deps/gssdp.bst gnome-build-meta.bst:gnomeos-deps/NetworkManager-openvpn.bst gnome-build-meta.bst:gnomeos-deps/fprintd.bst gnome-build-meta.bst:gnomeos-deps/pam-pkcs11.bst gnome-build-meta.bst:core-deps/libvirt.bst gnome-build-meta.bst:core/meta-gnome-core-developer-tools.bst gnome-build-meta.bst:gnomeos-deps/spice-vdagent.bst freedesktop-sdk.bst:components/gnu-free-fonts.bst freedesktop-sdk.bst:components/zip.bst freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst freedesktop-sdk.bst:vm/mesa-default.bst gnome-build-meta.bst:gnomeos-deps/python3-zstd.bst gnome-build-meta.bst:oci/layers/platform-stack.bst bluefin/fzf.bst bluefin/uutils-coreutils.bst
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.7586542Z ##[endgroup]
+Build chunk1-uutils-coreutils	Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02	2026-02-17T03:44:40.9740049Z ##[warning]No files were found with the provided path: logs/. No artifacts will be uploaded.
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	﻿2026-02-17T03:44:40.9851790Z Post job cleanup.
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0799302Z [command]/usr/bin/git version
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0836778Z git version 2.52.0
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0879373Z Temporarily overriding HOME='/home/runner/work/_temp/732316ec-a522-4166-a4cf-d59168e8dcbc' before making global git config changes
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0880420Z Adding repository directory to the temporary git global config as a safe directory
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0892142Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/egg/egg
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0928662Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.0961274Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1201308Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1222559Z http.https://github.com/.extraheader
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1234999Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1267155Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1499694Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build chunk1-uutils-coreutils	Post Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5	2026-02-17T03:44:41.1535128Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build chunk1-uutils-coreutils	Complete job	﻿2026-02-17T03:44:41.1889082Z Cleaning up orphan processes
+Build chunk1-uutils-coreutils	Complete job	2026-02-17T03:44:41.2195940Z Terminate orphan process: pid (2278) (catatonit)
