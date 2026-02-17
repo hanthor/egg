@@ -66,7 +66,6 @@ jobs:
             -v "${{ github.workspace }}/.cache/buildstream:/root/.cache/buildstream:rw" \
             -w /src \
             "$BST2_IMAGE" \
-            "$BST2_IMAGE" \
             python3 scripts/generate-build-matrix.py oci/bluefin.bst 20 > matrix.json
 
           cat matrix.json
