@@ -58,47 +58,44 @@ def main():
 
     target = sys.argv[1]
     num_chunks = int(sys.argv[2]) if len(sys.argv) > 2 else 5
+    core_split = int(sys.argv[3]) if len(sys.argv) > 3 else 0
     
-    print(f"Generating build plan for {target} with {num_chunks} chunks...", file=sys.stderr)
+    print(f"Generating build plan for {target} with {num_chunks} chunks (core split: {core_split})...", file=sys.stderr)
     
     elements = get_build_plan(target)
     
     # Separate the final target from the dependencies
-    # Use suffix match to handle project prefixes returned by bst show (e.g., 'main:oci/bluefin.bst')
     elements = [e for e in elements if not e.endswith(target)]
     
     print(f"Found {len(elements)} elements to build (excluding final target).", file=sys.stderr)
+
+    # Split into Core and Leaves
+    core_elements = []
+    if core_split > 0 and len(elements) > core_split:
+        core_elements = elements[:core_split]
+        elements = elements[core_split:]
+        print(f"Splitting {len(core_elements)} elements into Core stage.", file=sys.stderr)
     
     chunks = chunk_list(elements, num_chunks)
     
     # Output JSON for GHA
-    # We produce a map where keys are 'chunk1', 'chunk2', etc.
     matrix_map = {}
     for i, chunk in enumerate(chunks):
         if not chunk:
             continue
             
-        # Pick a representative name from the end of the chunk (topological top)
-        # Since the list is topologically sorted, the last element depends on the previous ones
         representative = chunk[-1]
-        
-        # Clean up the name for GHA matrix key compatibility
-        # Get basename of the element (e.g. project.bst:dir/file.bst -> file)
         element_path = representative.split(':')[-1]
         base = os.path.basename(element_path)
         safe_name = base.replace('.bst', '').replace('/', '-').replace(':', '-')
-        
-        # Limit length just in case
         safe_name = safe_name[:30]
         
         key = f"chunk{i+1}-{safe_name}"
-        
-        # Join with space for passing to bst build
         matrix_map[key] = " ".join(chunk)
         print(f"{key}: {len(chunk)} elements (ends with {representative})", file=sys.stderr)
 
-    # Structure: { "matrix": { "chunk1": "...", ... }, "final": "target" }
     final_output = {
+        "core": " ".join(core_elements),
         "matrix": matrix_map,
         "final": target
     }
