@@ -267,16 +267,19 @@ jobs:
             echo "cache_hit=true" >> "$GITHUB_OUTPUT"
             
             mkdir -p ~/.cache/buildstream
-            # Extract cas.tar from the image
-            # We assume the image was built with 'COPY cas-chunk.tar /cas.tar'
-            id=$(podman create "$IMAGE_TAG")
-            podman cp "$id":/cas.tar cas-restore.tar
-            podman rm "$id"
             
-            # Untar to local cache
-            tar -xf cas-restore.tar -C "$HOME/.cache/buildstream"
-            rm cas-restore.tar
-            echo "CAS restored from cache."
+            if id=$(podman create "$IMAGE_TAG" true 2>/dev/null); then
+                if podman cp "$id":/cas.tar cas-restore.tar; then
+                    tar -xf cas-restore.tar -C "$HOME/.cache/buildstream"
+                    rm cas-restore.tar
+                    echo "CAS restored from cache."
+                else
+                    echo "WARNING: Failed to extract CAS from strict cache. Ignoring."
+                fi
+                podman rm "$id"
+            else
+                 echo "WARNING: Failed to create container from strict cache. Ignoring."
+            fi
           else
             echo "Strict Cache Miss. Checking for fallback (latest)..."
             echo "cache_hit=false" >> "$GITHUB_OUTPUT"
@@ -286,13 +289,18 @@ jobs:
                 echo "Fallback Cache Hit! Warming CAS from latest..."
                 
                 mkdir -p ~/.cache/buildstream
-                id=$(podman create "$LATEST_IMAGE_TAG")
-                podman cp "$id":/cas.tar cas-restore.tar
-                podman rm "$id"
-                
-                tar -xf cas-restore.tar -C "$HOME/.cache/buildstream"
-                rm cas-restore.tar
-                echo "CAS warmed from latest cache."
+                if id=$(podman create "$LATEST_IMAGE_TAG" true 2>/dev/null); then
+                    if podman cp "$id":/cas.tar cas-restore.tar; then
+                        tar -xf cas-restore.tar -C "$HOME/.cache/buildstream"
+                        rm cas-restore.tar
+                        echo "CAS warmed from latest cache."
+                    else
+                        echo "WARNING: Failed to extract CAS from fallback cache. Ignoring."
+                    fi
+                    podman rm "$id"
+                else
+                    echo "WARNING: Failed to create container from fallback cache. Ignoring."
+                fi
              else
                 echo "No fallback cache found. Starting fresh."
              fi
@@ -361,7 +369,7 @@ jobs:
           # Create Minimal Dockerfile
           # We use the tarball created in the previous step 'Archive CAS' => cas-{chunk}.tar
           # We rename it to /cas.tar in the image for consistent restoration
-          echo -e "FROM scratch\nCOPY cas-${{ matrix.chunk }}.tar /cas.tar" > Dockerfile
+          echo -e "FROM docker.io/library/busybox:latest\nCOPY cas-chunk.tar /cas.tar" > Dockerfile
           
           # Build the image (locally tagged as latest for now)
           podman build -t "$LATEST_IMAGE_TAG" .
