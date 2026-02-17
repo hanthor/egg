@@ -91,7 +91,7 @@ jobs:
   build_core:
     needs: planning
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 360
     permissions:
       contents: read
       packages: write
@@ -174,7 +174,7 @@ jobs:
     # Skip if matrix is empty
     if: needs.planning.outputs.matrix_keys != '[]'
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 360
     permissions:
       contents: read
       packages: write
