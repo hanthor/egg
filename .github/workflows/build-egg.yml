@@ -232,11 +232,12 @@ jobs:
           echo "Archiving CAS using Podman..."
           
           # We use the BST2 image which is already pulled and has tar
-          podman run --rm \
-            -v "$HOME/.cache/buildstream:/input:ro" \
-            -v "${{ github.workspace }}:/output:rw" \
-            "$BST2_IMAGE" \
-            tar -cf /output/cas-${{ matrix.chunk }}.tar -C /input --exclude "cas/staging" --exclude "cas/tmp" .
+            # Allow tar to return exit code 1 (file changed as we read it) which is common during active build interruptions
+            podman run --rm \
+              -v "$HOME/.cache/buildstream:/input:ro" \
+              -v "${{ github.workspace }}:/output:rw" \
+              "$BST2_IMAGE" \
+              sh -c "tar -cf /output/cas-${{ matrix.chunk }}.tar -C /input --exclude 'cas/staging' --exclude 'cas/tmp' . || [ \$? -eq 1 ]"
             
           ls -lh "cas-${{ matrix.chunk }}.tar"
 
