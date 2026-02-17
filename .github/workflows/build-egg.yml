@@ -130,11 +130,15 @@ jobs:
              # Try to create container. Use 'true' for busybox. Fallback or fail gracefully.
              if id=$(podman create "$CORE_TAG" true 2>/dev/null); then
                  echo "Created container $id"
-                 podman cp "$id":/cas.tar cas-core.tar
+                 if podman cp "$id":/cas.tar cas-core.tar; then
+                     echo "Cache extracted successfully."
+                     tar -xf cas-core.tar -C "$HOME/.cache/buildstream"
+                     rm cas-core.tar
+                     echo "Core CAS warmed."
+                 else
+                     echo "WARNING: Failed to copy /cas.tar from container. Ignoring cache."
+                 fi
                  podman rm "$id"
-                 tar -xf cas-core.tar -C "$HOME/.cache/buildstream"
-                 rm cas-core.tar
-                 echo "Core CAS warmed."
              else
                  echo "WARNING: Failed to create container from $CORE_TAG. Ignoring cache."
              fi
@@ -207,10 +211,13 @@ jobs:
            if podman pull "$CORE_TAG"; then
              echo "Pulling Core Cache to avoid rebuilding base..."
              if id=$(podman create "$CORE_TAG" true 2>/dev/null); then
-                 podman cp "$id":/cas.tar cas-core.tar
+                 if podman cp "$id":/cas.tar cas-core.tar; then
+                     tar -xf cas-core.tar -C "$HOME/.cache/buildstream"
+                     rm cas-core.tar
+                 else
+                     echo "WARNING: Failed to copy /cas.tar from container. Ignoring cache."
+                 fi
                  podman rm "$id"
-                 tar -xf cas-core.tar -C "$HOME/.cache/buildstream"
-                 rm cas-core.tar
              else
                  echo "WARNING: Failed to create container from $CORE_TAG. Proceeding without cache."
              fi
