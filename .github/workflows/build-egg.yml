@@ -1,41 +1,28 @@
 name: Build Bluefin Egg
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  schedule:
+    - cron: '0 8 * * *'  # Daily at 08:00 UTC, after GNOME OS builds (~03:03) and source tracking (06:00)
   workflow_dispatch:
 
 env:
   IMAGE_NAME: egg
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   BST2_IMAGE: registry.gitlab.com/freedesktop-sdk/infrastructure/freedesktop-sdk-docker-images/bst2:f89b4aef847ef040b345acceda15a850219eb8f1
-  R2_BUCKET: bst-cache
 
-# On PRs: group by branch so new pushes cancel stale runs.
-# On main: group by SHA so every push gets its own non-cancellable run.
-# (GitHub cancels even pending/queued runs in the same group regardless of
-#  cancel-in-progress when a newer run arrives, so main needs unique groups.)
+# Only one build at a time. If a manual dispatch arrives while a scheduled
+# build is running, the in-progress run is cancelled.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: read
       packages: write
     steps:
-      # ── Host-level setup ──────────────────────────────────────────────
-      # These steps MUST run on the host, not inside the bst2 container.
-      # We cannot use `container:` at job level because
-      # ublue-os/remove-unwanted-software needs host filesystem access.
-
-      - name: Free disk space
-        uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
-
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -48,103 +35,46 @@ jobs:
       - name: Pull BuildStream container image
         run: podman pull "$BST2_IMAGE"
 
-      - name: Cache BuildStream sources
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      - name: Mount BuildStream cache (sticky disk)
+        uses: useblacksmith/stickydisk@v1
         with:
-          path: ~/.cache/buildstream/sources
-          key: bst-sources-${{ hashFiles('elements/**/*.bst', 'project.conf') }}
-          restore-keys: |
-            bst-sources-
+          key: ${{ github.repository }}-bst-cache
+          path: /home/runner/.cache/buildstream
 
-      - name: Prepare BuildStream cache directory
+      - name: Prepare BuildStream cache layout
         run: |
-          mkdir -p "$HOME/.cache/buildstream/sources"
-          mkdir -p "$HOME/.cache/buildstream/cas"
-          mkdir -p "$HOME/.cache/buildstream/artifacts"
-          mkdir -p "$HOME/.cache/buildstream/source_protos"
+          mkdir -p /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources}
+          echo "=== Sticky disk status ==="
+          du -sh /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
+          df -h /home/runner/.cache/buildstream
 
-      # ── Restore cache from R2 ─────────────────────────────────────────
-      # Use rclone to sync BuildStream's CAS and artifact metadata from
-      # Cloudflare R2. rclone only transfers files that differ (by size
-      # and checksum), making this incremental. The CAS is content-
-      # addressed so files never change — only new blobs are downloaded.
-
-      - name: Install rclone
+      - name: Install just from GitHub releases
         run: |
-          curl -fsSL https://rclone.org/install.sh | sudo bash
-          rclone version
+          # Ubuntu 24.04 ships just 1.21.0, but we need 1.31.0+ for [group()] attribute
+          # Download and install latest just binary directly from GitHub releases
+          JUST_VERSION="1.46.0"
+          curl -fsSL "https://github.com/casey/just/releases/download/${JUST_VERSION}/just-${JUST_VERSION}-x86_64-unknown-linux-musl.tar.gz" -o just.tar.gz
+          tar xzf just.tar.gz
+          sudo install -m 755 just /usr/local/bin/just
+          rm just just.tar.gz
+          just --version
 
-      - name: Restore BuildStream cache from R2
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping cache restore"
-            exit 0
-          fi
-
-          # Configure rclone for Cloudflare R2 (S3-compatible)
-          mkdir -p ~/.config/rclone
-          cat > ~/.config/rclone/rclone.conf <<EOF
-          [r2]
-          type = s3
-          provider = Cloudflare
-          access_key_id = $R2_ACCESS_KEY
-          secret_access_key = $R2_SECRET_KEY
-          endpoint = $R2_ENDPOINT
-          no_check_bucket = true
-          EOF
-          # Strip leading whitespace from config (heredoc is indented in YAML)
-          sed -i 's/^[[:space:]]*//' ~/.config/rclone/rclone.conf
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Restoring CAS objects from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/cas/" "${BST_CACHE}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS restore from R2 failed (non-fatal)"
-
-          echo "=== Restoring artifact refs from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/artifacts/" "${BST_CACHE}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs restore from R2 failed (non-fatal)"
-
-          echo "=== Restoring source protos from R2 ==="
-          rclone sync "r2:${R2_BUCKET}/source_protos/" "${BST_CACHE}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos restore from R2 failed (non-fatal)"
-
-          echo "=== Cache restore summary ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-          df -h /
-
-      - name: Disk space before build
-        run: df -h /
+      - name: Capture build timestamp
+        id: timestamp
+        run: echo "created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
 
       # ── Generate CI-specific BuildStream config ───────────────────────
       # Tuned per gnome-build-meta CI patterns:
       # - on-error: continue  -> find ALL failures, don't stop at first
       # - fetchers: 12        -> parallel downloads from upstream caches
-      # - builders: 1         -> GHA has 4 vCPUs; single builder avoids OOM
+      # - builders: 1         -> conservative to avoid OOM
       # - retry-failed: True  -> auto-retry flaky builds
       # - error-lines: 80     -> generous error context in logs
       # - cache-buildtrees: never -> save disk (we only need final artifacts)
       #
       # No remote artifact server is configured. BuildStream uses only:
-      # 1. Local disk cache (restored from R2 above)
+      # 1. Local disk cache (persisted by sticky disk)
       # 2. Upstream GNOME caches defined in project.conf (read-only)
-      # After the build, rclone syncs everything back to R2.
 
       - name: Generate BuildStream CI config
         run: |
@@ -171,177 +101,46 @@ jobs:
           echo "=== BuildStream CI config ==="
           cat buildstream-ci.conf
 
-      # ── Background R2 sync ──────────────────────────────────────────
-      # Start a background loop that pushes new CAS blobs to R2 every
-      # 2 minutes while the build runs. This ensures the R2 cache is
-      # filled incrementally even if the build times out or is cancelled.
-      # The loop runs on the host (not in the container) and has direct
-      # access to ~/.cache/buildstream/ via the bind mount.
-
-      - name: Start background R2 sync
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-        run: |
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping background sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          cat > /tmp/r2-sync-loop.sh <<'SYNCSCRIPT'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          BST_CACHE="$1"
-          R2_BUCKET="$2"
-          INTERVAL=120  # seconds between sync cycles
-
-          echo "[r2-sync] Background sync started (every ${INTERVAL}s)"
-          while true; do
-            sleep "$INTERVAL"
-            echo "[r2-sync] $(date -Iseconds) Starting sync cycle..."
-
-            # CAS: copy only (never delete), skip existing (immutable blobs)
-            rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-              --ignore-existing \
-              --transfers=16 \
-              --checkers=32 \
-              --fast-list \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] CAS sync warning (non-fatal)"
-
-            # Artifact refs: sync (metadata can change)
-            rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-              --transfers=8 \
-              --checkers=16 \
-              --fast-list \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Artifacts sync warning (non-fatal)"
-
-            # Source protos: sync (metadata can change)
-            rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-              --transfers=8 \
-              --checkers=16 \
-              --fast-list \
-              --stats=0 \
-              -q 2>&1 | sed 's/^/[r2-sync] /' || echo "[r2-sync] Source protos sync warning (non-fatal)"
-
-            echo "[r2-sync] $(date -Iseconds) Sync cycle complete"
-          done
-          SYNCSCRIPT
-          chmod +x /tmp/r2-sync-loop.sh
-
-          nohup /tmp/r2-sync-loop.sh "$BST_CACHE" "$R2_BUCKET" \
-            > /tmp/r2-sync-loop.log 2>&1 &
-          echo $! > /tmp/r2-sync-loop.pid
-          echo "Background R2 sync started (PID $(cat /tmp/r2-sync-loop.pid))"
-
       # ── BuildStream build ─────────────────────────────────────────────
-      # Runs inside the bst2 container with:
-      # - --privileged: required for bubblewrap sandboxing
-      # - --device /dev/fuse: required for buildbox-fuse (ext4 lacks reflinks)
-      # - ulimit -n 1048576: buildbox-casd needs many file descriptors
-      # - --no-interactive: prevent blocking on prompts in CI
+      # Uses the Justfile's `bst` wrapper to run BuildStream inside the
+      # bst2 container. CI-specific flags (--no-interactive, --config)
+      # are injected via BST_FLAGS env var.
+      # Additional --log-file flag is passed directly (build-specific).
 
       - name: Build OCI image with BuildStream
+        env:
+          BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
         run: |
-          podman run --rm \
-            --privileged \
-            --device /dev/fuse \
-            --network=host \
-            -v "${{ github.workspace }}:/src:rw" \
-            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
-            -w /src \
-            "$BST2_IMAGE" \
-            bash -c '
-              ulimit -n 1048576 || true
-              bst --no-interactive \
-                  --colors \
-                  --config /src/buildstream-ci.conf \
-                  --log-file /src/logs/build.log \
-                  build \
-                  oci/bluefin.bst
-            '
+          just bst --log-file /src/logs/build.log build oci/bluefin.bst
         timeout-minutes: 120
 
-      # ── Final R2 sync ───────────────────────────────────────────────
-      # Stop the background sync loop, then do one final thorough sync
-      # to catch any blobs created since the last background cycle.
-      # Always runs (even on build failure) so partial progress is saved.
-
-      - name: Final sync to R2
+      - name: Cache and disk status
         if: always()
-        continue-on-error: true
-        env:
-          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
-          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
         run: |
-          # Stop background sync loop
-          if [ -f /tmp/r2-sync-loop.pid ]; then
-            PID=$(cat /tmp/r2-sync-loop.pid)
-            if kill -0 "$PID" 2>/dev/null; then
-              echo "Stopping background R2 sync (PID $PID)"
-              kill "$PID" || true
-              wait "$PID" 2>/dev/null || true
-            fi
-            rm -f /tmp/r2-sync-loop.pid
-          fi
-
-          echo "=== Background sync log (last 30 lines) ==="
-          tail -30 /tmp/r2-sync-loop.log 2>/dev/null || echo "(no log)"
-
-          if [ -z "${R2_ACCESS_KEY}" ]; then
-            echo "R2 secrets not configured, skipping final sync"
-            exit 0
-          fi
-
-          BST_CACHE="$HOME/.cache/buildstream"
-
-          echo "=== Local cache sizes ==="
-          du -sh "${BST_CACHE}/cas" "${BST_CACHE}/artifacts" \
-                 "${BST_CACHE}/source_protos" "${BST_CACHE}/sources" 2>/dev/null || true
-
-          echo "=== Final CAS sync to R2 ==="
-          rclone copy "${BST_CACHE}/cas/" "r2:${R2_BUCKET}/cas/" \
-            --transfers=32 \
-            --checkers=64 \
-            --s3-upload-concurrency=4 \
-            --s3-chunk-size=16M \
-            --ignore-existing \
-            --fast-list \
-            --stats=10s \
-            --stats-one-line \
-            -v || echo "::warning::CAS sync to R2 failed"
-
-          echo "=== Final artifact refs sync to R2 ==="
-          rclone sync "${BST_CACHE}/artifacts/" "r2:${R2_BUCKET}/artifacts/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Artifact refs sync to R2 failed"
-
-          echo "=== Final source protos sync to R2 ==="
-          rclone sync "${BST_CACHE}/source_protos/" "r2:${R2_BUCKET}/source_protos/" \
-            --transfers=16 \
-            --checkers=32 \
-            --fast-list \
-            -v || echo "::warning::Source protos sync to R2 failed"
-
-          echo "=== R2 final sync complete ==="
-
-      - name: Disk space after build
-        if: always()
-        run: df -h /
+          echo "=== Disk usage ==="
+          df -h /home/runner/.cache/buildstream / 2>/dev/null || df -h /
+          echo ""
+          echo "=== BuildStream cache breakdown ==="
+          du -sh /home/runner/.cache/buildstream/{cas,artifacts,source_protos,sources} 2>/dev/null || true
+          echo ""
+          echo "=== Total ==="
+          du -sh /home/runner/.cache/buildstream/ 2>/dev/null || true
 
       # ── Export OCI image ──────────────────────────────────────────────
-      # Stream the OCI tar from BuildStream directly into podman on the
-      # host. This avoids writing an intermediate tar file to disk.
-      # Pattern: bst artifact checkout --tar - | podman load
+      # Uses the Justfile's `export` recipe: checks out the OCI image
+      # layout from BuildStream, loads it into podman via skopeo, and
+      # applies the /usr/etc bootc fixup. Same logic as local builds.
+      # Creates image with local name (egg:latest) to avoid registry
+      # lookups during validation.
 
       - name: Export OCI image from BuildStream
         id: export
+        env:
+          BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
+          BUILD_IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          OCI_IMAGE_CREATED: ${{ steps.timestamp.outputs.created }}
+          OCI_IMAGE_REVISION: ${{ github.sha }}
+          OCI_IMAGE_VERSION: latest
         run: |
           # Build chunkah tool
           podman build --build-arg FINAL_FROM=rootfs -t chunkah-tool chunkah/
@@ -384,17 +183,18 @@ jobs:
           if [ "$RAW_REF" != "$IMAGE_REF" ]; then
              podman rmi "$RAW_REF" || true
           fi
+          just export
+          echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
       - name: Verify image loaded
-        run: podman images
+        run: sudo podman images
 
       # ── Validation ────────────────────────────────────────────────────
 
       - name: Validate with bootc container lint
         run: |
-          podman run --rm --privileged \
-            -v /var/lib/containers:/var/lib/containers \
-            "${{ steps.export.outputs.image_ref }}" \
+          sudo podman run --rm --privileged --pull=never \
+            "localhost/${{ steps.export.outputs.image_ref }}" \
             bootc container lint
 
       # ── Upload build logs ─────────────────────────────────────────────
@@ -409,23 +209,26 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
-      # ── Publish to GHCR (main branch only) ───────────────────────────
+      # ── Publish to GHCR ───────────────────────────────────────────────
 
       - name: Login to GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
-            podman login ghcr.io --username ${{ github.actor }} --password-stdin
+            sudo podman login ghcr.io --username ${{ github.actor }} --password-stdin
 
       - name: Tag image for GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          podman tag "${{ steps.export.outputs.image_ref }}" \
-            "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest" \
+          sudo podman tag "localhost/${{ steps.export.outputs.image_ref }}" \
+            "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          sudo podman tag "localhost/${{ steps.export.outputs.image_ref }}" \
             "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
       - name: Push to GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-          podman push --retry 3 "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          for tag in latest "${{ github.sha }}"; do
+            for i in 1 2 3; do
+              sudo podman push "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${tag}" && break
+              echo "Push attempt $i failed for tag ${tag}, retrying..."
+              sleep 5
+            done
+          done

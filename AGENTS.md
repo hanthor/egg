@@ -4,6 +4,8 @@ This repository builds **Bluefin** -- a custom GNOME-based Linux desktop image -
 
 All AI-assisted development is skill-driven. Skills (`.opencode/skills/`) are vendored in-repo and are the primary mechanism for institutional memory. Agents MUST load and follow relevant skills before acting, and MUST create or update skills whenever they discover automatable patterns.
 
+**Note:** Despite the directory name, skills are agent-agnostic markdown files. The `.opencode/` prefix is a convention for open AI tooling, not a tool-specific requirement. Any agent system (Claude Code, Cursor, Windsurf, Aider, custom tools) can read and use these skills. See `.opencode/skills/README.md` for details.
+
 ## Quick Reference
 
 | What | Where |
@@ -11,6 +13,8 @@ All AI-assisted development is skill-driven. Skills (`.opencode/skills/`) are ve
 | Build target | `oci/bluefin.bst` |
 | End-to-end local test | `just show-me-the-future` |
 | Local build | `just build` |
+| Publish to local registry | `just publish` (requires `just registry-start`) |
+| Local OTA registry | `just registry-start` / `just registry-stop` (zot on port 5000) |
 | CI workflow | `.github/workflows/build-egg.yml` |
 | Published image | `ghcr.io/projectbluefin/egg:latest` |
 | Upstream repo | `github.com/projectbluefin/egg` |
@@ -24,7 +28,7 @@ Bluefin Egg is the "primal form" of [Project Bluefin](https://projectbluefin.io/
 
 The build pipeline:
 1. BuildStream resolves the dependency graph rooted at `oci/bluefin.bst`
-2. It pulls cached artifacts from GNOME's upstream CAS and our R2 cache
+2. It pulls cached artifacts from GNOME's upstream CAS and the local sticky disk cache
 3. Elements not in any cache are built from source inside bubblewrap sandboxes
 4. The final output is an OCI image containing a bootable Linux filesystem
 5. CI validates with `bootc container lint` and pushes to GHCR
@@ -35,7 +39,7 @@ The build pipeline:
 .github/workflows/       CI/CD pipeline (GitHub Actions)
 docs/plans/              Implementation plans (source of truth for decisions)
 elements/                BuildStream element definitions (.bst files)
-  bluefin/               Bluefin-specific packages (brew, fonts, extensions, ghostty, etc.)
+  bluefin/               Bluefin-specific packages (brew, fonts, extensions, etc.)
   core/                  Core system component overrides (bootc, grub, ptyxis, etc.)
   oci/                   OCI image assembly -- build targets live here
     bluefin.bst          THE primary build target
@@ -75,9 +79,35 @@ just bst show oci/bluefin.bst  # Run any bst command inside the bst2 container
 
 All BuildStream commands run inside the official bst2 container image (same one CI uses), invoked automatically via podman. No native BuildStream installation needed. Requires: podman, ~50 GB free disk. For VM boot: QEMU + OVMF.
 
+### Local OTA Updates
+
+A local `zot` OCI registry enables pushing builds to running VMs as OTA updates, without leaving the network. The full dev loop:
+
+```bash
+just registry-start                    # Start local zot registry on port 5000
+just build                             # Build the image
+just publish                           # Push to local registry
+just generate-bootable-image           # Create bootable disk (first time)
+just boot-vm                           # Boot VM
+# Inside VM (one-time): sudo bootc switch --transport registry 10.0.2.2:5000/egg:latest
+# Iterate: edit -> just build -> just publish -> (in VM) sudo bootc upgrade
+```
+
+**Plan:** `docs/plans/2026-02-15-local-ota-registry.md` has the full design.
+
 **Skill:** Load `local-e2e-testing` for full prerequisites, troubleshooting, and environment variable reference.
 
 Requires BuildStream 2.5+ (provided by the bst2 container). The Justfile handles `bst build oci/bluefin.bst` followed by `bst artifact checkout --tar - | podman load`.
+
+### Local-First Development Policy
+
+**Local development is the default.** All build verification MUST happen locally before pushing to the remote. CI is a safety net, not the primary build environment.
+
+**Hard gate:** No code may be committed to `main` or pushed for PR without a local build log showing the affected elements build successfully. The `verification-before-completion` skill enforces this with specific requirements for different change types.
+
+**Rationale:** CI runs take 30-60 minutes and consume shared resources. Local builds with a warm cache take minutes. Catching failures locally is faster, cheaper, and more respectful of the shared CI infrastructure.
+
+**Skill:** Load `verification-before-completion` for the hard gate requirements and `local-e2e-testing` for the complete local development workflow.
 
 ### project.conf
 
@@ -88,59 +118,56 @@ The project configuration defines:
 - **Architecture options**: x86_64, aarch64, riscv64
 - **Source ref format**: `git-describe`
 
-**Important**: `project.conf` is shared between local dev and CI. CI-specific settings (like the R2 cache remote) are passed via CLI flags, NOT added to project.conf.
+**Important**: `project.conf` is shared between local dev and CI. CI-specific settings are passed via CLI flags, NOT added to project.conf.
 
 ## CI/CD Pipeline
 
 ### Workflow: `.github/workflows/build-egg.yml`
 
-Runs on `ubuntu-24.04`. Triggers on push to main, PRs against main, and manual dispatch.
+Runs on `blacksmith-4vcpu-ubuntu-2404`. Triggers daily at 08:00 UTC (after GNOME OS builds) and on manual dispatch.
 
-**Architecture**: BuildStream runs inside GNOME's official `bst2` Docker image via podman. This container needs `--privileged` and `--device /dev/fuse` for bubblewrap sandboxing. The container is NOT the GitHub Actions `container:` directive -- it's invoked via `podman run` because the disk-space-reclamation action needs host filesystem access.
+**Architecture**: BuildStream runs inside GNOME's official `bst2` Docker image via podman. This container needs `--privileged` and `--device /dev/fuse` for bubblewrap sandboxing. The container is NOT the GitHub Actions `container:` directive -- it's invoked via `podman run` because sticky disk mounts must happen on the host before being bind-mounted into the container.
 
 **Steps** (in order):
-1. Free disk space (removes pre-installed SDKs -- essential, builds need >50 GB)
-2. Checkout repository
-3. Pull bst2 container image
-4. Restore BuildStream source cache (`actions/cache`)
-5. Start bazel-remote cache proxy (main branch only)
-6. Generate CI-specific BuildStream config (`buildstream-ci.conf`)
-7. Build `oci/bluefin.bst` inside bst2 container
-8. Push artifacts to R2 cache (main branch only, non-fatal)
-9. Export OCI image (`bst artifact checkout --tar - | podman load`)
-10. Validate with `bootc container lint`
-11. Upload build logs and cache proxy logs
-12. Stop cache proxy
-13. Tag and push to GHCR (main branch only)
+1. Checkout repository
+2. Pull bst2 container image
+3. Mount BuildStream cache (sticky disk)
+4. Prepare BuildStream cache layout (mkdir subdirs)
+5. Preseed CAS from R2 (cold cache only -- runs only when sticky disk is empty)
+6. Install just
+7. Generate CI-specific BuildStream config (`buildstream-ci.conf`)
+8. Build `oci/bluefin.bst` inside bst2 container
+9. Cache and disk status
+10. Export OCI image (`just export`)
+11. Verify image loaded
+12. Validate with `bootc container lint`
+13. Upload build logs
+14. Login to GHCR (main only)
+15. Tag image for GHCR (main only)
+16. Push to GHCR (main only)
 
 ### Artifact Caching
 
-Two layers of artifact caching:
+Three layers of artifact caching:
 
-1. **GNOME upstream** (`gbm.gnome.org:11003`): Read-only. Configured in `project.conf`. Contains artifacts for freedesktop-sdk and gnome-build-meta elements. Available to all builds.
+1. **Sticky disk cache** (NVMe-backed Ceph): A single persistent disk at `~/.cache/buildstream` that survives across CI runs (~3s mount time, auto-commit on job end, 7-day eviction). Contains CAS objects, artifact refs, source protos, and source tarballs -- everything BuildStream needs in one volume.
 
-2. **Project R2 cache** (Cloudflare R2 via `bazel-remote`): Read-write. Only active on main-branch pushes. Stores artifacts for Bluefin-specific elements that aren't in GNOME's cache.
+2. **GNOME upstream** (`gbm.gnome.org:11003`): Read-only. Configured in `project.conf`. Contains artifacts for freedesktop-sdk and gnome-build-meta elements. Available to all builds.
 
-The R2 cache uses `bazel-remote` v2.6.1 as a CAS-to-S3 bridge:
-- Runs on the GitHub Actions host (not inside the bst2 container)
-- Exposes gRPC CAS on port 9092, HTTP status on port 8080
-- The bst2 container reaches it via `--network=host`
-- BuildStream pulls from it during build via `--artifact-remote=grpc://localhost:9092`
-- A separate `bst artifact push` step uploads after a successful build
-- Binary integrity verified via SHA256 checksum
+3. **R2 cold preseed** (Cloudflare R2, read-only): Used only when the sticky disk is empty (first run or after 7-day eviction). Installs rclone on-demand, downloads CAS archive and metadata refs, then never touches R2 again until the next cold start. **Note:** The R2 `cas.tar.zst` is currently corrupt (93 bytes despite claiming 12.9 GB) -- cold starts build from scratch using GNOME upstream CAS.
 
-**Secrets** (configured on projectbluefin/egg):
+**Secrets** (configured on projectbluefin/egg, used only for R2 preseed):
 - `R2_ACCESS_KEY`: Cloudflare R2 access key ID
 - `R2_SECRET_KEY`: Cloudflare R2 secret access key
 - `R2_ENDPOINT`: R2 S3-compatible endpoint (`https://<ACCOUNT_ID>.r2.cloudflarestorage.com`)
-- R2 bucket name: `bst-cache` (hardcoded in workflow)
+- R2 bucket name: `bst-cache` (hardcoded in workflow env block)
 
 ### CI Config Rationale
 
 The `buildstream-ci.conf` generated during CI uses these settings:
 - `on-error: continue` -- Find ALL build failures, don't stop at first
-- `fetchers: 32` -- Aggressive parallel downloads from artifact caches
-- `builders: 1` -- GHA runners have 4 vCPUs; conservative to avoid OOM
+- `fetchers: 12` -- Parallel downloads from artifact caches
+- `builders: 1` -- Conservative to avoid OOM on complex elements
 - `retry-failed: True` -- Auto-retry flaky builds
 - `error-lines: 80` -- Generous error context in logs
 - `cache-buildtrees: never` -- Save disk; only final artifacts matter
@@ -152,14 +179,11 @@ Read `docs/plans/` for full context and rationale. Summary:
 | Decision | Why |
 |---|---|
 | bst2 container via podman (not pip/Homebrew) | Consistent with GNOME upstream CI; avoids dependency conflicts |
-| CLI flags for CI cache config (not project.conf) | Avoids affecting local dev builds |
 | `on-error: continue` in CI | Find all failures in one run, not just the first |
-| R2 cache push only on main | PRs don't write to shared cache; avoids exposing secrets to fork PRs |
-| `bazel-remote` as CAS bridge | BuildStream needs gRPC CAS; R2 speaks S3; bazel-remote bridges them |
-| `--network=host` for bst2 container | Simplest way for container to reach host's cache proxy |
-| Separate `bst artifact push` step | BuildStream has no `--artifact-push` flag on `bst build`; push is a separate command |
-| Non-fatal cache push (`continue-on-error`) | Cache failures must not block image builds |
-| Disk space reclamation still needed | R2 cache reduces rebuild time but BuildStream's local CAS still needs >50 GB |
+| Blacksmith sticky disks for CI cache | NVMe-backed persistent storage; ~3s mount; no sync overhead; auto-commit on job end |
+| R2 as cold preseed only | Sticky disks are primary; R2 bootstraps empty disks after 7-day eviction |
+| No `actions/cache` for sources | Sticky disk replaces it; no 10 GB size limit, no upload/download step |
+| Non-fatal R2 preseed (`continue-on-error`) | Preseed failures must not block builds; sticky disk may already be warm |
 
 ## Working with Elements
 
@@ -185,6 +209,7 @@ The `gnome-build-meta.bst` and `freedesktop-sdk.bst` junction elements pin speci
 - **YAML indentation**: 2 spaces
 - **Shell in workflows**: `${VAR}` notation, double-quote all expansions, single-quoted `bash -c` with `-e` env passthrough for podman
 - **Agent state**: `.opencode/` is gitignored -- never commit it (except `.opencode/skills/` which is tracked)
+- **Justfile style**: See `writing-justfiles` skill for complete style guide (exported variables, group decorators, quiet mode, etc.)
 
 ## Superpowers Skill System
 
@@ -206,6 +231,22 @@ All agents MUST load and follow these skills before acting:
 | `receiving-code-review` | When processing review feedback |
 | `using-git-worktrees` | When starting isolated feature work |
 | `dispatching-parallel-agents` | When facing 2+ independent tasks |
+| `writing-justfiles` | When creating or modifying Justfiles in this repository |
+| `adding-a-package` | When adding a new software package to the image |
+| `buildstream-element-reference` | When writing or reviewing .bst element files |
+| `packaging-pre-built-binaries` | When packaging pre-built static binaries |
+| `packaging-zig-projects` | When packaging Zig build system projects |
+| `packaging-rust-cargo-projects` | When packaging Rust/Cargo projects with cargo2 sources |
+| `packaging-gnome-shell-extensions` | When packaging GNOME Shell extensions |
+| `packaging-go-projects` | When packaging Go projects for BuildStream |
+| `oci-layer-composition` | When working with OCI layers or the image assembly pipeline |
+| `patching-upstream-junctions` | When patching freedesktop-sdk or gnome-build-meta elements |
+| `managing-bst-overrides` | When creating, evaluating, or removing BuildStream junction overrides |
+| `removing-packages` | When removing a package from the Bluefin image |
+| `updating-upstream-refs` | When updating upstream source refs or dependency versions |
+| `debugging-bst-build-failures` | When diagnosing BuildStream build errors |
+| `ci-pipeline-operations` | When working with the GitHub Actions CI pipeline |
+| `local-e2e-testing` | When building or testing the OCI image locally |
 
 Skills are vendored at `.opencode/skills/` and auto-discovered by the agent runtime. Load them with the `Skill` tool by name (e.g., `brainstorming`, `writing-plans`).
 
@@ -257,32 +298,11 @@ Plans are the source of truth for what was decided and why. They include correct
 
 ### Subagent Workflow
 
-When executing a multi-task implementation plan in the current session, use the `subagent-driven-development` skill. This applies whenever a plan has two or more independent tasks.
+When executing a multi-task implementation plan in the current session, use the `subagent-driven-development` skill. Load the skill for:
 
-**Dispatch pattern:**
+- Dispatch patterns (one fresh subagent per task)
+- Two-stage review process (spec compliance, then code quality)
+- Parallelism rules (independent vs sequential tasks)
+- Question handling and issue resolution
 
-| Rule | Why |
-|---|---|
-| One fresh subagent per task | Isolation prevents cross-contamination of context |
-| Include full task text in the dispatch | Subagents must not read plan files -- they lack conversation context |
-| Provide surrounding context | Tell the subagent where the task fits in the plan and what other tasks exist |
-| Subagents ask questions if unclear | Better to block than to guess wrong |
-
-**Parallelism:**
-
-- Independent tasks (different files, no shared state) -- dispatch in parallel
-- Tasks that modify the same files -- dispatch sequentially, never in parallel
-- When in doubt, run sequentially
-
-**Two-stage review after each task:**
-
-1. **Spec compliance** -- Does the output match the plan's requirements exactly?
-2. **Code quality** -- Is the implementation clean, correct, and consistent with the codebase?
-
-Both stages must pass before the task is marked complete. If a reviewer finds issues, the implementer fixes them and the reviewer re-reviews. This loop repeats until both stages pass.
-
-**Completion:**
-
-- Load `verification-before-completion` before claiming any task or the overall plan is done
-- Run builds or checks as specified in the plan -- evidence before assertions
-- Mark todos complete only after verification passes
+The skill provides the complete workflow with flowcharts, examples, and red flags to avoid.

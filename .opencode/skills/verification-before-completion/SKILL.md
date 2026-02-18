@@ -124,6 +124,22 @@ From 24 failure memories:
 - Moving to next task
 - Delegating to agents
 
+## BuildStream-Specific Verification
+
+**Element changes require a local build log.** This is a hard gate -- no exceptions.
+
+| Change Type | Required Verification |
+|---|---|
+| New or modified `.bst` element | `just bst build <element>` -- show output with exit 0 |
+| Changes affecting the OCI image | `just build` -- full image build, show output |
+| Removing an element | `just build` -- confirm image still builds without it |
+| Patching a junction element | `just bst build <affected-element>` for each affected element |
+| Updating an upstream ref | `just build` -- full image build (ref changes can cascade) |
+
+**What "show output" means:** The build command's stdout/stderr must appear in the conversation. A summary like "it built successfully" is NOT sufficient -- paste the actual terminal output showing the build completed.
+
+**Rationale:** CI takes 30-60 minutes. Local builds with a warm cache take minutes. Catching failures locally is faster, cheaper, and more respectful of shared CI resources. See `local-e2e-testing` skill for build commands.
+
 **Rule applies to:**
 - Exact phrases
 - Paraphrases and synonyms

@@ -7,7 +7,11 @@ description: Use when building the egg OCI image locally, testing changes end-to
 
 ## Overview
 
+**This is the default development workflow.** All build verification happens locally before pushing to the remote. CI is a safety net, not the primary build environment.
+
 Build Bluefin from source and boot it in a VM using three composable `just` recipes. All BuildStream commands run inside the bst2 container via podman -- no native BuildStream installation required.
+
+**Hard gate:** No code may be committed or pushed without a local build log showing affected elements build successfully. See `verification-before-completion` skill for the full gate function.
 
 ## Prerequisites
 
@@ -47,7 +51,12 @@ just bst show oci/bluefin.bst          # Show element details
 just bst build bluefin/brew.bst        # Build a single element
 just bst shell bluefin/brew.bst        # Interactive shell in build sandbox
 just bst artifact log oci/bluefin.bst  # View build logs
+just bst artifact delete <element.bst> # Delete cached artifact to reclaim disk
 ```
+
+## Cache Behavior
+
+BuildStream uses a local Content Addressable Storage (CAS) cache. The first build downloads and builds ~2000 elements (~1-2 hours depending on network). Once cached, only changed elements rebuild — subsequent builds with a warm cache typically take minutes. The cache lives in `~/.cache/buildstream/` (inside the bst2 container, mapped to the host). If disk runs low, use `just bst artifact delete <element>` to selectively reclaim space or remove the entire cache directory.
 
 ## Environment Variables
 
@@ -82,3 +91,47 @@ just bst artifact log oci/bluefin.bst  # View build logs
 ## Serial Debug Shell
 
 The disk image includes `systemd.debug_shell=ttyS1` as a kernel argument. In the QEMU console (stdio), you get access to this debug shell for troubleshooting boot issues without needing a graphical login.
+
+## Local OTA Updates via Registry
+
+The local dev workflow extends beyond booting a VM -- you can push updates to a running VM via a local `zot` OCI registry. This enables a full build-publish-upgrade loop without leaving the network.
+
+**Plan:** `docs/plans/2026-02-15-local-ota-registry.md` has the full design and implementation tasks.
+
+### Quick Reference
+
+| Command | What it does |
+|---|---|
+| `just registry-start` | Start local zot registry on port 5000 |
+| `just registry-stop` | Stop the registry (data preserved in volume) |
+| `just registry-status` | Show registry status and image catalog |
+| `just publish` | Push `egg:latest` from podman to the local registry |
+| `just vm-switch-local` | Print the `bootc switch` command to run inside the VM |
+
+### The OTA Dev Loop
+
+```
+1. just build                              # Build the image
+2. just publish                            # Push to local registry
+3. just generate-bootable-image && just boot-vm  # Boot VM (first time only)
+4. [In VM] sudo bootc switch --transport registry 10.0.2.2:5000/egg:latest  # One-time
+5. [In VM] sudo bootc upgrade              # Pull update from local registry
+```
+
+After step 4, the VM permanently tracks the local registry. The iterative loop is just: edit -> `just build` -> `just publish` -> `bootc upgrade` in VM.
+
+### How It Works
+
+- **zot** runs as a podman container on the host, listening on port 5000
+- **`10.0.2.2`** is QEMU's default gateway to the host -- the VM reaches the registry there
+- **`bootc switch`** rewrites the VM's tracked image ref (one-time, persists across reboots)
+- **`registries.conf.d` drop-in** in the image marks `10.0.2.2:5000` as insecure (HTTP, no TLS)
+- **`policy.json.d` drop-in** allows unsigned pulls from `10.0.2.2:5000`
+
+These configs only affect `10.0.2.2:5000` -- an IP that only exists inside QEMU VMs. Zero effect on production.
+
+## Related Skills
+
+- **`debugging-bst-build-failures`** -- When a build fails during local testing, use this skill for systematic diagnosis of BuildStream element failures
+- **`ci-pipeline-operations`** -- Understanding how the full CI pipeline works, including remote artifact caching and image publishing to GHCR. Note: the local registry is dev-only; CI continues to use GHCR
+- **`oci-layer-composition`** -- The `bluefin/local-dev-registry.bst` element adds container registry config files to the Bluefin layer

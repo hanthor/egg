@@ -8,6 +8,7 @@ depends:
   - bluefin/shell-extensions/gsconnect.bst
   - bluefin/shell-extensions/search-light.bst
   - bluefin/shell-extensions/logomenu.bst
+  - bluefin/shell-extensions/caffeine.bst
   # Since we use gnomeos nightly atm, no extension works with the current shell version
   - bluefin/shell-extensions/disable-ext-validator.bst
 

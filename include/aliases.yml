@@ -19,6 +19,9 @@ aliases:
   fedora_rpms: https://src.fedoraproject.org/rpms/
   ghostty_deps: https://deps.files.ghostty.org/
   ghostty_releases: https://release.files.ghostty.org/
+  onepassword_cli: https://cache.agilebits.com/dist/1P/op2/pkg/
+  onepassword_files: https://downloads.1password.com/
+
   flathub: https://flathub.org/repo/
   freedesktop_files: https://gitlab.freedesktop.org/
   freedesktop_people: https://people.freedesktop.org/
@@ -50,12 +53,14 @@ aliases:
   snowballstem: https://snowballstem.org/dist/
   sourceforge: https://downloads.sourceforge.net/
   spice: https://www.spice-space.org/download/
+  tailscale_pkgs: https://pkgs.tailscale.com/stable/
   tcpdump: https://www.tcpdump.org/
   tecnocode: https://tecnocode.co.uk/downloads/
   thekelleys: http://www.thekelleys.org.uk/
   videolan_pub: https://download.videolan.org/pub/
   webkitgtk: https://webkitgtk.org/releases/
   ziglang: https://ziglang.org/
+
 
   # git aliases go here
   codeberg: https://codeberg.org/

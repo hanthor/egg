@@ -21,6 +21,7 @@ Quick-reference for authoring `.bst` elements in the bluefin-egg project. Look u
 | `%{go-arch}` | `amd64`/`arm64`/`riscv64` | Defined in project.conf per-arch |
 | `%{arch}` | `x86_64`/`aarch64`/`riscv64` | Raw architecture name |
 | `strip-binaries` | Set to `""` to disable | Required for non-ELF elements (fonts, configs, pre-built) |
+| `overlap-whitelist` | `public: bst: overlap-whitelist:` | List of paths allowed to overlap between elements. Declared under `public:` block |
 
 ## Element Kinds
 
@@ -30,22 +31,23 @@ Quick-reference for authoring `.bst` elements in the bluefin-egg project. Look u
 | `meson` | GNOME libraries/apps | gsconnect, ptyxis |
 | `make` | Makefile projects, Go with vendored deps | podman, skopeo |
 | `autotools` | Legacy C projects | grub, firewalld, openvpn |
-| `cargo` | Rust projects | just, bpftop, virtiofsd, bootc |
+| `make` + `cargo2` | Rust projects (actual pattern used) | just, bpftop, virtiofsd, bootc. See `packaging-rust-cargo-projects` |
 | `cmake` | CMake projects | fish |
 | `import` | Direct file placement (no build) | systemd-presets |
 | `stack` | Dependency aggregation, arch dispatch | deps.bst, tailscale.bst |
 | `compose` | Layer filtering (exclude debug/devel) | bluefin-runtime.bst |
 | `script` | OCI image assembly | oci/bluefin.bst |
+| `collect_initial_scripts` | Collect systemd preset/sysusers/tmpfiles from deps | oci/layers/bluefin-stack.bst (gnome-build-meta plugin) |
 
 ## Source Kinds
 
 | Source Kind | Use Case | Examples |
 |-------------|----------|---------|
 | `git_repo` | Most elements | brew, common, jetbrains-mono |
-| `tar` | Release tarballs | tailscale-x86_64, wallpapers |
-| `remote` | Single file download (not extracted) | brew-tarball, ghostty deps |
+| `tar` | Release tarballs. Add `base-dir: ""` if the tarball has no wrapping directory (e.g., fzf ships a bare binary at root). Without it, BuildStream fails with `Could not find base directory matching pattern: *` | tailscale-x86_64, wallpapers, fzf |
+| `remote` | Single file download (not extracted) | brew-tarball. Use `directory:` to place into a subdirectory (critical for Zig offline builds) |
 | `local` | Files from repo's `files/` directory | plymouth-bluefin-theme |
-| `cargo2` | Rust crate vendoring | bootc, just |
+| `cargo2` | Rust crate vendoring | bootc, just. Generate with `files/scripts/generate_cargo_sources.py` from Cargo.lock |
 | `go_module` | Go module deps (one per dep) | git-lfs (in freedesktop-sdk) |
 | `git_module` | Git submodule checkout | common (bluefin-branding) |
 | `patch_queue` | Apply patches directory | toolbox |
@@ -80,6 +82,10 @@ kind: stack
 
 Each per-arch element has its own source URL with the hardcoded architecture string. See the `packaging-pre-built-binaries` skill for the complete pattern.
 
+## Zig Build Pattern
+
+Zig projects use `kind: manual` with custom `zig build` commands and many `remote` sources with `directory:` for offline dependency resolution. See the `packaging-zig-projects` skill for the complete workflow. Note: No Zig elements currently exist in the build; the skill is preserved for future use.
+
 ## Layer Chain
 
 How elements flow into the final OCI image:
@@ -113,6 +119,8 @@ Three patterns exist across the project (in upstream junctions):
 2. **`manual` + `go_module` sources per dep** — verbose; one `go_module` entry per dependency (git-lfs: 33 modules in freedesktop-sdk)
 3. **`manual` + `go build` with vendored tar** — when deps are bundled in a tarball
 
+See the `packaging-go-projects` skill for step-by-step packaging instructions and helper scripts.
+
 ## Source Aliases
 
 Defined in `include/aliases.yml`. Key aliases for Bluefin elements:
@@ -122,7 +130,5 @@ Defined in `include/aliases.yml`. Key aliases for Bluefin elements:
 | `github:` | `https://github.com/` | git sources |
 | `github_files:` | `https://github.com/` | tarballs, release downloads |
 | `gnome:` | `https://gitlab.gnome.org/GNOME/` | GNOME git sources |
-| `ghostty_deps:` | `https://deps.files.ghostty.org/` | Ghostty dependency files |
-| `ghostty_releases:` | `https://release.files.ghostty.org/` | Ghostty release tarballs |
 
 **Important:** Variable substitution (`%{go-arch}`, etc.) does NOT work in source URLs. Use the multi-arch dispatcher pattern instead.

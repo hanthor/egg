@@ -8,9 +8,16 @@ depends:
   - bluefin/brew.bst
   - bluefin/brew-tarball.bst
 
+  - bluefin/tailscale.bst
+
+  - bluefin/1password-cli.bst
+  - bluefin/1password.bst
+
   - bluefin/ghostty.bst
 
-  - bluefin/tailscale.bst
+  - bluefin/glow.bst
+  - bluefin/gum.bst
+  - bluefin/fzf.bst
 
   - bluefin/common.bst
   - bluefin/wallpapers.bst
@@ -27,5 +34,3 @@ depends:
   - gnome-build-meta.bst:gnomeos-deps/distrobox.bst
   - gnome-build-meta.bst:gnomeos-deps/just.bst
   - gnome-build-meta.bst:gnomeos-deps/wl-clipboard.bst
-  - bluefin/uutils-coreutils.bst
-  - bluefin/sudo-rs.bst
