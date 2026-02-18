@@ -18,7 +18,7 @@ fi
 echo "Archiving local CAS (this may take a while)..."
 # We use a container to run tar so we can handle root-owned files in the cache if necessary
 # and to ensure consistent behavior with CI.
-podman run --rm \
+podman run --rm --security-opt label=disable \
     -v "$CACHE_DIR:/input:ro" \
     -v "${PWD}:/output:rw" \
     docker.io/library/busybox:latest \
