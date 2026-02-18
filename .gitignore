@@ -24,3 +24,5 @@ logs/
 
 # Chunkah checkout
 chunkah/
+
+.cache/
