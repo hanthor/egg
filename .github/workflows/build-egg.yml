@@ -26,6 +26,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
+      - name: Checkout chunkah
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          repository: coreos/chunkah
+          path: chunkah
+
       - name: Pull BuildStream container image
         run: podman pull "$BST2_IMAGE"
 
@@ -136,6 +142,47 @@ jobs:
           OCI_IMAGE_REVISION: ${{ github.sha }}
           OCI_IMAGE_VERSION: latest
         run: |
+          # Build chunkah tool
+          podman build --build-arg FINAL_FROM=rootfs -t chunkah-tool chunkah/
+
+          # Export and load raw image
+          LOADED=$(podman run --rm \
+            --privileged \
+            --device /dev/fuse \
+            -v "${{ github.workspace }}:/src:rw" \
+            -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
+            -w /src \
+            "$BST2_IMAGE" \
+            bash -c '
+              ulimit -n 1048576 || true
+              bst --no-interactive \
+                  --config /src/buildstream-ci.conf \
+                  artifact checkout --tar - oci/bluefin.bst
+            ' | podman load)
+
+          RAW_REF=$(echo "$LOADED" | grep -oP '(?<=Loaded image: ).*' || \
+                    echo "$LOADED" | grep -oP '(?<=Loaded image\(s\): ).*')
+          echo "Loaded Raw: $RAW_REF"
+
+          # Chunkify
+          echo "==> Chunkifying..."
+          CONFIG=$(podman inspect "$RAW_REF")
+
+          LOADED_CHUNKED=$(podman run --rm \
+            --mount=type=image,src="$RAW_REF",dest=/chunkah \
+            -e "CHUNKAH_CONFIG_STR=$CONFIG" \
+            chunkah-tool build | podman load)
+
+          IMAGE_REF=$(echo "$LOADED_CHUNKED" | grep -oP '(?<=Loaded image: ).*' || \
+                      echo "$LOADED_CHUNKED" | grep -oP '(?<=Loaded image\(s\): ).*')
+
+          echo "image_ref=$IMAGE_REF" >> "$GITHUB_OUTPUT"
+          echo "Loaded Chunked: $IMAGE_REF"
+
+          # Cleanup raw
+          if [ "$RAW_REF" != "$IMAGE_REF" ]; then
+             podman rmi "$RAW_REF" || true
+          fi
           just export
           echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
