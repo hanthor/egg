@@ -148,7 +148,7 @@ jobs:
               -v "${{ github.workspace }}:/src:rw" \
               -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
               -w /src "$BST2_IMAGE" \
-              bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-core.log build $TARGETS"
+              bash -c "export XDG_CACHE_HOME=/root/.cache; ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-core.log build $TARGETS"
 
       - name: Archive Core CAS
         if: env.TARGETS != ''
@@ -328,7 +328,7 @@ jobs:
               -v "${{ github.workspace }}:/src:rw" \
               -v "$HOME/.cache/buildstream:/root/.cache/buildstream:rw" \
               -w /src "$BST2_IMAGE" \
-              bash -c "ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-${{ matrix.chunk }}.log build $TARGETS"; then
+              bash -c "export XDG_CACHE_HOME=/root/.cache; ulimit -n 1048576; bst --no-interactive --config buildstream-ci.conf --log-file logs/build-${{ matrix.chunk }}.log build $TARGETS"; then
               success=true
               break
             fi
@@ -347,6 +347,7 @@ jobs:
         run: |
           # Use podman to archive the CAS to bypass permission issues with root-owned files
           echo "Archiving CAS using Podman..."
+          podman run --rm -v "$HOME/.cache/buildstream:/input:ro" docker.io/library/busybox:latest du -sh /input
           
           # We use the BST2 image which is already pulled and has tar
             # Allow tar to return exit code 1 (file changed as we read it) which is common during active build interruptions
@@ -369,7 +370,7 @@ jobs:
           # Create Minimal Dockerfile
           # We use the tarball created in the previous step 'Archive CAS' => cas-{chunk}.tar
           # We rename it to /cas.tar in the image for consistent restoration
-          echo -e "FROM docker.io/library/busybox:latest\nCOPY cas-chunk.tar /cas.tar" > Dockerfile
+          echo -e "FROM docker.io/library/busybox:latest\nCOPY cas-${{ matrix.chunk }}.tar /cas.tar" > Dockerfile
           
           # Build the image (locally tagged as latest for now)
           podman build -t "$LATEST_IMAGE_TAG" .
