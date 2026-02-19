@@ -492,6 +492,19 @@ jobs:
           just export
           echo "image_ref=${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
 
+      - name: Prune BuildStream artifact cache
+        env:
+          BST_FLAGS: --no-interactive --config /src/buildstream-ci.conf
+        run: |
+          echo "=== Disk before prune ==="
+          df -h /
+          just bst artifact delete --deps all oci/bluefin.bst
+          echo "=== Disk after prune ==="
+          df -h /
+
+      - name: Chunkify OCI image
+        run: just chunkify "${{ env.IMAGE_NAME }}:latest"
+
       - name: Verify image loaded
         run: sudo podman images
 
